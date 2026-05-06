@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=more_horiz" />
+</head>
+<body>
+    <main class="main-grid">
+        <section class="lists-wrapper" aria-label="Listas de tareas">
+            <!-- Cards generadas dinámicamente desde JS -->
+            <div class="fab-container">
+                <button class="fab" id="addTodo-btn" aria-label="Crear nueva lista">+</button>
+            </div>
+        </section>
+
+    </main>
+
+    <dialog id="myDialog" aria-labelledby="dialog-title">
+        <span class="bar" style="background-color: #f2f2f2;"></span>
+        <form method="dialog" class="dialog-form">
+            <h2 id="dialog-title" class="dialog-form__title">Appearance</h2>
+
+            <label for="userAnswer" class="dialog-form__label">Todo list name</label>
+            <input type="text" id="userAnswer" class="dialog-form__input" placeholder="Untitled">
+
+            <fieldset class="dialog-form__fielset">
+                <legend class="dialog-form__legend">Customisation</legend>
+
+                <div class="dialog-form__option">
+                    <label for="todo-tags">Tags</label>
+                    <input type="text" id="todo-tags" class="dialog-form__tags" placeholder="Personal">
+                </div>
+
+                <div class="dialog-form__option">
+                    <label for="marker">Marker</label>
+                    <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌">
+                </div>
+
+                <div class="dialog-form__option">
+                    <label>Color</label>
+                    <div class="color-picker">
+                        <button type="button" class="color-opt selected" data-color="#f1f1f1" style="background-color: #787878;"></button>
+                        <button type="button" class="color-opt" data-color="#fdefee" style="background-color: #ed6b5a;"></button>
+                        <button type="button" class="color-opt" data-color="#e6f2ff" style="background-color: #038cff;"></button>
+                        <button type="button" class="color-opt" data-color="#e1fae7" style="background-color: #36c25c;"></button>
+                        <button type="button" class="color-opt" data-color="#fcf5db" style="background-color: #e6961f;"></button>
+                        <button type="button" class="color-opt" data-color="#efeaff" style="background-color: #6d3cfa;"></button>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="dialog-form__actions">
+                <button type="button" class="dialog-btn dialog-btn--cancel" id="btn-cancel">Cancelar</button>
+                <button type="submit" class="dialog-btn dialog-btn--confirm" id="btn-acept" value="default">Agregar</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- DIALOG CARD -->
+    <dialog id="card-dialog__config">
+		<header class="dialog-header">
+			<h2>Untitled</h2>
+            <button value="close">X</button>
+		</header>
+		<section>
+			<button class="add-config">+Add content</button>
+		</section>
+	</dialog>
+
+    <script src="./main.js"></script>
+</body>
+</html>
