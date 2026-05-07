@@ -1,0 +1,13 @@
+/* ─────────────────────────────────────
+   UTILS
+───────────────────────────────────── */
+.material-symbols-outlined {
+    flex-shrink: 0;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}

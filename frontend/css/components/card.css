@@ -1,0 +1,43 @@
+/* ─────────────────────────────────────
+   TODO CARD
+───────────────────────────────────── */
+.todo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 22px;
+    box-shadow: 0 3px 8px #0002;
+    border: 2px solid #eaeaea;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    transition: scale .3s;
+
+    &:hover {
+        scale: 1.01;
+    }
+}
+
+.todo-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.todo-card__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    width: 100%;
+}
+
+.todo-card__preview {
+    width: 100%;
+    min-height: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #fff;
+}

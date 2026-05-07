@@ -1,0 +1,15 @@
+/* ─────────────────────────────────────
+   LAYOUT
+───────────────────────────────────── */
+.main-grid {
+    padding-top: 70px;
+}
+
+.lists-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 320px);
+    gap: 20px;
+    padding: 20px;
+    align-items: start;
+    justify-content: center;
+}
