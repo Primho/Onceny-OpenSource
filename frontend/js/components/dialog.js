@@ -1,52 +1,55 @@
 import { makeCard } from "./card.js";
 import { setColor, getColor, setDataCards, getDataCards, setCounter, getCounter } from '../state.js';
 
-const LISTS_WRAPPER = document.querySelector('.lists-wrapper');
-const ADD_TODO = document.querySelector('.fab-container');
+const listWrapper = document.querySelector('.lists-wrapper');
+const addCardBtn = document.querySelector('.fab-container');
 
-const DIALOG = document.querySelector('#myDialog');
-const BAR = document.querySelector('.bar');
-const ANS_THEME = document.querySelector('#userAnswer');
-const TAG = document.querySelector('#todo-tags');
-const MARKER = document.querySelector('#marker');
-const COLOR_OPTS = document.querySelectorAll('.color-opt');
-const CANCEL_BTN = document.getElementById('btn-cancel');
-const ACEPT_BTN = document.getElementById('btn-acept');
+const newCardDialog = document.querySelector('#myDialog');
+const dialogColorBar = document.querySelector('.bar');
+const cardTitleInput = document.querySelector('#userAnswer');
+const cardTagInput = document.querySelector('#todo-tags');
+const cardMarkerInput = document.querySelector('#marker');
+const colorOptions = document.querySelectorAll('.color-opt');
 
-ADD_TODO.addEventListener('click', () => {
-    DIALOG.showModal();
-});
+const aceptBtn = document.getElementById('btn-acept');
+const cancelBtn= document.getElementById('btn-cancel');
 
-COLOR_OPTS.forEach(btn => {
+// Card Dialog
+
+colorOptions.forEach(btn => {
     btn.addEventListener('click', () => {
-        COLOR_OPTS.forEach(b => b.classList.remove('selected'));
+        colorOptions.forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
 
         setColor(btn.dataset.color);
-        BAR.style.backgroundColor = getColor();
+        dialogColorBar.style.backgroundColor = getColor();
     });
 });
 
-ACEPT_BTN.addEventListener('click', () => {
+addCardBtn.addEventListener('click', () => {
+    newCardDialog.showModal();
+});
+
+cancelBtn.addEventListener ('click', () => {
+    newCardDialog.close();
+});
+
+aceptBtn.addEventListener('click', () => {
     setCounter(getCounter() + 1);
     const newCard = {
         id: getCounter(),
         color: getColor(),
-        title: ANS_THEME.value || 'To-Do App',
-        tag: TAG.value,
+        title: cardTitleInput.value || 'To-Do App',
+        tag: cardTagInput.value,
         blocks: getDataCards(),/*es un arr es para acordarme que hay dentro */
-        marker: MARKER.value
+        marker: cardMarkerInput.value
     };
 
     const cards = getDataCards();
     cards.push(newCard);
     setDataCards(cards);
 
-    makeCard(newCard, LISTS_WRAPPER);
+    makeCard(newCard, listWrapper);
     
-    DIALOG.close();
-});
-
-CANCEL_BTN.addEventListener ('click', () => {
-    DIALOG.close();
+    newCardDialog.close();
 });

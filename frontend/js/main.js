@@ -2,16 +2,16 @@ import { getDataCards } from './state.js'
 import './components/dialog.js';
 
 
-const LISTS_WRAPPER = document.querySelector('.lists-wrapper');
+const listsWrapper = document.querySelector('.lists-wrapper');
 
-const CARD_CONFIG = document.querySelector('#card-dialog__config');
-const CARD_HEADER = document.querySelector('#card-dialog__config');
+const cardDialog = document.querySelector('#card-dialog');
+const cardDialogHeader = document.querySelector('#card-dialog__header');
 
-LISTS_WRAPPER.addEventListener('click', (e) => {
+listsWrapper.addEventListener('click', (e) => {
     const isCard = e.target.closest('.todo-card');
 
     if (!isCard) return;
-    CARD_CONFIG.showModal();
+    cardDialog.showModal();
     const card = Number(isCard.dataset.id);
     
     const findIt = getDataCards().find(elemento => elemento.id === card);

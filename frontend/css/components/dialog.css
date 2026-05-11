@@ -148,7 +148,7 @@
 /* ─────────────────────────────────────
    DIALOG — CARD
 ───────────────────────────────────── */
-#card-dialog__config {
+#card-dialog {
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -173,18 +173,18 @@
     }
 }
 
-#card-dialog__config::backdrop {
+#card-dialog::backdrop {
     background-color: rgba(0, 0, 0, .2);
     backdrop-filter: blur(4px);
     opacity: 0;
     transition: opacity .3s;
 }
 
-#card-dialog__config[open]::backdrop {
+#card-dialog[open]::backdrop {
     opacity: 1;
 }
 
-.dialog-header {
+.card-dialog__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -197,23 +197,35 @@
     }
 }
 
-.dialog-body {
+.card-dialog__close {
+    display: flex;
+    border: none;
+    cursor: pointer;
+    background-color: inherit;
+}
+
+.card-dialog__content {
     flex: 1;
     width: 100%;
-    height: 100%;
     padding: 50px;
+    padding-top: 20px;
 }
 
 .add-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     cursor: pointer;
-    text-align: start;
     width: 100%;
     padding: 10px 25px;
-    background-color: #fff;
     border: none;
     border-radius: 8px;
+
+    background-color: inherit;
     font-size: 1rem;
     transition: background-color .3s;
+    gap: 8px;
 
     &:hover {
         background-color: #f1f1f2;
