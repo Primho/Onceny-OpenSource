@@ -1,5 +1,6 @@
-import { makeCard } from './components/card.js';
-import {/*funcion*/} from './components/dialog.js';
+import { getDataCards } from './state.js'
+import './components/dialog.js';
+
 
 const LISTS_WRAPPER = document.querySelector('.lists-wrapper');
 
@@ -13,7 +14,7 @@ LISTS_WRAPPER.addEventListener('click', (e) => {
     CARD_CONFIG.showModal();
     const card = Number(isCard.dataset.id);
     
-    const findIt = dataCards.find(elemento => elemento.id === card);
+    const findIt = getDataCards().find(elemento => elemento.id === card);
     console.log(findIt);
 
 });

@@ -1,6 +1,7 @@
 import { makeCard } from "./card.js";
 import { setColor, getColor, setDataCards, getDataCards, setCounter, getCounter } from '../state.js';
 
+const LISTS_WRAPPER = document.querySelector('.lists-wrapper');
 const ADD_TODO = document.querySelector('.fab-container');
 
 const DIALOG = document.querySelector('#myDialog');
@@ -20,22 +21,27 @@ COLOR_OPTS.forEach(btn => {
     btn.addEventListener('click', () => {
         COLOR_OPTS.forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
+
         setColor(btn.dataset.color);
-        BAR.style.backgroundColor = selectedColor;
+        BAR.style.backgroundColor = getColor();
     });
 });
 
 ACEPT_BTN.addEventListener('click', () => {
-    counter++;
+    setCounter(getCounter() + 1);
     const newCard = {
-        id: counter,
-        color: selectedColor,
+        id: getCounter(),
+        color: getColor(),
         title: ANS_THEME.value || 'To-Do App',
         tag: TAG.value,
-        blocks: [],
+        blocks: getDataCards(),/*es un arr es para acordarme que hay dentro */
         marker: MARKER.value
     };
-    dataCards.push(newCard);
+
+    const cards = getDataCards();
+    cards.push(newCard);
+    setDataCards(cards);
+
     makeCard(newCard, LISTS_WRAPPER);
     
     DIALOG.close();
