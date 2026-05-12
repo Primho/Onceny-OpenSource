@@ -7,6 +7,44 @@
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
+    <nav class="sidebar">
+        <ul>
+            <li>
+                <a href="index.html">
+                    <svg><use href="../assets/icons/sprite.svg#icon-home"></use></svg>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <svg><use href="../assets/icons/sprite.svg#icon-space-dashboard"></use></svg>
+                    <span>My Space</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <svg><use href="../assets/icons/sprite.svg#icon-bookmarks"></use></svg>
+                    <span>Favorites</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <svg><use href="../assets/icons/sprite.svg#icon-share"></use></svg>
+                    <span>Share</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html">
+                    <svg><use href="../assets/icons/sprite.svg#icon-settings"></use></svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     <main class="main-grid">
         <section class="lists-wrapper" aria-label="Listas de tareas">
             <!-- Cards generadas dinámicamente desde JS -->
@@ -14,7 +52,6 @@
                 <button class="fab" id="addTodo-btn" aria-label="Crear nueva lista">+</button>
             </div>
         </section>
-
     </main>
 
     <dialog id="myDialog" aria-labelledby="dialog-title">
