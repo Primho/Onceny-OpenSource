@@ -1,10 +1,6 @@
 /* ─────────────────────────────────────
    LAYOUT
 ───────────────────────────────────── */
-.main-grid {
-    padding-top: 70px;
-}
-
 .lists-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, 320px);

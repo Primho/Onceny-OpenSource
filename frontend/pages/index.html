@@ -7,59 +7,76 @@
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-    <nav class="sidebar">
+    <nav id="sidebar">
         <ul>
-            <li>
+            <div class="profile-continer">
+                <img src="../assets/Primh.png" alt="profile picture">
+                <div>
+                    <span>Kevin Parra</span>
+                    <span>kevin@example.com</span>
+                </div>
+            </div>
+
+            <li class="active">
                 <a href="index.html">
-                    <svg><use href="../assets/icons/sprite.svg#icon-home"></use></svg>
+                    <svg style="width: 24px; height: 24px;">
+                        <use href="../assets/icons/sprite.svg#icon-home"></use>
+                    </svg>
                     <span>Home</span>
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <svg><use href="../assets/icons/sprite.svg#icon-space-dashboard"></use></svg>
+                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-space-dashboard"></use></svg>
                     <span>My Space</span>
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <svg><use href="../assets/icons/sprite.svg#icon-bookmarks"></use></svg>
+                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-bookmarks"></use></svg>
                     <span>Favorites</span>
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <svg><use href="../assets/icons/sprite.svg#icon-share"></use></svg>
+                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-share"></use></svg>
                     <span>Share</span>
                 </a>
             </li>
-
+        </ul>
+        <ul>
             <li>
                 <a href="settings.html">
-                    <svg><use href="../assets/icons/sprite.svg#icon-settings"></use></svg>
+                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-settings"></use></svg>
                     <span>Settings</span>
                 </a>
             </li>
         </ul>
     </nav>
     <main class="main-grid">
+        <header class="main-header">
+            <h2>Notes</h2>
+            <div class="fab-container">
+                <button class="fab" id="addTodo-btn" aria-label="Crear nueva lista">
+                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-add"></use></svg>
+                    New Note
+                </button>
+            </div>
+        </header>
         <section class="lists-wrapper" aria-label="Listas de tareas">
             <!-- Cards generadas dinámicamente desde JS -->
-            <div class="fab-container">
-                <button class="fab" id="addTodo-btn" aria-label="Crear nueva lista">+</button>
-            </div>
         </section>
     </main>
 
-    <dialog id="myDialog" aria-labelledby="dialog-title">
+    <dialog id="myDialog" aria-labelledby="dialog-title" closedby="any">
         <span class="bar" style="background-color: #f2f2f2;"></span>
         <form method="dialog" class="dialog-form">
             <h2 id="dialog-title" class="dialog-form__title">Appearance</h2>
 
-            <label for="userAnswer" class="dialog-form__label">Todo list name</label>
+            <label for="userAnswer" class="dialog-form__label">Title Name</label>
             <input type="text" id="userAnswer" class="dialog-form__input" placeholder="Untitled">
 
             <fieldset class="dialog-form__fielset">
@@ -95,13 +112,17 @@
         </form>
     </dialog>
     <!-- DIALOG CARD -->
-    <dialog id="card-dialog">
+    <dialog id="card-dialog" closedby="any">
 		<header class="card-dialog__header">
-			<h2>Untitled</h2>
-            <button id="card-dialog__close" class="card-dialog__close"><span class="material-symbols-outlined">close</span></button>
+			<input class="card-dialog__title" type="text" placeholder="Untitled">
+            <button id="card-dialog__close" class="card-dialog__close">
+                <svg style="width: 20px; height: 20px;">
+                    <use href="../assets/icons/sprite.svg#icon-close"></use>
+                </svg> 
+            </button>
 		</header>
 		<section class="card-dialog__content">
-			<button class="add-content"><span class="material-symbols-outlined">add</span>Add content</button>
+			<button class="add-content"><svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-add"></use></svg>Add content</button>
 		</section>
 	</dialog>
 

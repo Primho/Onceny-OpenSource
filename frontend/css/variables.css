@@ -1,0 +1,49 @@
+:root {
+    /* Tipografia */
+    --font-base: 1rem;
+    --font-sm: 0.875rem;
+    --font-lg: 1.125rem;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+
+    /* Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 22px;
+
+    /* Espaciado */
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+
+    /* Colores base */
+    --color-bg: #ffffff;
+    --color-surface: #f2f2f2;
+    --color-surface-hover: #e5e5e5;
+    --color-border: #dedede;
+    --color-border-light: #eaeaea;
+
+    /* Texto */
+    --color-text: #1a1a1a;
+    --color-text-muted: #ececf0;
+
+    /* Muted */
+    --color-muted: #ececf0;
+
+    /* Acento */
+    --color-accent: rgb(255, 64, 64);
+
+    /* ── Colores de cards ── */
+    --card-gray: #f1f1f1;
+    --card-gray-text: #787878;
+    --card-red: #fdefee;
+    --card-red-text: #ec6a5a;
+    --card-blue: #e6f2ff;
+    --card-blue-text: #038cff;
+    --card-green: #e1fae7;
+    --card-green-text: #36c25c;
+    --card-yellow: #fcf5db;
+    --card-yellow-text: #e6961f;
+    --card-purple: #efeaff;
+    --card-purple-text: #6d3cfa;
+}

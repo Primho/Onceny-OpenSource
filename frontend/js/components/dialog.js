@@ -23,6 +23,7 @@ colorOptions.forEach(btn => {
 
         setColor(btn.dataset.color);
         dialogColorBar.style.backgroundColor = getColor();
+        newCardDialog.style.borderTop = `2px solid ${getColor()}`;
     });
 });
 
@@ -39,7 +40,7 @@ aceptBtn.addEventListener('click', () => {
     const newCard = {
         id: getCounter(),
         color: getColor(),
-        title: cardTitleInput.value || 'To-Do App',
+        title: cardTitleInput.value || 'Untitled',
         tag: cardTagInput.value,
         blocks: getDataCards(),/*es un arr es para acordarme que hay dentro */
         marker: cardMarkerInput.value
