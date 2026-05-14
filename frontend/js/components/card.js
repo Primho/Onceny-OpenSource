@@ -16,7 +16,7 @@ const makeCard = (card, container) => {
                     <h2 class="todo-card__title" style="color: ${titleColor(card.color)};">${card.title}</h2>
                     <span class="todo-card__tag">${card.tag}</span>
                 </div>
-                <svg style="width: 24px; height: 24px; fill: ${titleColor(card.color)};">
+                <svg style="width: 24px; height: 24px; color: ${titleColor(card.color)};">
                     <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
                 </svg>
             </header>
