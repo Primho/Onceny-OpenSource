@@ -16,9 +16,11 @@ const makeCard = (card, container) => {
                     <h2 class="todo-card__title" style="color: ${titleColor(card.color)};">${card.title}</h2>
                     <span class="todo-card__tag">${card.tag}</span>
                 </div>
-                <svg style="width: 24px; height: 24px; color: ${titleColor(card.color)};">
+                <button>
+                    <svg style="width: 24px; height: 24px; color: ${titleColor(card.color)};">
                     <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
-                </svg>
+                    </svg>
+                </button>    
             </header>
             <section class="todo-card__preview">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis deleniti ea explicabo consectetur modi necessitatibus quibusdam exercitationem autem praesentium illum, voluptatibus animi debitis dolorem repudiandae. Minima illo eveniet exercitationem aperiam?</p>

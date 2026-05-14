@@ -88,4 +88,10 @@
 
 .sidebar__nav-item.active .sidebar__nav-link {
     background-color: var(--color-muted);
+    color: black;
+
+    & svg {
+        --icon-color: black; /* This explicitly overrides the path color */
+        font-variation-settings: 'FILL' 1; 
+    }
 }
