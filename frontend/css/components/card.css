@@ -7,8 +7,8 @@
     justify-content: space-between;
     padding: var(--space-md);
     border-radius: var(--radius-lg);
-    box-shadow: 0 3px 8px #0002;
-    border: 2px solid var(--color-border);
+    box-shadow: 0 3px 8px #0001;
+    border: 1.5px solid var(--color-border-light);
     background-color: red;
     cursor: pointer;
     transition: scale .3s;

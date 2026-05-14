@@ -1,11 +1,20 @@
 /* ─────────────────────────────────────
    LAYOUT
 ───────────────────────────────────── */
+
+.main-grid {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: var(--space-lg);
+    padding-top: 0;
+}
+
 .lists-wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 320px);
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
     align-items: start;
     justify-content: center;
+
 }

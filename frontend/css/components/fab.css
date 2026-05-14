@@ -4,8 +4,7 @@
 .fab {
     display: flex;
     align-items: center;
-    padding: 5px 10px;
-    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
     font-size: var(--font-base);
     cursor: pointer;
     border: none;
@@ -13,7 +12,6 @@
 
     background-color: var(--color-text);
     color: var(--color-bg);
-    transition: color .3s, background-color .3s, border-radius .3s;
 
     & svg {
         fill: var(--color-bg);

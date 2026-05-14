@@ -188,7 +188,7 @@
     padding: 0 25px;
     border-bottom: 2px solid var(--color-border-light);
 
-    & h2 {
+    & input {
         color: var(--color-text);
     }
 }
@@ -216,6 +216,8 @@
     transition: border-radius .3s, background-color .3s;
 
     & svg {
+        width: 24px;
+        height: 24px;
         color: var(--color-text);
     }
 
@@ -235,8 +237,7 @@
 .add-content {
     display: flex;
     align-items: center;
-    justify-content: center;
-
+    justify-content: flex-start;
     cursor: pointer;
     width: 100%;
     padding: var(--space-sm) var(--space-lg);

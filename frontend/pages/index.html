@@ -7,55 +7,59 @@
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-    <nav id="sidebar">
-        <ul>
-            <div class="profile-continer">
-                <img src="../assets/Primh.png" alt="profile picture">
-                <div>
-                    <span>Kevin Parra</span>
-                    <span>kevin@example.com</span>
-                </div>
+    <aside id="sidebar">
+        <div class="sidebar__profile">
+            <img src="../assets/Primh.png" alt="profile picture" class="sidebar__profile-img">
+            <div class="sidebar__profile-info">
+                <span class="sidebar__profile-name">Kevin Parra</span>
+                <span class="sidebar__profile-email">kevin@example.com</span>
             </div>
-
-            <li class="active">
-                <a href="index.html">
-                    <svg style="width: 24px; height: 24px;">
-                        <use href="../assets/icons/sprite.svg#icon-home"></use>
-                    </svg>
-                    <span>Home</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-space-dashboard"></use></svg>
-                    <span>My Space</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-bookmarks"></use></svg>
-                    <span>Favorites</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-share"></use></svg>
-                    <span>Share</span>
-                </a>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <a href="settings.html">
-                    <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-settings"></use></svg>
-                    <span>Settings</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+        </div>
+        <nav class="sidebar__nav">
+            <ul class="sidebar__nav-list">
+                <li class="sidebar__nav-item active">
+                    <a href="index.html" class="sidebar__nav-link">
+                        <svg style="width: 24px; height: 24px;">
+                            <use href="../assets/icons/sprite.svg#icon-home"></use>
+                        </svg>
+                        <span>Home</span>
+                    </a>
+                </li>
+    
+                <li class="sidebar__nav-item">
+                    <a href="#" class="sidebar__nav-link">
+                        <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-space-dashboard"></use></svg>
+                        <span>My Space</span>
+                    </a>
+                </li>
+    
+                <li class="sidebar__nav-item">
+                    <a href="#" class="sidebar__nav-link">
+                        <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-bookmarks"></use></svg>
+                        <span>Favorites</span>
+                    </a>
+                </li>
+    
+                <li class="sidebar__nav-item">
+                    <a href="#" class="sidebar__nav-link">
+                        <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-share"></use></svg>
+                        <span>Share</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar__settings">
+            <ul class="sidebar__settings-list">
+                <li class="sidebar__settings-item">
+                    <a href="settings.html" class="sidebar__settings-link">
+                        <svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-settings"></use></svg>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!-- Main Content -->
     <main class="main-grid">
         <header class="main-header">
             <h2>Notes</h2>
@@ -70,7 +74,7 @@
             <!-- Cards generadas dinámicamente desde JS -->
         </section>
     </main>
-
+    <!-- New Card Dialog -->
     <dialog id="myDialog" aria-labelledby="dialog-title" closedby="any">
         <span class="bar" style="background-color: #f2f2f2;"></span>
         <form method="dialog" class="dialog-form">
@@ -116,13 +120,13 @@
 		<header class="card-dialog__header">
 			<input class="card-dialog__title" type="text" placeholder="Untitled">
             <button id="card-dialog__close" class="card-dialog__close">
-                <svg style="width: 20px; height: 20px;">
+                <svg>
                     <use href="../assets/icons/sprite.svg#icon-close"></use>
                 </svg> 
             </button>
 		</header>
 		<section class="card-dialog__content">
-			<button class="add-content"><svg style="width: 24px; height: 24px;"><use href="../assets/icons/sprite.svg#icon-add"></use></svg>Add content</button>
+			<button class="add-content"><svg style="width: 24px; height: 24px; "><use href="../assets/icons/sprite.svg#icon-add"></use></svg>Add content</button>
 		</section>
 	</dialog>
 
