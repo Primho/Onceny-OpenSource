@@ -22,6 +22,7 @@ const makeCard = (card, container) => {
                             <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
                         </svg>
                     </button>
+                    
                     <div id="menu-${card.id}" popover style="position-anchor: --ancla-${card.id};" class="menu-flotante">
                         <button onclick="console.log('editste ${card.id}')">Editar</button>
                         <button onclick="console.log('eliminaste ${card.id}')" class="delete">Eliminar</button>
