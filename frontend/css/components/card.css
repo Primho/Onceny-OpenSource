@@ -34,6 +34,41 @@
     width: 100%;
 }
 
+.card-options {
+    cursor: pointer;
+    display: flex;
+    background-color: inherit;
+    border: none;
+    border-radius: var(--radius-sm);
+
+    &:hover {
+        background-color: var(--color-muted);
+    }
+}
+
+.menu-flotante {
+    position-area: bottom right; 
+    position-try-fallbacks: flip-block, flip-inline; 
+  
+    /* Estilos visuales comunes */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+.menu-flotante button {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menu-flotante button:hover { background: var(--color-muted); }
+
 .todo-card__preview {
     width: 100%;
     min-height: 100%;

@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────
+   LAYOUT
+───────────────────────────────────── */
+
+.main-grid {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: var(--space-lg);
+    padding-top: 0;
+}
+
+.main__grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg) 0;
+    position: sticky; 
+    top: 0;
+
+    background-color: var(--color-bg);
+    z-index: 999;
+}
+
+/* ─────────────────────────────────────
+   FAB
+───────────────────────────────────── */
+.addNote-btn {
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-base);
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background-color: var(--color-text);
+    color: var(--color-bg);
+
+    & svg {
+        fill: var(--color-bg);
+    }
+}
+
+/* ─────────────────────────────────────
+   Wrapper
+───────────────────────────────────── */
+.lists-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
+    align-items: start;
+    justify-content: center;
+
+}

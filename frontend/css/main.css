@@ -1,9 +1,7 @@
 @import './variables.css';
 @import './reset.css';
-@import './layout/grid.css';
-@import './layout/header.css';
+@import './pages/notes.css';
 @import './layout/sidebar.css';
 @import './components/card.css';
 @import './components/dialog.css';
-@import './components/fab.css';
 @import './utils.css';

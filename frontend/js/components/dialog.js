@@ -2,7 +2,7 @@ import { makeCard } from "./card.js";
 import { setColor, getColor, setDataCards, getDataCards, setCounter, getCounter } from '../state.js';
 
 const listWrapper = document.querySelector('.lists-wrapper');
-const addCardBtn = document.querySelector('.fab-container');
+const addCardBtn = document.querySelector('#addNote-btn');
 
 const newCardDialog = document.querySelector('#myDialog');
 const dialogColorBar = document.querySelector('.bar');
@@ -12,10 +12,9 @@ const cardMarkerInput = document.querySelector('#marker');
 const colorOptions = document.querySelectorAll('.color-opt');
 
 const aceptBtn = document.getElementById('btn-acept');
-const cancelBtn= document.getElementById('btn-cancel');
+const cancelBtn = document.getElementById('btn-cancel');
 
 // Card Dialog
-
 colorOptions.forEach(btn => {
     btn.addEventListener('click', () => {
         colorOptions.forEach(b => b.classList.remove('selected'));
