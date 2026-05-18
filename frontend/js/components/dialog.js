@@ -7,7 +7,7 @@ const addCardBtn = document.querySelector('#addNote-btn');
 const newCardDialog = document.querySelector('#myDialog');
 const dialogColorBar = document.querySelector('.bar');
 const cardTitleInput = document.querySelector('#userAnswer');
-const cardTagInput = document.querySelector('#todo-tags');
+const cardTagInput = document.querySelector('#card-tags');
 const cardMarkerInput = document.querySelector('#marker');
 const colorOptions = document.querySelectorAll('.color-opt');
 

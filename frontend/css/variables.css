@@ -17,6 +17,7 @@
     --space-lg: 24px;
 
     /* Colores base */
+    --sidebar: oklch(0.985 0 0);
     --color-bg: #ffffff;
     --color-surface: #f2f2f2;
     --color-surface-hover: #e5e5e5;
