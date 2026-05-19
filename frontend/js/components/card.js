@@ -24,8 +24,8 @@ const makeCard = (card, container) => {
                     </button>
                     
                     <div id="menu-${card.id}" popover style="position-anchor: --ancla-${card.id};" class="card-menu">
-                        <button onclick="console.log('editste ${card.id}')">Edit</button>
-                        <button onclick="console.log('eliminaste ${card.id}')" class="delete-card">Delete</button>
+                        <button>Edit</button>
+                        <button class="delete-card">Delete</button>
                     </div>
                 </div>
             </header>

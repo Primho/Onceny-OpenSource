@@ -1,4 +1,4 @@
-import { getDataCards } from './state.js'
+import { getDataCards, setDataCards } from './state.js'
 import './components/dialog.js';
 
 
@@ -11,9 +11,10 @@ let currentCard = null;
 
 listsWrapper.addEventListener('click', (e) => {
     const isCard = e.target.closest('.note-card');
+    const isDelete = e.target.closest('.delete-card'); 
     const cardOptionsMenu = e.target.closest('.card-menu-btn');
 
-    if (!isCard || cardOptionsMenu) return;
+    if (!isCard || cardOptionsMenu || isDelete) return;
     cardDialog.showModal();
     const cardNumber = Number(isCard.dataset.id);
     
@@ -34,8 +35,13 @@ noteDialogBtn.addEventListener('click', () => {
 
 document.addEventListener('click', (e) => {
     const isDelete = e.target.closest('.delete-card');
-    const cards = getDataCards();
     if(!isDelete) return;
     
-    console.log(isDelete, currentCard, cards);
+    const cardElement = e.target.closest('.note-card');
+    const cardId = Number(cardElement.dataset.id);
+
+    let cards = getDataCards();
+    cards = cards.filter(card => card.id !== cardId);
+    setDataCards(cards);
+    cardElement.remove();
 });

@@ -66,6 +66,11 @@
     cursor: pointer;
 }
 
+.card-menu button:last-child {
+    color: var(--color-accent);
+    border-top: 1px solid var(--color-muted);
+}
+
 .card-menu button:hover { background: var(--color-muted); }
 
 .note-card__preview {
