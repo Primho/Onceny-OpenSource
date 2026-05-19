@@ -2,6 +2,8 @@
    DIALOG — CREAR LISTA
 ───────────────────────────────────── */
 #myDialog {
+    display: none;
+    
     position: relative;
     margin: auto;
     width: 100%;
@@ -11,30 +13,46 @@
     border: 2px solid var(--color-border);
     padding: var(--space-md);
     overflow: hidden;
+    
     opacity: 0;
-    transform: scale(0) translateY(500px);
-    transition: transform .3s, opacity .3s;
+    transform: scale(0.5);
+    
+    transition: 
+        transform .3s ease, 
+        opacity .3s ease, 
+        display .3s ease allow-discrete, 
+        overlay .3s ease allow-discrete;
 
     &[open] {
+        display: block; /* Todo: flex/grid */
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1);
 
         @starting-style {
             opacity: 0;
-            transform: scale(0) translateY(500px);
+            transform: scale(0.5);
         }
     }
 }
 
+/* --- BACKDROP CLOSING ANIMATION --- */
 #myDialog::backdrop {
     background-color: rgba(0, 0, 0, .2);
     backdrop-filter: blur(4px);
     opacity: 0;
-    transition: opacity .3s;
+    
+    transition: 
+        opacity .3s ease, 
+        display .3s ease allow-discrete, 
+        overlay .3s ease allow-discrete;
 }
 
 #myDialog[open]::backdrop {
     opacity: 1;
+
+    @starting-style {
+        opacity: 0;
+    }
 }
 
 .bar {
@@ -145,7 +163,8 @@
    DIALOG — CARD
 ───────────────────────────────────── */
 #card-dialog {
-    display: flex;
+    display: none;
+    
     flex-direction: column;
     margin: auto;
     min-height: 800px;
@@ -154,17 +173,24 @@
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
     overflow: hidden;
+
     opacity: 0;
-    transform: scale(0) translateY(500px);
-    transition: transform .3s, opacity .3s;
+    transform: scale(0.5);
+
+    transition: 
+        transform .3s ease, 
+        opacity .3s ease, 
+        display .3s ease allow-discrete, 
+        overlay .3s ease allow-discrete;
 
     &[open] {
+        display: flex;
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1);
 
         @starting-style {
             opacity: 0;
-            transform: scale(0) translateY(500px);
+            transform: scale(0.5);
         }
     }
 }
@@ -173,11 +199,19 @@
     background-color: rgba(0, 0, 0, .2);
     backdrop-filter: blur(4px);
     opacity: 0;
-    transition: opacity .3s;
+    
+    transition: 
+        opacity .3s ease, 
+        display .3s ease allow-discrete, 
+        overlay .3s ease allow-discrete;
 }
 
 #card-dialog[open]::backdrop {
     opacity: 1;
+
+    @starting-style {
+        opacity: 0;
+    }
 }
 
 .card-dialog__header {

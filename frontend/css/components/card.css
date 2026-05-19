@@ -11,9 +11,25 @@
     border: 1.5px solid var(--color-border-light);
     cursor: pointer;
     transition: scale .3s;
+    animation: fadeIn .3s;
 
     &:hover {
         scale: 1.01;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        transform: scale(0.5);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        transform: scale(0);
     }
 }
 
@@ -39,22 +55,47 @@
     background-color: inherit;
     border: none;
     border-radius: var(--radius-sm);
+    transition: background-color .2s;
 
     &:hover {
-        background-color: var(--color-muted);
+        background-color: var(--color-bg);
     }
 }
 
-.card-menu {
-    position-area: bottom right; 
-    position-try-fallbacks: flip-block, flip-inline; 
+.card-menu[popover] {
+  position-area: bottom right; 
+  position-try-fallbacks: flip-block, flip-inline; 
   
-    /* Estilos visuales comunes */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: var(--color-surface);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  /* close default */
+  opacity: 0;
+  transform: translateY(-5px);
+
+  transition: 
+    opacity .3s ease, 
+    transform .3s ease, 
+    display .3s ease allow-discrete,
+    overlay .3s ease allow-discrete; /* <--- Esto retiene el anclaje al cerrar */
+}
+
+/* open */
+.card-menu[popover]:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* before open */
+@starting-style {
+  .card-menu[popover]:popover-open {
+    opacity: 0;
+    transform: translateY(-5px);
   }
+}
+
   
 .card-menu button {
     display: block;
