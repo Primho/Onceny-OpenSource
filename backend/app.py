@@ -1,8 +1,12 @@
 from flask import Flask
-from routes.notes import notes_bp
+from routes.cards import notes_bp
+from models import init_db
 
 app = Flask(__name__)
 app.register_blueprint(notes_bp)
+
+with app.app_context():
+    init_db()
 
 @app.route('/')
 def home():
