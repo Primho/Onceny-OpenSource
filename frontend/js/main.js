@@ -7,6 +7,8 @@ const listsWrapper = document.querySelector('.lists-wrapper');
 const cardDialog = document.querySelector('#card-dialog');
 const noteDialogBtn = document.querySelector('#card-dialog__close');
 const cardDialogTitle = document.querySelector('.card-dialog__title');
+
+const confirmDialog = document.querySelector('#confirm-dialog');
 let currentCard = null;
 
 listsWrapper.addEventListener('click', (e) => {
@@ -36,6 +38,7 @@ noteDialogBtn.addEventListener('click', () => {
 document.addEventListener('click', (e) => {
     const isDelete = e.target.closest('.delete-card');
     if(!isDelete) return;
+    confirmDialog.showModal();
     
     const cardElement = e.target.closest('.note-card');
     const cardId = Number(cardElement.dataset.id);

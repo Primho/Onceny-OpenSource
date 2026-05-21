@@ -95,3 +95,25 @@
         font-variation-settings: 'FILL' 1; 
     }
 }
+
+.sidebar__settings-link svg {
+    width: 100px;
+    height: 100px;
+        /* Vinculamos la línea de tiempo a la vista del elemento */
+    view-timeline-name: --rotacion-scroll;
+    view-timeline-axis: block;
+        
+    /* Asociamos la animación y la línea de tiempo */
+    animation-name: girar;
+    animation-timeline: --rotacion-scroll;
+    animation-timing-function: ease; 
+}
+
+@keyframes girar {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
