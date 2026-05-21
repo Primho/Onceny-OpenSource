@@ -106,7 +106,7 @@
     /* Asociamos la animación y la línea de tiempo */
     animation-name: girar;
     animation-timeline: --rotacion-scroll;
-    animation-timing-function: ease; 
+    animation-timing-function: linear; 
 }
 
 @keyframes girar {

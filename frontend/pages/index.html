@@ -131,12 +131,17 @@
 	</dialog>
 
     <!-- Dialog settings -->
-    <dialog id="confirm-dialog" closedby="any">
-		<div>
-            <button>Cancel</button>
-            <button>Delete</button>
-        </div>
-	</dialog>
+    <dialog id="delete-confirmation-dialog" closedby="any" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
+        <form method="dialog" class="dialog-form">
+            <h2 id="delete-dialog-title" class="dialog-form__title">Delete Note</h2>
+            <p id="delete-dialog-desc" class="dialog-form__description">Are you sure you want to permanently delete this note? This action cannot be undone.</p>
+            
+            <div class="dialog-form__actions">
+                <button type="button" value="cancel" class="dialog-btn dialog-btn--cancel">Cancel</button>
+                <button type="button" value="confirm" class="dialog-btn dialog-btn--danger">Delete</button>
+            </div>
+        </form>
+    </dialog>
     <script type="module" src="../js/main.js"></script>
 </body>
 </html>
