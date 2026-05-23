@@ -7,15 +7,18 @@
     justify-content: space-between;
     padding: var(--space-md);
     border-radius: var(--radius-lg);
-    box-shadow: 0 3px 8px #0001;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     border: 1.5px solid var(--color-border-light);
     cursor: pointer;
     transition: scale .3s;
-    animation: fadeIn .3s;
 
     &:hover {
         scale: 1.01;
     }
+}
+
+.note-card--new {
+    animation: fadeIn .3s;
 }
 
 @keyframes fadeIn {

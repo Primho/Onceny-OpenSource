@@ -8,9 +8,9 @@ const titleColor = (selectedColor) => {
     else return 'inherit';
 }
 
-const makeCard = (card, container) => {
+const makeCard = (card, container, isNew = false) => {
     container.insertAdjacentHTML('afterbegin', `
-        <article class="note-card" data-id="${card.id}" style="background-color: ${card.color};">
+        <article class="note-card ${isNew ? 'note-card--new' : ''}" data-id="${card.id}" style="background-color: ${card.color};">
             <header class="note-card__header">
                 <div class="note-card__info">
                     <h2 class="note-card__title" style="color: ${titleColor(card.color)};">${card.title}</h2>

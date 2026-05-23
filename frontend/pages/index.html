@@ -77,23 +77,23 @@
     <!-- New Card Dialog -->
     <dialog id="myDialog" aria-labelledby="dialog-title" closedby="any">
         <span class="bar" style="background-color: #f2f2f2;"></span>
-        <form method="dialog" class="dialog-form">
+        <form class="dialog-form">
             <h2 id="dialog-title" class="dialog-form__title">Appearance</h2>
 
             <label for="userAnswer" class="dialog-form__label">Title Name</label>
-            <input type="text" id="userAnswer" class="dialog-form__input" placeholder="Untitled">
+            <input type="text" id="userAnswer" class="dialog-form__input" placeholder="Untitled" name="title">
 
             <fieldset class="dialog-form__fielset">
                 <legend class="dialog-form__legend">Customisation</legend>
 
                 <div class="dialog-form__option">
                     <label for="card-tags">Tags</label>
-                    <input type="text" id="card-tags" class="dialog-form__tags" placeholder="Personal">
+                    <input type="text" id="card-tags" class="dialog-form__tags" placeholder="Personal" name="tag">
                 </div>
 
                 <div class="dialog-form__option">
                     <label for="marker">Marker</label>
-                    <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌">
+                    <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌" name="marker">
                 </div>
 
                 <div class="dialog-form__option">
@@ -111,7 +111,7 @@
 
             <div class="dialog-form__actions">
                 <button type="button" class="dialog-btn dialog-btn--cancel" id="btn-cancel">Cancelar</button>
-                <button type="submit" class="dialog-btn dialog-btn--confirm" id="btn-acept" value="default">Agregar</button>
+                <button type="submit" class="dialog-btn dialog-btn--confirm" id="btn-acept">Agregar</button>
             </div>
         </form>
     </dialog>
@@ -132,7 +132,7 @@
 
     <!-- Dialog settings -->
     <dialog id="delete-confirmation-dialog" closedby="any" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
-        <form method="dialog" class="dialog-form">
+        <form class="dialog-form">
             <h2 id="delete-dialog-title" class="dialog-form__title">Delete Note</h2>
             <p id="delete-dialog-desc" class="dialog-form__description">Are you sure you want to permanently delete this note? This action cannot be undone.</p>
             

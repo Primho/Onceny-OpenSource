@@ -1,9 +1,11 @@
 from flask import Flask
-from routes.cards import notes_bp
+from flask_cors import CORS
+from routes.cards import cards_bp
 from models import init_db
 
 app = Flask(__name__)
-app.register_blueprint(notes_bp)
+CORS(app)
+app.register_blueprint(cards_bp)
 
 with app.app_context():
     init_db()

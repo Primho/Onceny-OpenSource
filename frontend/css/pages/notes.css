@@ -47,15 +47,26 @@
 ───────────────────────────────────── */
 .lists-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--space-md);
     align-items: start;
     justify-content: center;
     margin-top: var(--space-lg);
+    transition: gap 0.3s ease;
 }
 
-@media screen {
+@media screen and (min-width: 920px) {
     .lists-wrapper {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+@media screen and (min-width: 1200px) {
+    .lists-wrapper {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.lists-wrapper > * {
+    animation: aparecer 0.4s ease forwards;
 }
