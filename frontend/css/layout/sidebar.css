@@ -1,16 +1,22 @@
-#sidebar {
+/* =========================================================================
+   CONTENEDOR PRINCIPAL (.sidebar)
+   ========================================================================= */
+   .sidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: sticky;
     top: 0;
     align-self: start;
-    height: 100vh;
+    height: 100dvh; /* Mejor práctica: dvh evita problemas de altura en navegadores móviles */
     width: 280px;
     background-color: var(--sidebar);
     border-right: 1px solid var(--color-border);
 }
 
+/* =========================================================================
+   BLOQUE DE PERFIL
+   ========================================================================= */
 .sidebar__profile {
     display: flex;
     align-items: center;
@@ -43,26 +49,31 @@
     color: var(--color-text);
 }
 
-.sidebar__nav {
-    flex: 1;
-    padding: var(--space-lg);
-
-    & ul {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        list-style: none;
-    }
-}
-
+/* =========================================================================
+   ESTRUCTURAS DE LISTAS (Se unificó el reseteo para evitar repetir código)
+   ========================================================================= */
+.sidebar__nav,
 .sidebar__settings {
     padding: var(--space-lg);
-
-    & ul {
-        list-style: none;
-    }
 }
 
+.sidebar__nav {
+    flex: 1;
+}
+
+.sidebar__nav-list,
+.sidebar__settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================================================================
+   ENLACES Y ACCIONES (Navegación y Configuración agrupados)
+   ========================================================================= */
 .sidebar__nav-link,
 .sidebar__settings-link {
     display: flex;
@@ -75,10 +86,12 @@
     color: var(--color-text);
     text-decoration: none;
     border-radius: var(--radius-sm);
-    transition: background-color .2s;
+    transition: background-color .2s, color .2s;
 
     & svg {
         flex-shrink: 0;
+        width: 24px;  /* Forzamos tamaño estándar para que no se desfiguren */
+        height: 24px;
     }
 
     &:hover {
@@ -86,26 +99,12 @@
     }
 }
 
-.sidebar__nav-item.active .sidebar__nav-link {
+/* Estado Activo (Actualizado para usar la clase del HTML de SEO) */
+.sidebar__nav-item--active .sidebar__nav-link {
     background-color: var(--color-muted);
-    color: black;
+    color: var(--color-text);
 
     & svg {
-        --icon-color: black; /* This explicitly overrides the path color */
         font-variation-settings: 'FILL' 1; 
-    }
-}
-
-.sidebar__settings-link svg {
-    width: 100px;
-    height: 100px;
-}
-
-@keyframes girar {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
     }
 }

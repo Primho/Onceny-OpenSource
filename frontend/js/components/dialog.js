@@ -1,70 +1,61 @@
-import { makeCard } from "./card.js";
-import { createCard } from "../api.js";
-import { setColor, getColor, setDataCards, getDataCards } from '../state.js';
+import { updateCard } from "../api.js";
+import { setColor, getColor } from '../state.js';
 
-const listWrapper = document.querySelector('.lists-wrapper');
-const addCardBtn = document.querySelector('#addNote-btn');
-const newCardDialog = document.querySelector('#myDialog');
-const dialogForm = document.querySelector('.dialog-form');
-const dialogColorBar = document.querySelector('.bar');
-
+// --- Selectores del Dialog ---
+const cardDialog = document.querySelector('#card-dialog');
+const closeNoteDialogBtn = document.querySelector('#card-dialog__close');
+const noteDialogTitleInput = document.querySelector('#modal-card-title');
 const colorPicker = document.querySelector('.color-picker');
 
-const cancelCreateBtn = document.getElementById('btn-cancel');
+// --- Cambiar Color (Paleta Interactiva) ---
+if (colorPicker) {
+    colorPicker.addEventListener('click', (e) => {
+        const clickedBtn = e.target.closest('.color-opt');
+        if (!clickedBtn) return;
 
-colorPicker.addEventListener('click', (e) => {
-    const clickedBtn = e.target.closest('.color-opt');
-    if (!clickedBtn) return;
-
-    const colorOptions = document.querySelectorAll('.color-opt');
-    colorOptions.forEach(b => b.classList.remove('selected'));
-    clickedBtn.classList.add('selected');
-    setColor(clickedBtn.dataset.color);
-    dialogColorBar.style.backgroundColor = getColor();
-    newCardDialog.style.borderTop = `2px solid ${getColor()}`;
-})
-
-addCardBtn.addEventListener('click', () => {
-    newCardDialog.showModal();
-});
-
-cancelCreateBtn.addEventListener('click', () => {
-    newCardDialog.close();
-});
-
-dialogForm.addEventListener('submit', async (e) => {
-    // Evitamos que la página se recargue (comportamiento por defecto de HTML)
-    e.preventDefault(); 
-
-    const formData = new FormData(dialogForm);
-    const formValues = Object.fromEntries(formData);
-
-    const newCard = {
-        color: getColor(),
-        title: formValues.title || 'Untitled',
-        tag: formValues.tag,
-        marker: formValues.marker
-    };
-    
-    newCardDialog.close();
-    
-    const savedCard = await createCard(newCard);
-    
-    const cards = getDataCards();
-    cards.push(savedCard);
-    setDataCards(cards);
-    
-    makeCard(savedCard, listWrapper, true); 
-
-    resetStyles();
-});
-
-function resetStyles() {
-    const colorOptions = document.querySelectorAll('.color-opt');
-    dialogForm.reset();
-    colorOptions.forEach(btn => btn.classList.remove('selected'));
-    colorOptions[0].classList.add('selected');
-    dialogColorBar.style.backgroundColor = colorOptions[0].dataset.color;
-    newCardDialog.style.borderTop = `2px solid ${colorOptions[0].dataset.color}`;
-    setColor(colorOptions[0].dataset.color);
+        const colorOptions = document.querySelectorAll('.color-opt');
+        colorOptions.forEach(b => b.classList.remove('selected'));
+        clickedBtn.classList.add('selected');
+        
+        // Guardamos el color seleccionado en el estado
+        setColor(clickedBtn.dataset.color);
+        
+        // Si hay una tarjeta activa editándose, le cambiamos el fondo de una vez en vivo
+        if (window.currentCard && window.currentCardDOM) {
+            window.currentCard.color = clickedBtn.dataset.color;
+            window.currentCardDOM.style.backgroundColor = clickedBtn.dataset.color;
+            
+            // Forzar actualización del color del título según tu mapa de contrastes
+            const titleHeading = window.currentCardDOM.querySelector('.note-card__title');
+            const menuBtnSvg = window.currentCardDOM.querySelector('.card-menu-btn svg');
+            
+            // Obtenemos el estilo de texto desde el mapa del navegador o el CSS inyectado
+            if (titleHeading) titleHeading.style.color = `var(--card-${clickedBtn.ariaLabel.toLowerCase()}-text)`;
+            if (menuBtnSvg) menuBtnSvg.style.color = `var(--card-${clickedBtn.ariaLabel.toLowerCase()}-text)`;
+        }
+    });
 }
+
+// --- Cerrar Manual ---
+closeNoteDialogBtn.addEventListener('click', () => {
+    cardDialog.close();
+});
+
+// --- Auto Guardar al Cerrar (Mejor práctica de Persistencia) ---
+cardDialog.addEventListener('close', () => {
+    // Si no hay tarjeta seleccionada en el entorno global, salimos
+    if (!window.currentCard || !window.currentCardDOM) return;
+    
+    const cardTitleHeading = window.currentCardDOM.querySelector('.note-card__title');
+    const newTitle = noteDialogTitleInput.value.trim() || 'Untitled';
+    let currentTitle = window.currentCard.title;
+
+    // Actualizamos interfaz física y objeto en memoria
+    window.currentCard.title = newTitle;
+    if (cardTitleHeading) cardTitleHeading.textContent = newTitle;
+
+    // Solo golpeamos la API si el título realmente cambió para no saturar el servidor backend
+    if (newTitle !== currentTitle) {
+        updateCard(window.currentCard.id, newTitle);
+    }
+});

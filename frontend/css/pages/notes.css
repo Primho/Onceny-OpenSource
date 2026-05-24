@@ -1,8 +1,7 @@
 /* ─────────────────────────────────────
-   LAYOUT
+   LAYOUT GENERAL (.main-content)
 ───────────────────────────────────── */
-
-.main-grid {
+.main-content {
     width: 100%;
     max-width: 72rem;
     margin-inline: auto;
@@ -10,32 +9,39 @@
     padding-top: 0;
 }
 
-.main__grid-header {
+.main-content__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: var(--space-lg);
     position: sticky; 
     top: 0;
-
     background-color: var(--color-bg);
     z-index: 999;
 }
 
+.main-content__title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    margin: 0;
+}
+
 /* ─────────────────────────────────────
-   FAB
+   PRINCIPAL BTN 
 ───────────────────────────────────── */
-.addNote-btn {
+.main-content__btn-add {
     display: flex;
     align-items: center;
+    gap: var(--space-sm);
     padding: var(--space-sm) var(--space-md);
     font-size: var(--font-base);
     cursor: pointer;
     border: none;
     border-radius: var(--radius-sm);
-
     background-color: var(--color-text);
     color: var(--color-bg);
+    transition: background-color 0.2s ease;
 
     & svg {
         fill: var(--color-bg);
@@ -43,9 +49,9 @@
 }
 
 /* ─────────────────────────────────────
-   Wrapper
+   CONTENEDOR DE TARJETAS (.cards-display)
 ───────────────────────────────────── */
-.lists-wrapper {
+.cards-display {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
@@ -55,18 +61,32 @@
     transition: gap 0.3s ease;
 }
 
+/* Responsivo para 2 columnas */
 @media screen and (min-width: 920px) {
-    .lists-wrapper {
+    .cards-display {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsivo para 3 columnas */
 @media screen and (min-width: 1200px) {
-    .lists-wrapper {
+    .cards-display {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-.lists-wrapper > * {
+/* Animación nativa para las tarjetas que entran con JS */
+.cards-display > * {
     animation: aparecer 0.4s ease forwards;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -1,126 +1,171 @@
-/* ─────────────────────────────────────
-   TODO CARD
-───────────────────────────────────── */
-.note-card {
+/* =========================================================================
+   CONTENEDOR DE LA TARJETA (.note-card)
+   ========================================================================= */
+   .note-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: var(--space-md);
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     border: 1.5px solid var(--color-border-light);
     cursor: pointer;
-    transition: scale .3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* El background-color viene dinámicamente desde el JS en línea */
 
     &:hover {
-        scale: 1.01;
+        transform: scale(1.01);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     }
 }
 
+/* Animaciones de entrada/salida (Nativas y fluidas) */
 .note-card--new {
-    animation: fadeIn .3s;
+    animation: fadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes fadeIn {
     from {
-        transform: scale(0.5);
+        opacity: 0;
+        transform: scale(0.95);
     }
     to {
+        opacity: 1;
         transform: scale(1);
     }
 }
 
-@keyframes fadeOut {
-    to {
-        transform: scale(0);
-    }
-}
-
+/* =========================================================================
+   CABECERA E INFORMACIÓN (.note-card__header)
+   ========================================================================= */
 .note-card__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.note-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0; /* Evita que títulos largos rompan el Flexbox */
 }
 
 .note-card__title {
+    font-size: var(--font-base);
+    font-weight: var(--font-weight-medium);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-    width: 100%;
+    /* El color se inyecta desde JS usando tus variables --card-*-text */
+}
+
+.note-card__tag {
+    font-size: var(--font-sm);
+    font-weight: var(--font-weight-medium);
+    /* Hereda sutilmente el color del texto de la tarjeta bajando la opacidad */
+    color: currentColor;
+    opacity: 0.8; 
+}
+
+/* Contenedor del menú de acción */
+.note-card__menu-container {
+    display: inline-flex;
 }
 
 .card-menu-btn {
     cursor: pointer;
     display: flex;
-    background-color: inherit;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
     border: none;
     border-radius: var(--radius-sm);
-    transition: background-color .2s;
+    padding: var(--space-xs);
+    transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: var(--color-bg);
+        /* Usamos un color negro muy suave con opacidad. 
+           Así se ve bien sobre CUALQUIER color de tarjeta (gris, rojo, azul...) */
+        background-color: rgba(0, 0, 0, 0.06);
     }
 }
 
+/* =========================================================================
+   POPOVER NATIVO DEL MENÚ (.card-menu)
+   ========================================================================= */
 .card-menu[popover] {
-  position-area: bottom right; 
-  position-try-fallbacks: flip-block, flip-inline; 
-  
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: var(--color-surface);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position-area: bottom right; 
+    position-try-fallbacks: flip-block, flip-inline; 
+    
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: var(--space-xs) 0;
+    margin: 4px 0 0 0;
 
-  /* close default */
-  opacity: 0;
-  transform: translateY(-5px);
-
-  transition: 
-    opacity .3s ease, 
-    transform .3s ease, 
-    display .3s ease allow-discrete,
-    overlay .3s ease allow-discrete; /* <--- Esto retiene el anclaje al cerrar */
-}
-
-/* open */
-.card-menu[popover]:popover-open {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* before open */
-@starting-style {
-  .card-menu[popover]:popover-open {
+    /* Estado cerrado por defecto */
     opacity: 0;
     transform: translateY(-5px);
-  }
+    transition: 
+        opacity 0.2s ease, 
+        transform 0.2s ease, 
+        display 0.2s ease allow-discrete,
+        overlay 0.2s ease allow-discrete;
 }
 
-  
-.card-menu button {
+.card-menu[popover]:popover-open {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@starting-style {
+    .card-menu[popover]:popover-open {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+}
+
+.card-menu__btn {
     display: block;
     width: 100%;
-    padding: 8px 16px;
+    padding: var(--space-sm) var(--space-md);
     border: none;
     background: none;
+    font-size: var(--font-sm);
     text-align: left;
     cursor: pointer;
+    color: var(--color-text);
+    transition: background-color 0.15s ease;
+
+    &:hover { 
+        background-color: var(--color-muted); 
+    }
+
+    &--danger {
+        color: var(--card-red-text) !important; /* Reutiliza tu variable OKLCH de texto rojo */
+        border-top: 1px solid var(--color-border-light);
+    }
 }
 
-.card-menu button:last-child {
-    color: var(--color-accent);
-    border-top: 1px solid var(--color-muted);
-}
-
-.card-menu button:hover { background: var(--color-muted); }
-
+/* =========================================================================
+   VISTA PREVIA DEL CONTENIDO (.note-card__preview)
+   ========================================================================= */
 .note-card__preview {
     width: 100%;
-    min-height: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    background-color: #fff;
+    flex-grow: 1;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    /* En vez de un #fff puro que rompería con las tarjetas de colores,
+       usamos una capa blanca semitransparente. Esto hace que el fondo de la 
+       vista previa sea una versión más clara y limpia del color de la tarjeta */
+    background-color: rgba(255, 255, 255, 0.45);
+    font-size: var(--font-sm);
+    line-height: 1.5;
+    color: var(--color-text);
 }

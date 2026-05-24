@@ -1,38 +1,46 @@
-const titleColor = (selectedColor) => {
-    if (selectedColor === '#f1f1f1') return '#787878';
-    else if (selectedColor === '#fdefee') return '#ec6a5a';
-    else if (selectedColor === '#e6f2ff') return '#038cff';
-    else if (selectedColor === '#e1fae7') return '#36c25c';
-    else if (selectedColor === '#fcf5db') return '#e6961f';
-    else if (selectedColor === '#efeaff') return '#6d3cfa';
-    else return 'inherit';
-}
+const COLOR_MAP = {
+    '#f1f1f1': 'var(--card-gray-text)',
+    '#fdefee': 'var(--card-red-text)',
+    '#e6f2ff': 'var(--card-blue-text)',
+    '#e1fae7': 'var(--card-green-text)',
+    '#fcf5db': 'var(--card-yellow-text)',
+    '#efeaff': 'var(--card-purple-text)'
+};
 
+const titleColor = (selectedColor) => COLOR_MAP[selectedColor] || 'inherit';
+
+/**
+ * Genera de forma dinámica una tarjeta de nota con semántica y accesibilidad avanzada.
+ */
 const makeCard = (card, container, isNew = false) => {
+    const displayTitle = card.title?.trim() || 'Untitled';
+    const currentContrastColor = titleColor(card.color);
+
     container.insertAdjacentHTML('afterbegin', `
         <article class="note-card ${isNew ? 'note-card--new' : ''}" data-id="${card.id}" style="background-color: ${card.color};">
             <header class="note-card__header">
                 <div class="note-card__info">
-                    <h2 class="note-card__title" style="color: ${titleColor(card.color)};">${card.title}</h2>
-                    <span class="note-card__tag">${card.tag}</span>
+                    <h3 class="note-card__title" style="color: ${currentContrastColor};">${displayTitle}</h3>
+                    <span class="note-card__tag" aria-label="Categoría: ${card.tag}">${card.tag}</span>
                 </div>
-                <div>
-                    <button popovertarget="menu-${card.id}" style="anchor-name: --ancla-${card.id};" class="card-menu-btn">
-                        <svg style="width: 24px; height: 24px; color: ${titleColor(card.color)};">
+                
+                <div class="note-card__menu-container">
+                    <button popovertarget="menu-${card.id}" style="anchor-name: --ancla-${card.id};" class="card-menu-btn" aria-label="Opciones de la nota: ${displayTitle}">
+                        <svg style="width: 24px; height: 24px; color: ${currentContrastColor};" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
                         </svg>
                     </button>
                     
-                    <div id="menu-${card.id}" popover style="position-anchor: --ancla-${card.id};" class="card-menu">
-                        <button>Edit</button>
-                        <button class="delete-card">Delete</button>
+                    <div id="menu-${card.id}" popover style="position-anchor: --ancla-${card.id};" class="card-menu" role="menu">
+                        <button role="menuitem" class="card-menu__btn">Edit</button>
+                        <button role="menuitem" class="card-menu__btn card-menu__btn--danger delete-card">Delete</button>
                     </div>
                 </div>
             </header>
-            <section class="note-card__preview">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis deleniti ea explicabo consectetur modi necessitatibus quibusdam exercitationem autem praesentium illum, voluptatibus animi debitis dolorem repudiandae. Minima illo eveniet exercitationem aperiam?</p>
-                <!-- o contenido como notas -->
-            </section>
+            
+            <div class="note-card__preview">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis deleniti ea explicabo.</p>
+            </div>
         </article>
     `);
 };

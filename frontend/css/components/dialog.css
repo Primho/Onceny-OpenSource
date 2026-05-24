@@ -1,53 +1,24 @@
-/* ─────────────────────────────────────
-   DIALOG — CREAR LISTA
-───────────────────────────────────── */
-#myDialog {
-    display: none;
-    
-    position: relative;
-    margin: auto;
-    width: 100%;
-    max-width: 600px;
-    min-height: 300px;
-    border-radius: var(--radius-lg);
-    border: 2px solid var(--color-border);
-    padding: var(--space-md);
+/* =========================================================================
+   ESTILOS COMPARTIDOS Y CONTROL DEL BODY
+   ========================================================================= */
+body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     overflow: hidden;
-    
-    opacity: 0;
-    transform: scale(0.5);
-    
-    transition: 
-        transform .3s ease, 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
-
-    &[open] {
-        display: block; /* Todo: flex/grid */
-        opacity: 1;
-        transform: scale(1);
-
-        @starting-style {
-            opacity: 0;
-            transform: scale(0.5);
-        }
-    }
 }
 
-/* --- BACKDROP CLOSING ANIMATION --- */
-#myDialog::backdrop {
+/* Backdrops unificados para los diálogos activos en tu HTML */
+#card-dialog::backdrop,
+#delete-confirmation-dialog::backdrop {
     background-color: rgba(0, 0, 0, .2);
     backdrop-filter: blur(4px);
     opacity: 0;
-    
     transition: 
         opacity .3s ease, 
         display .3s ease allow-discrete, 
         overlay .3s ease allow-discrete;
 }
 
-#myDialog[open]::backdrop {
+#card-dialog[open]::backdrop,
+#delete-confirmation-dialog[open]::backdrop {
     opacity: 1;
 
     @starting-style {
@@ -55,38 +26,10 @@
     }
 }
 
-.bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 7px;
-}
-
+/* Elementos comunes de los formularios internos */
 .dialog-form__title {
     text-align: center;
     margin-bottom: var(--space-lg);
-}
-
-.dialog-form__input {
-    margin-bottom: 20px;
-}
-
-.dialog-form__input, .dialog-form__option input {
-    width: 100%;
-    min-height: 40px;
-    padding: 0 var(--space-sm);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-base);
-    border: 1px solid var(--color-border-light);
-    margin-top: 10px;
-
-    transition: background-color .3s;
-
-    &:focus {
-        outline: none;
-        background-color: var(--color-muted);
-    }
 }
 
 .dialog-form__fielset {
@@ -97,12 +40,24 @@
     border: none;
 }
 
-.dialog-form__legend {
-    font-size: var(--font-lg);
-    font-weight: 600;
-    text-align: center;
+.dialog-form__input, 
+.dialog-form__option input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-base);
+    border: 1px solid var(--color-border-light);
+    margin-top: 10px;
+    transition: background-color .3s;
+
+    &:focus {
+        outline: none;
+        background-color: var(--color-muted);
+    }
 }
 
+/* Sistema de selección de color */
 .color-picker {
     display: flex;
     gap: var(--space-sm);
@@ -127,6 +82,7 @@
     }
 }
 
+/* Botonería general de acciones */
 .dialog-form__actions {
     margin-top: var(--space-lg);
     display: flex;
@@ -140,7 +96,6 @@
     min-height: 40px;
     border: none;
     border-radius: var(--radius-md);
-
     font-size: var(--font-sm);
     background-color: var(--color-surface);
     transition: color .3s, background-color .3s;
@@ -155,24 +110,30 @@
     background-color: var(--color-accent);
 }
 
-/* ─────────────────────────────────────
-   DIALOG — CARD
-───────────────────────────────────── */
+.dialog-btn--danger {
+    color: var(--color-muted);
+    background-color: var(--color-accent);
+
+    &:hover {
+        background-color: rgb(235, 64, 64);
+    }
+}
+
+
+/* =========================================================================
+   DIALOG 1: WORKSPACE DE LA TARJETA (#card-dialog)
+   ========================================================================= */
 #card-dialog {
     display: none;
-    
-    flex-direction: column;
     margin: auto;
     min-height: min(800px, 90dvh);
     max-height: 90dvh;
-    width: min(950px, 95dvw);
+    width: min(1000px, 100dvw);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
     overflow-y: hidden;
-
     opacity: 0;
     transform: scale(0.5);
-
     transition: 
         transform .3s ease, 
         opacity .3s ease, 
@@ -180,7 +141,7 @@
         overlay .3s ease allow-discrete;
 
     &[open] {
-        display: flex;
+        display: flex; /* Alinea de forma horizontal la barra lateral y el cuerpo principal */
         opacity: 1;
         transform: scale(1);
 
@@ -191,23 +152,40 @@
     }
 }
 
-#card-dialog::backdrop {
-    background-color: rgba(0, 0, 0, .2);
-    backdrop-filter: blur(4px);
-    opacity: 0;
-    
-    transition: 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
+/* Barra lateral interna de pestañas */
+.card-dialog__sidebar {
+    width: 100%;
+    max-width: 80px;
+    background-color: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--space-md);
+    gap: var(--space-sm);
+
+    & .sidebar-tab {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: var(--radius-sm);
+        transition: background-color 0.2s;
+
+        &:hover, &.active {
+            background-color: var(--color-muted);
+        }
+    }
 }
 
-#card-dialog[open]::backdrop {
-    opacity: 1;
-
-    @starting-style {
-        opacity: 0;
-    }
+/* Cuerpo de contenidos del diálogo */
+.card-dialog__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-dialog__header {
@@ -273,7 +251,6 @@
     padding: var(--space-sm) var(--space-lg);
     border: none;
     border-radius: var(--radius-sm);
-
     background-color: inherit;
     font-size: var(--font-base);
     transition: background-color .3s;
@@ -284,11 +261,33 @@
     }
 }
 
-/* Confirmation delete */
+/* Control de vistas por pestañas internas */
+.tab-view {
+    display: none;
+}
 
+.tab-view.active {
+    display: block;
+    animation: tabFadeIn 0.25s ease-out;
+}
+
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================================
+   DIALOG 2: CONFIRMACIÓN DE BORRADO (#delete-confirmation-dialog)
+   ========================================================================= */
 #delete-confirmation-dialog {
     display: none;
-    
     flex-direction: column;
     justify-content: center;
     text-align: center;
@@ -299,10 +298,8 @@
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
     overflow: hidden;
-
     opacity: 0;
     transform: scale(0.5);
-
     transition: 
         transform .3s ease, 
         opacity .3s ease, 
@@ -321,34 +318,9 @@
     }
 }
 
-#delete-confirmation-dialog::backdrop {
-    background-color: rgba(0, 0, 0, .2);
-    backdrop-filter: blur(4px);
-    opacity: 0;
-    
-    transition: 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
-}
-
-#delete-confirmation-dialog[open]::backdrop {
-    opacity: 1;
-
-    @starting-style {
-        opacity: 0;
-    }
-}
-
-.dialog-btn--danger {
-    color: var(--color-muted);
-    background-color: var(--color-accent);
-
-    &:hover {
-        background-color: rgb(235, 64, 64);
-    }
-}
-
-body:has(#card-dialog[open], #myDialog[open], #delete-confirmation-dialog[open]) {
-    overflow: hidden;
+.dialog-form__description {
+    font-size: var(--font-sm);
+    color: var(--card-gray-text);
+    margin-bottom: var(--space-md);
+    padding: 0 var(--space-lg);
 }
