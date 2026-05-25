@@ -69,9 +69,9 @@ cardsContainer.addEventListener('click', (e) => {
         cardToDeleteId = Number(card.dataset.id);
         deleteConfirmationDialog.showModal();
         
-        const audio = new Audio('../assets/sounds/access-denied-alert-sound.mp3');
+        const audio = new Audio('../assets/sounds/access-denied-alert-sound.m4a');
         audio.volume = 0.5;
-        audio.play().catch(error => console.log("Audio play bloqueado o sin archivo:", error));
+        audio.play().catch(error => console.log("Audio play m4a no soportado o sin archivo:", error));
         return;
     }
 

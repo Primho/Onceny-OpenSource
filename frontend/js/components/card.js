@@ -13,7 +13,7 @@ const titleColor = (selectedColor) => COLOR_MAP[selectedColor] || 'inherit';
  * Genera de forma dinámica una tarjeta de nota con semántica y accesibilidad avanzada.
  */
 const makeCard = (card, container, isNew = false) => {
-    const displayTitle = card.title?.trim() || 'Untitled';
+    const displayTitle = card.title || 'Untitled';
     const currentContrastColor = titleColor(card.color);
 
     container.insertAdjacentHTML('afterbegin', `
@@ -33,7 +33,7 @@ const makeCard = (card, container, isNew = false) => {
                     
                     <div id="menu-${card.id}" popover style="position-anchor: --ancla-${card.id};" class="card-menu" role="menu">
                         <button role="menuitem" class="card-menu__btn">Edit</button>
-                        <button role="menuitem" class="card-menu__btn card-menu__btn--danger delete-card">Delete</button>
+                        <button role="menuitem" class="card-menu__btn delete-card">Delete</button>
                     </div>
                 </div>
             </header>

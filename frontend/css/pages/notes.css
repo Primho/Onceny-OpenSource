@@ -1,6 +1,4 @@
-/* ─────────────────────────────────────
-   LAYOUT GENERAL (.main-content)
-───────────────────────────────────── */
+/* Main content */
 .main-content {
     width: 100%;
     max-width: 72rem;
@@ -27,9 +25,7 @@
     margin: 0;
 }
 
-/* ─────────────────────────────────────
-   PRINCIPAL BTN 
-───────────────────────────────────── */
+/* Main Button */
 .main-content__btn-add {
     display: flex;
     align-items: center;
@@ -48,23 +44,22 @@
     }
 }
 
-/* ─────────────────────────────────────
-   CONTENEDOR DE TARJETAS (.cards-display)
-───────────────────────────────────── */
+/* Cards Container */
 .cards-display {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0px, 200px);
     gap: var(--space-md);
     align-items: start;
     justify-content: center;
     margin-top: var(--space-lg);
-    transition: gap 0.3s ease;
 }
 
 /* Responsivo para 2 columnas */
 @media screen and (min-width: 920px) {
     .cards-display {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0px, 200px));
     }
 }
 
@@ -72,6 +67,7 @@
 @media screen and (min-width: 1200px) {
     .cards-display {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: repeat(3, minmax(0px, 200px));
     }
 }
 

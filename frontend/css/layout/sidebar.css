@@ -1,22 +1,18 @@
-/* =========================================================================
-   CONTENEDOR PRINCIPAL (.sidebar)
-   ========================================================================= */
-   .sidebar {
+/* SIDEBAR */
+.sidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: sticky;
     top: 0;
     align-self: start;
-    height: 100dvh; /* Mejor práctica: dvh evita problemas de altura en navegadores móviles */
-    width: 280px;
+    height: 100dvh;
+    width: 250px;
     background-color: var(--sidebar);
     border-right: 1px solid var(--color-border);
 }
 
-/* =========================================================================
-   BLOQUE DE PERFIL
-   ========================================================================= */
+/* Profile */
 .sidebar__profile {
     display: flex;
     align-items: center;

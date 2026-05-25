@@ -1,8 +1,7 @@
-/* =========================================================================
-   CONTENEDOR DE LA TARJETA (.note-card)
-   ========================================================================= */
-   .note-card {
+/* CARD */
+.note-card {
     display: flex;
+    height: 100%;
     flex-direction: column;
     justify-content: space-between;
     padding: var(--space-md);
@@ -10,14 +9,12 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     border: 1.5px solid var(--color-border-light);
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
 
-    /* El background-color viene dinámicamente desde el JS en línea */
-
-    &:hover {
-        transform: scale(1.01);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    }
+.note-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* Animaciones de entrada/salida (Nativas y fluidas) */
@@ -36,9 +33,7 @@
     }
 }
 
-/* =========================================================================
-   CABECERA E INFORMACIÓN (.note-card__header)
-   ========================================================================= */
+/* Note Card Header */
 .note-card__header {
     display: flex;
     justify-content: space-between;
@@ -51,7 +46,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-width: 0; /* Evita que títulos largos rompan el Flexbox */
+    min-width: 0;
 }
 
 .note-card__title {
@@ -61,13 +56,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-    /* El color se inyecta desde JS usando tus variables --card-*-text */
 }
 
 .note-card__tag {
     font-size: var(--font-sm);
     font-weight: var(--font-weight-medium);
-    /* Hereda sutilmente el color del texto de la tarjeta bajando la opacidad */
+    
     color: currentColor;
     opacity: 0.8; 
 }
@@ -89,15 +83,11 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-        /* Usamos un color negro muy suave con opacidad. 
-           Así se ve bien sobre CUALQUIER color de tarjeta (gris, rojo, azul...) */
         background-color: rgba(0, 0, 0, 0.06);
     }
 }
 
-/* =========================================================================
-   POPOVER NATIVO DEL MENÚ (.card-menu)
-   ========================================================================= */
+/* Popover menu */
 .card-menu[popover] {
     position-area: bottom right; 
     position-try-fallbacks: flip-block, flip-inline; 
@@ -146,24 +136,20 @@
     &:hover { 
         background-color: var(--color-muted); 
     }
-
-    &--danger {
-        color: var(--card-red-text) !important; /* Reutiliza tu variable OKLCH de texto rojo */
-        border-top: 1px solid var(--color-border-light);
-    }
 }
 
-/* =========================================================================
-   VISTA PREVIA DEL CONTENIDO (.note-card__preview)
-   ========================================================================= */
+.delete-card {
+    color: var(--card-red-text) !important;
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* Card Preview */
 .note-card__preview {
     width: 100%;
     flex-grow: 1;
     padding: var(--space-sm);
     border-radius: var(--radius-sm);
-    /* En vez de un #fff puro que rompería con las tarjetas de colores,
-       usamos una capa blanca semitransparente. Esto hace que el fondo de la 
-       vista previa sea una versión más clara y limpia del color de la tarjeta */
+
     background-color: rgba(255, 255, 255, 0.45);
     font-size: var(--font-sm);
     line-height: 1.5;
