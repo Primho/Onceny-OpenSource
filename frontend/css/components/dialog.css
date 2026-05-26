@@ -252,12 +252,70 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: none;
     border-radius: var(--radius-sm);
     background-color: inherit;
+    color: #717182;
+    font-weight: var(--font-weight-medium);
     font-size: var(--font-base);
     transition: background-color .3s;
     gap: var(--space-sm);
 
+    & svg {
+        fill: #717182;
+    }
+
     &:hover {
         background-color: var(--color-muted);
+    }
+}
+
+/* Popover menu */
+.add-content-menu[popover] {
+    position-area: bottom span-right;
+    position-try-fallbacks: flip-block, flip-inline; 
+    
+    width: 100px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: var(--space-xs) 0;
+    margin: 4px 0 0 0;
+
+    /* Estado cerrado por defecto */
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: 
+        opacity 0.2s ease, 
+        transform 0.2s ease, 
+        display 0.2s ease allow-discrete,
+        overlay 0.2s ease allow-discrete;
+}
+
+.add-content-menu[popover]:popover-open {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@starting-style {
+    .add-content-menu[popover]:popover-open {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+}
+
+.card-menu__btn {
+    display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: none;
+    font-size: var(--font-sm);
+    text-align: left;
+    cursor: pointer;
+    color: var(--color-text);
+    transition: background-color 0.15s ease;
+
+    &:hover { 
+        background-color: var(--color-muted); 
     }
 }
 

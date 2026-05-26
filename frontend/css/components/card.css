@@ -87,6 +87,13 @@
     }
 }
 
+/* Estilo para las tarjetas efímeras */
+.note-card--temporal {
+    background-color: transparent !important;
+    border-style: dashed !important;
+    border-width: 2px;
+}
+
 /* Popover menu */
 .card-menu[popover] {
     position-area: bottom right; 

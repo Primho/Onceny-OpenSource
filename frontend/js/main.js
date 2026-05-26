@@ -1,16 +1,18 @@
-import { getDataCards, setDataCards } from './state.js';
+import { getDataCards, setDataCards, setActiveCard } from './state.js';
 import { makeCard } from './components/card.js';
 import { deleteCard, getCards, createCard } from './api.js';
 import './components/dialog.js'; // Importamos para que ejecute la lógica interna del modal
 
 // --- Variables de Control Global ---
 let cardToDeleteId = null;
+let spaceTypeToCreate = 'normal';
 
 // --- Selectores del DOM (Actualizados al HTML 2026) ---
 const cardsContainer = document.querySelector('.cards-display');
-const addCardBtn = document.querySelector('#addCard-btn');
+const addSpaceBtn = document.querySelector('#create-space-btn');
 const cardDialog = document.querySelector('#card-dialog');
 const noteDialogTitleInput = document.querySelector('#modal-card-title');
+const typeOfBtn = document.querySelectorAll('.main-content__menu-btn');
 
 const deleteConfirmationDialog = document.querySelector('#delete-confirmation-dialog');
 const confirmDeleteBtn = document.querySelector('#delete-confirmation-dialog .dialog-btn--danger');
@@ -27,15 +29,32 @@ const loadCards = async () => {
 };
 loadCards();
 
+typeOfBtn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const menuCreate = document.getElementById('menu-create');
+        spaceTypeToCreate = btn.dataset.space;
+        console.log(spaceTypeToCreate);
+
+        menuCreate.hidePopover();
+        makeSpace(spaceTypeToCreate);
+    })
+});
+
 // --- Crear Nota Nueva Directamente ---
-addCardBtn.addEventListener('click', async () => {
+const makeSpace = async (typeOfSpace) => {
     // Estructura por defecto usando tu lógica
     const newCard = {
         color: '#f1f1f1', // Gris por defecto
         title: '',
         tag: '',
-        marker: '📌'
+        marker: '📌',
+        type: typeOfSpace
     };
+
+    if(typeOfSpace === 'temporal') {
+        newCard.marker = '⏳';
+        newCard.createdAt = Date.now();
+    }
 
     // 1. Guardar en Base de Datos
     const savedCard = await createCard(newCard);
@@ -47,14 +66,11 @@ addCardBtn.addEventListener('click', async () => {
 
     // 3. Pintarla en el contenedor con la animación de nueva (.note-card--new)
     makeCard(savedCard, cardsContainer, true);
-
-    // 4. Llevar al usuario directo a editarla en el Dialog
-    window.currentCard = savedCard; // Compartimos la tarjeta actual globalmente para dialog.js
-    window.currentCardDOM = document.querySelector(`[data-id="${savedCard.id}"]`);
+    setActiveCard(savedCard);
     
     noteDialogTitleInput.value = '';
     cardDialog.showModal();
-});
+}
 
 // --- Delegación de Eventos (Click en Tarjeta o Borrar) ---
 cardsContainer.addEventListener('click', (e) => {
@@ -76,11 +92,12 @@ cardsContainer.addEventListener('click', (e) => {
     }
 
     // Caso: Abrir para Editar existente
-    window.currentCardDOM = card;
     const cardId = Number(card.dataset.id);
-    window.currentCard = getDataCards().find(c => c.id === cardId);
+    const currentCard = getDataCards().find(c => c.id === cardId);
+
+    setActiveCard(currentCard);
     
-    noteDialogTitleInput.value = window.currentCard.title;
+    noteDialogTitleInput.value = currentCard.title;
     cardDialog.showModal();
 });
 
@@ -94,7 +111,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     setDataCards(cards);
 
     await deleteCard(cardId);
-    cardToDelete.remove();
+    if (cardToDelete) cardToDelete.remove();
     deleteConfirmationDialog.close();
 });
 

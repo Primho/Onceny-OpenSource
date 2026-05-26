@@ -6,7 +6,6 @@ const COLOR_MAP = {
     '#fcf5db': 'var(--card-yellow-text)',
     '#efeaff': 'var(--card-purple-text)'
 };
-
 const titleColor = (selectedColor) => COLOR_MAP[selectedColor] || 'inherit';
 
 /**
@@ -15,9 +14,10 @@ const titleColor = (selectedColor) => COLOR_MAP[selectedColor] || 'inherit';
 const makeCard = (card, container, isNew = false) => {
     const displayTitle = card.title || 'Untitled';
     const currentContrastColor = titleColor(card.color);
+    const isTemporal = card.type === 'temporal' ? 'note-card--temporal': '';
 
     container.insertAdjacentHTML('afterbegin', `
-        <article class="note-card ${isNew ? 'note-card--new' : ''}" data-id="${card.id}" style="background-color: ${card.color};">
+        <article class="note-card ${isNew ? 'note-card--new' : ''} ${isTemporal}" data-id="${card.id}" style="background-color: ${card.color};">
             <header class="note-card__header">
                 <div class="note-card__info">
                     <h3 class="note-card__title" style="color: ${currentContrastColor};">${displayTitle}</h3>

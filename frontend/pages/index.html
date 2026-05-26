@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Prizma - Tu Espacio Personal de Notas y Tareas</title>
-    <meta name="description" content="Organiza tu día a día con Prizma. Crea listas de tareas, gestiona tus notas personales y personaliza tu espacio de trabajo de forma rápida y sencilla.">
+    <title>Prisma - Your Space</title>
+    <meta name="description" content="Organiza tu día a día con Prisma. Crea listas de tareas, gestiona tus notas personales y personaliza tu espacio de trabajo de forma rápida y sencilla.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tudominio.com/home">
+    <link rel="canonical" href="https://prisma.nertv.com/">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Prizma - Tu Espacio Personal de Notas">
-    <meta property="og:description" content="Organiza tu día a día con Prizma. Gestiona tus notas personales de forma rápida y visual.">
+    <meta property="og:title" content="Prisma - Tu Espacio Personal de Notas">
+    <meta property="og:description" content="Organiza tu día a día con Prisma. Gestiona tus notas personales de forma rápida y visual.">
     <meta property="og:image" content="../assets/og-image.png">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Prizma - Tu Espacio Personal de Notas">
+    <meta name="twitter:title" content="Prisma - Tu Espacio Personal de Notas">
     <meta name="twitter:description" content="Organiza tu día a día con Prizma. Gestiona tus notas personales de forma rápida y visual.">
 
     <link rel="stylesheet" href="../css/main.css">
@@ -86,14 +86,20 @@
 
     <main class="main-content">
         <header class="main-content__header">
-            <h1 class="main-content__title">Notes</h1>
+            <h1 class="main-content__title">Workspace</h1>
+            
             <div class="main-content__actions">
-                <button class="main-content__btn-add" id="addCard-btn" aria-label="Create new note">
+                <button popovertarget="menu-create" class="main-content__btn main-content__btn--create" id="new-space-btn" aria-label="Create new Prisma-Space">
                     <svg style="width: 24px; height: 24px;" aria-hidden="true">
                         <use href="../assets/icons/sprite.svg#icon-add"></use>
                     </svg>
-                    New Note
+                    New Space
                 </button>
+                
+                <div id="menu-create" popover class="main-content__menu" role="menu">
+                    <button id="create-space-btn" class="main-content__menu-btn" data-space="normal">Space</button>
+                    <button id="create-temporal-space-btn" class="main-content__menu-btn" data-space="temporal">Temp Space</button>
+                </div>
             </div>
         </header>
     
@@ -102,6 +108,7 @@
     </main>
 
     <dialog id="card-dialog" closedby="any" aria-labelledby="modal-card-title">
+
         <aside class="card-dialog__sidebar" aria-label="Opciones de la tarjeta">
             <button type="button" class="sidebar-tab active" data-tab="content" aria-label="Edit content">
                 <svg style="width: 24px; height: 24px;" aria-hidden="true">
@@ -127,12 +134,17 @@
     
             <section id="tab-content" class="tab-view active" aria-label="Contenido de la nota">
                 <div class="card-dialog__content">
-                    <button class="add-content">
+                    <button popovertarget="menu-add-content" class="add-content" aria-label="Opciones de la nota">
                         <svg style="width: 24px; height: 24px;" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-add"></use>
                         </svg>
                         Add content
                     </button>
+                    
+                    <div id="menu-add-content" popover class="add-content-menu" role="menu">
+                        <button role="menuitem" class="card-menu__btn">☑️ Task</button>
+                        <button role="menuitem" class="card-menu__btn">📝 Note</button>
+                    </div>
                 </div>
             </section>
     
