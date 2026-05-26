@@ -58,6 +58,7 @@ const makeSpace = async (typeOfSpace) => {
 
     // 1. Guardar en Base de Datos
     const savedCard = await createCard(newCard);
+    console.log(savedCard);
 
     // 2. Actualizar tu estado en state.js
     const cards = getDataCards();

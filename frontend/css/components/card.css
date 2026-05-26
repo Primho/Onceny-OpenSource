@@ -90,8 +90,7 @@
 /* Estilo para las tarjetas efímeras */
 .note-card--temporal {
     background-color: transparent !important;
-    border-style: dashed !important;
-    border-width: 2px;
+    border: 2px dashed var(--color-border-light) !important;
 }
 
 /* Popover menu */
