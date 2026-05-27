@@ -58,6 +58,8 @@ const makeSpace = async (typeOfSpace) => {
 
     // 1. Guardar en Base de Datos
     const savedCard = await createCard(newCard);
+    if (typeOfSpace === 'temporal') manageTemporalTime(savedCard);
+
     console.log(savedCard);
 
     // 2. Actualizar tu estado en state.js
@@ -130,3 +132,21 @@ window.addEventListener('scroll', () => {
     const settingsIcon = document.querySelector('.sidebar__settings-link svg');
     if (settingsIcon) settingsIcon.style.transform = `rotate(${rotation}deg)`;
 });
+
+const manageTemporalTime = (card) => {
+    const MAXIMUM_TEMPORAL_TIME = 5000; // or setting user 7 days 15 days or 30 days
+    const EXPIRATION_TIME = card.createdAt + MAXIMUM_TEMPORAL_TIME;
+    const timeRemaining = EXPIRATION_TIME - card.createdAt;
+
+
+    setTimeout(async () => {
+        const cardId = document.querySelector(`[data-id="${card.id}"]`);
+
+        let currentCard = getDataCards();
+        currentCard = currentCard.filter(c => c.id !== card.id);
+        setDataCards(currentCard);
+
+        await deleteCard(card.id);
+        if (cardId) cardId.remove();
+    }, MAXIMUM_TEMPORAL_TIME);
+}

@@ -15,18 +15,28 @@ def create_card():
     data = request.get_json()
     conn = get_db()
     cursor = conn.execute(
-        'INSERT INTO cards (title, color, tag, marker) VALUES (?, ?, ?, ?)',
-        (data['title'], data['color'], data.get('tag', ''), data.get('marker', ''))
+        'INSERT INTO cards (title, color, tag, marker, type, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+        (
+            data.get('title', ''),
+            data.get('color', '#f1f1f1'),
+            data.get('tag', ''),
+            data.get('marker', ''),
+            data.get('type', 'normal'),
+            data.get('createdAt', None)
+        )
     )
     new_id = cursor.lastrowid
     conn.commit()
     conn.close()
+
     return jsonify({
         'id': new_id,
-        'title': data['title'],
-        'color': data['color'],
+        'title': data.get('title', ''),
+        'color': data.get('color', '#f1f1f1'),
         'tag': data.get('tag', ''),
-        'marker': data.get('marker', '')
+        'marker': data.get('marker', ''),
+        'type': data.get('type', 'normal'),
+        'createdAt': data.get('createdAt', None)
     }), 201
 
 @cards_bp.route('/api/cards/<int:id>', methods=['PUT'])

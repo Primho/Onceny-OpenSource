@@ -125,7 +125,7 @@
 }
 
 /* Animación nativa para las tarjetas que entran con JS */
-.cards-display > * {
+.cards-display > .note-card--new {
     animation: aparecer 0.4s ease forwards;
 }
 

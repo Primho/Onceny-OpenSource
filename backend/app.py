@@ -5,6 +5,7 @@ from models import init_db
 
 app = Flask(__name__)
 CORS(app)
+
 app.register_blueprint(cards_bp)
 
 with app.app_context():

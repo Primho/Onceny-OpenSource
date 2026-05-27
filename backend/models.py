@@ -16,7 +16,9 @@ def init_db():
         title TEXT NOT NULL,
         color TEXT DEFAULT '#f1f1f1',
         tag TEXT,
-        marker TEXT
+        marker TEXT,
+        type TEXT DEFAULT 'normal',
+        createdAt INTEGER
         )
     ''')
     conn.commit()
