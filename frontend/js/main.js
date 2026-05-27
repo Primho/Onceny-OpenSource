@@ -23,7 +23,12 @@ const loadCards = async () => {
     cardsContainer.innerHTML = '';
     const cards = await getCards();
     cards.forEach(card => {
-        makeCard(card, cardsContainer);
+        if (card.type === 'temporal') {
+            makeCard(card, cardsContainer);
+            manageTemporalTime(card)
+        }   else {
+            makeCard(card, cardsContainer);
+        }
     });
     setDataCards(cards);
 };
@@ -133,11 +138,22 @@ window.addEventListener('scroll', () => {
     if (settingsIcon) settingsIcon.style.transform = `rotate(${rotation}deg)`;
 });
 
-const manageTemporalTime = (card) => {
+const manageTemporalTime = async (card) => {
     const MAXIMUM_TEMPORAL_TIME = 5000; // or setting user 7 days 15 days or 30 days
     const EXPIRATION_TIME = card.createdAt + MAXIMUM_TEMPORAL_TIME;
-    const timeRemaining = EXPIRATION_TIME - card.createdAt;
+    const TIME_REMAINING = EXPIRATION_TIME - Date.now();
 
+    if (TIME_REMAINING <= 0) {
+        const cardId = document.querySelector(`[data-id="${card.id}"]`);
+
+        let currentCard = getDataCards();
+        currentCard = currentCard.filter(c => c.id !== card.id);
+        setDataCards(currentCard);
+
+        await deleteCard(card.id);
+        if (cardId) cardId.remove();
+        return;
+    }
 
     setTimeout(async () => {
         const cardId = document.querySelector(`[data-id="${card.id}"]`);
@@ -148,5 +164,5 @@ const manageTemporalTime = (card) => {
 
         await deleteCard(card.id);
         if (cardId) cardId.remove();
-    }, MAXIMUM_TEMPORAL_TIME);
+    }, TIME_REMAINING);
 }
