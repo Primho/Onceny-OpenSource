@@ -7,7 +7,7 @@ import './components/dialog.js'; // Importamos para que ejecute la lógica inter
 let cardToDeleteId = null;
 let spaceTypeToCreate = 'normal';
 
-// --- Selectores del DOM (Actualizados al HTML 2026) ---
+// --- Selectores del DOM ---
 const cardsContainer = document.querySelector('.cards-display');
 const addSpaceBtn = document.querySelector('#create-space-btn');
 const cardDialog = document.querySelector('#card-dialog');
@@ -21,19 +21,26 @@ const cancelDeleteBtn = document.querySelector('#delete-confirmation-dialog .dia
 // --- Carga Inicial de Datos ---
 const loadCards = async () => {
     cardsContainer.innerHTML = '';
-    const cards = await getCards();
-    cards.forEach(card => {
+    const allCards = await getCards();
+
+    // ADUANA: Filtramos las tarjetas en memoria antes de pintar
+    const validCards = allCards.filter(card => {
         if (card.type === 'temporal') {
-            makeCard(card, cardsContainer);
-            manageTemporalTime(card)
-        }   else {
-            makeCard(card, cardsContainer);
+            return manageTemporalTime(card); // Devuelve true si vive, false si ya expiró
         }
+        return true;
     });
-    setDataCards(cards);
+
+    // Pintamos solo las sobrevivientes
+    validCards.forEach(card => {
+        makeCard(card, cardsContainer);
+    });
+
+    setDataCards(validCards);
 };
 loadCards();
 
+// --- Selector de Tipo de Espacio (Popover) ---
 typeOfBtn.forEach(btn => {
     btn.addEventListener('click', () => {
         const menuCreate = document.getElementById('menu-create');
@@ -42,43 +49,44 @@ typeOfBtn.forEach(btn => {
 
         menuCreate.hidePopover();
         makeSpace(spaceTypeToCreate);
-    })
+    });
 });
 
 // --- Crear Nota Nueva Directamente ---
 const makeSpace = async (typeOfSpace) => {
-    // Estructura por defecto usando tu lógica
     const newCard = {
-        color: '#f1f1f1', // Gris por defecto
+        color: '#f1f1f1',
         title: '',
         tag: '',
         marker: '📌',
         type: typeOfSpace
     };
 
-    if(typeOfSpace === 'temporal') {
+    if (typeOfSpace === 'temporal') {
         newCard.marker = '⏳';
         newCard.createdAt = Date.now();
     }
 
     // 1. Guardar en Base de Datos
     const savedCard = await createCard(newCard);
-    if (typeOfSpace === 'temporal') manageTemporalTime(savedCard);
 
-    console.log(savedCard);
-
-    // 2. Actualizar tu estado en state.js
+    // 2. Actualizar tu estado local
     const cards = getDataCards();
     cards.push(savedCard);
     setDataCards(cards);
 
-    // 3. Pintarla en el contenedor con la animación de nueva (.note-card--new)
+    // 3. Pintarla en el contenedor con la animación de nueva
     makeCard(savedCard, cardsContainer, true);
     setActiveCard(savedCard);
+
+    // 4. Si es temporal, activamos el temporizador perezoso
+    if (typeOfSpace === 'temporal') {
+        manageTemporalTime(savedCard);
+    }
     
     noteDialogTitleInput.value = '';
     cardDialog.showModal();
-}
+};
 
 // --- Delegación de Eventos (Click en Tarjeta o Borrar) ---
 cardsContainer.addEventListener('click', (e) => {
@@ -88,14 +96,14 @@ cardsContainer.addEventListener('click', (e) => {
 
     if (!card || cardOptionsMenu) return;
 
-    // Caso: Borrar Nota
+    // Caso: Abrir Modal de Confirmación de Borrado
     if (clickedDeleteBtn) {
         cardToDeleteId = Number(card.dataset.id);
         deleteConfirmationDialog.showModal();
         
         const audio = new Audio('../assets/sounds/access-denied-alert-sound.m4a');
         audio.volume = 0.5;
-        audio.play().catch(error => console.log("Audio play m4a no soportado o sin archivo:", error));
+        audio.play().catch(error => console.log("Audio play m4a no soportado:", error));
         return;
     }
 
@@ -109,7 +117,7 @@ cardsContainer.addEventListener('click', (e) => {
     cardDialog.showModal();
 });
 
-// --- Confirmar Borrado ---
+// --- Confirmar Borrado Manual ---
 confirmDeleteBtn.addEventListener('click', async () => {
     const cardToDelete = document.querySelector(`[data-id="${cardToDeleteId}"]`);
     const cardId = cardToDeleteId;
@@ -138,31 +146,32 @@ window.addEventListener('scroll', () => {
     if (settingsIcon) settingsIcon.style.transform = `rotate(${rotation}deg)`;
 });
 
-const manageTemporalTime = async (card) => {
-    const MAXIMUM_TEMPORAL_TIME = 5000; // or setting user 7 days 15 days or 30 days
+// --- Administrador de Tiempo Temporal (SÍNCRONO) ---
+const manageTemporalTime = (card) => {
+    const MAXIMUM_TEMPORAL_TIME = 120000; // ⏳ 2 minutos fijos para pruebas (120,000 ms)
     const EXPIRATION_TIME = card.createdAt + MAXIMUM_TEMPORAL_TIME;
     const TIME_REMAINING = EXPIRATION_TIME - Date.now();
 
+    // Caso Instantáneo: si caducó con la app cerrada
     if (TIME_REMAINING <= 0) {
-        const cardId = document.querySelector(`[data-id="${card.id}"]`);
-
-        let currentCard = getDataCards();
-        currentCard = currentCard.filter(c => c.id !== card.id);
-        setDataCards(currentCard);
-
-        await deleteCard(card.id);
-        if (cardId) cardId.remove();
-        return;
+        deleteCard(card.id); // Petición asíncrona silenciosa en segundo plano
+        return false;        // No pasa el filtro, no se dibuja
     }
 
+    // Caso Futuro: Programamos su desintegración reactiva
     setTimeout(async () => {
-        const cardId = document.querySelector(`[data-id="${card.id}"]`);
+        // Búsqueda perezosa en el DOM en el momento exacto de la muerte
+        const cardElement = document.querySelector(`[data-id="${card.id}"]`);
 
-        let currentCard = getDataCards();
-        currentCard = currentCard.filter(c => c.id !== card.id);
-        setDataCards(currentCard);
+        // Sincronizamos estado de JS
+        let currentCards = getDataCards();
+        currentCards = currentCards.filter(c => c.id !== card.id);
+        setDataCards(currentCards);
 
+        // Limpieza total en API y DOM
         await deleteCard(card.id);
-        if (cardId) cardId.remove();
+        if (cardElement) cardElement.remove();
     }, TIME_REMAINING);
-}
+
+    return true; // Pasa el filtro de vida con éxito
+};
