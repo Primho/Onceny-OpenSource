@@ -131,7 +131,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     width: min(1000px, 100dvw);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
-    overflow-y: hidden;
+    padding: 0; /* Reseteamos padding por defecto del dialog */
+    overflow: hidden; /* Ocultamos overflow principal, se maneja internamente */
     opacity: 0;
     transform: scale(0.5);
     transition: 
@@ -141,7 +142,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         overlay .3s ease allow-discrete;
 
     &[open] {
-        display: flex; /* Alinea de forma horizontal la barra lateral y el cuerpo principal */
+        display: block; 
         opacity: 1;
         transform: scale(1);
 
@@ -152,33 +153,86 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
+/* Contenedor principal dentro del Dialog para flexbox */
+.card-dialog__container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: min(800px, 90dvh);
+}
+
 /* Barra lateral interna de pestañas */
 .card-dialog__sidebar {
     width: 100%;
-    max-width: 80px;
+    max-width: 220px;
     background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: var(--space-md);
+    padding: 0 var(--space-sm);
     gap: var(--space-sm);
+}
 
-    & .sidebar-tab {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        border-radius: var(--radius-sm);
-        transition: background-color 0.2s;
+.sidebar-top-actions,
+.sidebar-bottom-actions {
+    display: flex;
+    flex-direction: column;
+    min-height: 70px;
+    justify-content: center;
+    gap: var(--space-sm);
+}
 
-        &:hover, &.active {
-            background-color: var(--color-muted);
-        }
-    }
+.sidebar-top-actions {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-bottom-actions {
+    border-top: 1px solid var(--color-border);
+}
+
+.sidebar-spaces-menu {
+    flex: 1; /* Toma el espacio disponible y empuja el bottom-actions hacia abajo */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    overflow-y: auto;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: var(--space-sm) 0;
+    width: 100%;
+}
+
+.btn-add-section,
+.card-dialog__sidebar .sidebar-tab {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0 var(--space-md);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+    font-weight: 500;
+    color: var(--color-text);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-add-section {
+    border: 1px dashed var(--color-border);
+    justify-content: center;
+}
+
+.btn-add-section:hover,
+.card-dialog__sidebar .sidebar-tab:hover, 
+.card-dialog__sidebar .sidebar-tab.active {
+    background-color: var(--color-muted);
 }
 
 /* Cuerpo de contenidos del diálogo */
@@ -186,6 +240,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Evita que el contenedor crezca más que el dialog */
 }
 
 .card-dialog__header {
@@ -193,41 +248,34 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     justify-content: space-between;
     align-items: center;
     min-height: 70px;
-    padding: 0 25px;
-    border-bottom: 2px solid var(--color-border-light);
-
-    & input {
-        color: var(--color-text);
-    }
+    padding: 0 var(--space-lg);
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .card-dialog__title {
-    width: 100%;
+    flex: 1;
     height: 100%;
     border: none;
     min-height: 50px;
-    padding: 0 var(--space-sm);
     font-size: var(--font-lg);
     outline: none;
     background-color: inherit;
+    color: var(--color-text);
 }
 
 .card-dialog__close {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30px;
-    height: 30px;
+    gap: var(--space-xs);
+    height: 35px;
+    padding: 0 var(--space-md);
     border: none;
     cursor: pointer;
     background-color: inherit;
+    font-size: var(--font-sm);
+    color: var(--color-text);
     transition: border-radius .3s, background-color .3s;
-
-    & svg {
-        width: 24px;
-        height: 24px;
-        color: var(--color-text);
-    }
 
     &:hover {
         border-radius: var(--radius-sm);
@@ -240,6 +288,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     width: 100%;
     padding: 50px;
     padding-top: var(--space-lg);
+    overflow-y: auto; /* Permite scrollear notas largas */
+    height: 100%;
 }
 
 .add-content {
@@ -252,14 +302,14 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: none;
     border-radius: var(--radius-sm);
     background-color: inherit;
-    color: #717182;
+    color: #717182; /* Considera usar una variable css para esto si tienes */
     font-weight: var(--font-weight-medium);
     font-size: var(--font-base);
     transition: background-color .3s;
     gap: var(--space-sm);
 
     & svg {
-        fill: #717182;
+        fill: currentColor;
     }
 
     &:hover {
@@ -267,12 +317,12 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-/* Popover menu */
+/* Popover menus */
 .add-content-menu[popover] {
     position-area: bottom span-right;
     position-try-fallbacks: flip-block, flip-inline; 
     
-    width: 100px;
+    width: 150px; /* Un poco más ancho para los textos nuevos */
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
@@ -280,7 +330,6 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     padding: var(--space-xs) 0;
     margin: 4px 0 0 0;
 
-    /* Estado cerrado por defecto */
     opacity: 0;
     transform: translateY(-5px);
     transition: 
@@ -321,7 +370,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 /* Control de vistas por pestañas internas */
 .tab-view {
-    display: none;
+    display: block;
+    height: calc(100% - 70px); /* Restar el height del header */
 }
 
 .tab-view.active {
@@ -337,6 +387,96 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* =========================================================================
+   PESTAÑA DE CONFIGURACIÓN (.config-panel-container)
+   ========================================================================= */
+.config-panel-container {
+    padding: var(--space-lg) 50px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    overflow-y: auto;
+    height: 100%;
+}
+
+.config-section-card {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.config-section-card legend {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    padding: 0 var(--space-sm);
+    color: var(--color-text);
+}
+
+.config-section-description {
+    font-size: var(--font-sm);
+    color: #717182; /* Similar al card-gray-text */
+    margin-bottom: var(--space-md);
+    padding: 0 var(--space-sm);
+}
+
+.dialog-form__label-mock,
+.dialog-form__option label {
+    display: block;
+    font-size: var(--font-sm);
+    font-weight: 500;
+    margin-top: var(--space-md);
+    color: var(--color-text);
+}
+
+.dialog-form__metadata {
+
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.shortcuts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-md);
+}
+
+.shortcuts-table td {
+    padding: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-sm);
+    color: var(--color-text);
+}
+
+.shortcuts-table tr:last-child td {
+    border-bottom: none;
+}
+
+.shortcuts-table kbd {
+    background-color: var(--color-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: var(--color-text);
+}
+
+.config-panel-actions {
+    align-content: center;
+    position: sticky;
+    justify-content: center;
+    bottom: 0;
+    left: 0;
+    min-height: 70px;
+    border-top: 1px solid var(--color-border);
+
+    & button {
+        width: 100px;
+        height: 40px;
+        border: none;
     }
 }
 
@@ -378,7 +518,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 .dialog-form__description {
     font-size: var(--font-sm);
-    color: var(--card-gray-text);
+    color: #717182;
     margin-bottom: var(--space-md);
     padding: 0 var(--space-lg);
 }

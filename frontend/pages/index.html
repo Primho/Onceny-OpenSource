@@ -117,75 +117,115 @@
     </main>
 
     <dialog id="card-dialog" closedby="any" aria-labelledby="modal-card-title">
-
-        <aside class="card-dialog__sidebar" aria-label="Opciones de la tarjeta">
-            <button type="button" class="sidebar-tab active" data-tab="content" aria-label="Edit content">
-                <svg style="width: 24px; height: 24px;" aria-hidden="true">
-                    <use href="../assets/icons/sprite.svg#icon-document"></use>
-                </svg>
-            </button>
-            <button type="button" class="sidebar-tab" data-tab="appearance" aria-label="Personalize appearance">
-                <svg style="width: 24px; height: 24px;" aria-hidden="true">
-                    <use href="../assets/icons/sprite.svg#icon-palette"></use>
-                </svg>
-            </button>
-        </aside>
-    
-        <div class="card-dialog__body">
-            <header class="card-dialog__header">
-                <input id="modal-card-title" class="card-dialog__title" type="text" placeholder="Untitled" aria-label="Título de la nota">
-                <button id="card-dialog__close" class="card-dialog__close" aria-label="Close dialog">
-                    <svg aria-hidden="true">
-                        <use href="../assets/icons/sprite.svg#icon-close"></use>
-                    </svg> 
-                </button>
-            </header>
-    
-            <section id="tab-content" class="tab-view active" aria-label="Contenido de la nota">
-                <div class="card-dialog__content">
-                    <button popovertarget="menu-add-content" class="add-content" aria-label="Opciones de la nota">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
-                            <use href="../assets/icons/sprite.svg#icon-add"></use>
-                        </svg>
-                        Add content
+        <div class="card-dialog__container">
+            <aside class="card-dialog__sidebar" aria-label="Opciones de la tarjeta">
+                <div class="sidebar-top-actions">
+                    <button type="button" id="btn-add-section" class="btn-add-section">
+                        <span>➕ Add page</span>
                     </button>
-                    
-                    <div id="menu-add-content" popover class="add-content-menu" role="menu">
-                        <button role="menuitem" class="card-menu__btn">☑️ Task</button>
-                        <button role="menuitem" class="card-menu__btn">📝 Note</button>
+                </div>
+                
+                <div id="sidebar-spaces-menu" class="sidebar-spaces-menu" role="tablist">
+                    <button type="button" class="sidebar-tab active" data-tab="content" aria-label="Edit content">
+                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                            <use href="../assets/icons/sprite.svg#icon-document"></use>
+                        </svg>
+                        <span>Page 1</span>
+                    </button>
+                </div>
+
+                <div class="sidebar-bottom-actions">
+                    <button id="btn-open-config" type="button" class="sidebar-tab sidebar-tap-config" data-tab="appearance" aria-label="Personalize appearance" role="tab" aria-selected="false">
+                        <span>⚙️ Settings</span>
+                    </button>
+                </div>
+            </aside>
+
+            <div class="card-dialog__body">
+                <header class="card-dialog__header">
+                    <input id="modal-card-title" class="card-dialog__title" type="text" placeholder="Untitled" maxlength="80" aria-label="Title of the space (note)">
+                    <button id="card-dialog__close" class="card-dialog__close" aria-label="Close dialog">
+                        <span aria-hidden="true">💾</span>save and close
+                    </button>
+                </header>
+        
+                <section id="tab-content" class="tab-view active" aria-label="Contenido de la nota">
+                    <div class="card-dialog__content">
+                        <button popovertarget="menu-add-content" class="add-content" aria-label="Opciones de la nota">
+                            <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                                <use href="../assets/icons/sprite.svg#icon-add"></use>
+                            </svg>
+                            Add content
+                        </button>
+                        
+                        <div id="menu-add-content" popover class="add-content-menu" role="menu">
+                            <button role="menuitem" class="card-menu__btn">☑️ Task</button>
+                            <button role="menuitem" class="card-menu__btn">📝 Note</button>
+                        </div>
                     </div>
-                </div>
-            </section>
-    
-            <section id="tab-appearance" class="tab-view" aria-label="Apariencia de la nota">
-                <div class="card-dialog__content">
-                    <h2 class="dialog-form__title">Appearance</h2>
-                    
-                    <fieldset class="dialog-form__fielset">
-                        <div class="dialog-form__option">
-                            <label function="card-tags">Tags</label>
-                            <input type="text" id="card-tags" class="dialog-form__tags" placeholder="Personal" name="tag">
-                        </div>
-    
-                        <div class="dialog-form__option">
-                            <label function="marker">Marker</label>
-                            <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌" name="marker">
-                        </div>
-    
-                        <div class="dialog-form__option">
-                            <span class="dialog-form__label-mock">Color</span>
-                            <div class="color-picker" role="radiogroup" aria-label="Seleccionar color de fondo">
-                                <button type="button" class="color-opt selected" data-color="#f1f1f1" style="background-color: #787878;" role="radio" aria-checked="true" aria-label="Gris"></button>
-                                <button type="button" class="color-opt" data-color="#fdefee" style="background-color: #ed6b5a;" role="radio" aria-checked="false" aria-label="Rojo"></button>
-                                <button type="button" class="color-opt" data-color="#e6f2ff" style="background-color: #038cff;" role="radio" aria-checked="false" aria-label="Azul"></button>
-                                <button type="button" class="color-opt" data-color="#e1fae7" style="background-color: #36c25c;" role="radio" aria-checked="false" aria-label="Verde"></button>
-                                <button type="button" class="color-opt" data-color="#fcf5db" style="background-color: #e6961f;" role="radio" aria-checked="false" aria-label="Amarillo"></button>
-                                <button type="button" class="color-opt" data-color="#efeaff" style="background-color: #6d3cfa;" role="radio" aria-checked="false" aria-label="Morado"></button>
+                </section>
+
+                <section id="tab-config" class="tab-view" aria-label="Panel de configuración">
+                    <div class="config-panel-container">
+                        <fieldset class="config-section-card">
+                            <legend>🎨 Appearance</legend>
+                            <p class="config-section-description">Customize the background and the semantic color of this space.</p>
+                            <div class="dialog-form__option">
+                                <span class="dialog-form__label-mock">Background Color</span>
+                                <div class="color-picker" role="radiogroup" aria-label="Seleccionar color de fondo">
+                                    <button type="button" class="color-opt selected" data-color="#f1f1f1" style="background-color: #787878;" role="radio" aria-checked="true" aria-label="Gris"></button>
+                                    <button type="button" class="color-opt" data-color="#fdefee" style="background-color: #ed6b5a;" role="radio" aria-checked="false" aria-label="Rojo"></button>
+                                    <button type="button" class="color-opt" data-color="#e6f2ff" style="background-color: #038cff;" role="radio" aria-checked="false" aria-label="Azul"></button>
+                                    <button type="button" class="color-opt" data-color="#e1fae7" style="background-color: #36c25c;" role="radio" aria-checked="false" aria-label="Verde"></button>
+                                    <button type="button" class="color-opt" data-color="#fcf5db" style="background-color: #e6961f;" role="radio" aria-checked="false" aria-label="Amarillo"></button>
+                                    <button type="button" class="color-opt" data-color="#efeaff" style="background-color: #6d3cfa;" role="radio" aria-checked="false" aria-label="Morado"></button>
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </section>
+
+                            <div class="dialog-form__metadata">
+                                <div class="dialog-form__option">
+                                    <label function="marker">Marker</label>
+                                    <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌" name="marker">
+                                </div>
+
+                                <div class="dialog-form__option">
+                                    <label function="card-tags">Tags</label>
+                                    <input type="text" id="card-tags" class="dialog-form__tags" placeholder="Personal" name="tag">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="config-section-card">
+                            <legend>⌨️ Keyboard Shortcuts</legend>
+                            <p class="config-section-description">System commands for the molecular management of text blocks.</p>
+                            <table class="shortcuts-table">
+                                <tr>
+                                    <td><kbd>Enter</kbd></td>
+                                    <td>Create a new block of plain text below.</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Esc</kbd></td>
+                                    <td>Save permanently and close the dialog box.</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>:</kbd></td>
+                                    <td>Open the floating molecular submenu above the block.</td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                    <div class="config-panel-actions">
+                        <button>Cancel</button>
+                        <button>Save</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- POP UP MENU ESCONDIBLE -->
+        <div id="menu-change-block" popover class="add-content-menu" role="menu">
+            <button role="menuitem" class="card-menu__btn" data-type="text">📝 Text</button>
+            <button role="menuitem" class="card-menu__btn" data-type="heading">🛑 Title</button>
+            <button role="menuitem" class="card-menu__btn" data-type="task">☑️ Task</button>
         </div>
     </dialog>
 
