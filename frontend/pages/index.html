@@ -58,15 +58,6 @@
                         <span>Favorites</span>
                     </a>
                 </li>
-    
-                <li class="sidebar__nav-item">
-                    <a href="#" class="sidebar__nav-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
-                            <use href="../assets/icons/sprite.svg#icon-share"></use>
-                        </svg>
-                        <span>Shares</span>
-                    </a>
-                </li>
 
                 <li class="sidebar__nav-item">
                     <a href="#" class="sidebar__nav-link">
@@ -74,6 +65,15 @@
                             <use href="../assets/icons/sprite.svg#icon-folder"></use>
                         </svg>
                         <span>Folders</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__nav-item">
+                    <a href="#" class="sidebar__nav-link">
+                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                            <use href="../assets/icons/sprite.svg#icon-share"></use>
+                        </svg>
+                        <span>Shared</span>
                     </a>
                 </li>
             </ul>
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="sidebar-bottom-actions">
-                    <button id="btn-open-config" type="button" class="sidebar-tab sidebar-tap-config" data-tab="appearance" aria-label="Personalize appearance" role="tab" aria-selected="false">
+                    <button id="btn-open-config" class="sidebar-tab sidebar-tap-config" data-tab="config" aria-label="Personalize appearance" role="tab" aria-selected="false" type="button">
                         <span>⚙️ Settings</span>
                     </button>
                 </div>
@@ -212,6 +212,25 @@
                                     <td>Open the floating molecular submenu above the block.</td>
                                 </tr>
                             </table>
+                        </fieldset>
+
+                        <fieldset class="config-section-card">
+                            <legend>👥 Shared with</legend>
+                            <p class="config-section-description">Persons you shared with.</p>
+                            <div>
+                                <div class="shared-profile--container">
+                                    <div class="shared-profile--content">
+                                        <img src="../assets/midudev.jpg" style="width: 45px; border-radius: 50%; ">
+                                    <div class="shared-profile-data">
+                                        <span>Midudev</span>
+                                        <span>miduga@gmail.com</span>
+                                    </div>
+                                    </div>    
+                                    <button>x</button>
+                                </div>
+                            </div>
+                            <button class="invite">+ invite someone</button>
+                            <span class="soon">The feature to share the space and per page will be available soon.</span>
                         </fieldset>
                     </div>
                     <div class="config-panel-actions">

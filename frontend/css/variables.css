@@ -25,14 +25,14 @@
     ───────────────────────────────────── */
     --color-bg: oklch(1 0 0);               /* #ffffff */
     --sidebar: oklch(0.985 0 0);            /* Tu sidebar original */
-    --color-surface: oklch(0.96 0 0);       /* #f2f2f2 */
+    --color-surface: oklch(0.9824 0.0013 286.38);       /* #f2f2f2 */
     --color-surface-hover: oklch(0.92 0 0); /* #e5e5e5 */
     --color-border: oklch(0.89 0 0);        /* #dedede */
     --color-border-light: oklch(0.94 0 0);  /* #eaeaea */
     --color-muted: oklch(0.94 0.005 286);   /* #ececf0 */
 
     /* TEXTO */
-    --color-text: oklch(0.23 0 0);          /* #1a1a1a */
+    --color-text: oklch(0.1074 0.0447 280.7);   /* #030213 */
     --color-text-muted: var(--color-muted);
 
     /* ACENTO VIBRANTE */

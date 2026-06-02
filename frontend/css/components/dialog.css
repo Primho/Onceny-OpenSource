@@ -164,7 +164,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 /* Barra lateral interna de pestañas */
 .card-dialog__sidebar {
     width: 100%;
-    max-width: 220px;
+    max-width: 200px;
     background-color: var(--color-surface);
     border-right: 1px solid var(--color-border-light);
     display: flex;
@@ -370,8 +370,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 /* Control de vistas por pestañas internas */
 .tab-view {
-    display: block;
-    height: calc(100% - 70px); /* Restar el height del header */
+    display: none;
 }
 
 .tab-view.active {
@@ -464,10 +463,64 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     color: var(--color-text);
 }
 
+.shared-profile--container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & button {
+        cursor: pointer;
+        color: #717182;
+        background-color: inherit;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-border);
+        font-size: large;
+        width: 30px;
+        height: fit-content;
+    }
+}
+
+.shared-profile--content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    & span:last-child {
+        color: #717182;
+        font-size: var(--font-sm);
+    }
+
+}
+
+.shared-profile-data {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.invite {
+    cursor: pointer;
+    font-size: var(--font-lg);
+    color: #717182;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+    min-height: 30px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--color-border);
+    background-color: inherit;
+}
+
+.soon {
+    font-size: var(--font-sm);
+    color: #717182;
+}
+
 .config-panel-actions {
     align-content: center;
     position: sticky;
-    justify-content: center;
+
+    justify-content: flex-end;
     bottom: 0;
     left: 0;
     min-height: 70px;
@@ -477,6 +530,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         width: 100px;
         height: 40px;
         border: none;
+        border-radius: var(--radius-md);
     }
 }
 

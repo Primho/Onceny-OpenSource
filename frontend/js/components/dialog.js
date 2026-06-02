@@ -70,6 +70,7 @@ cardDialog.addEventListener('close', () => {
 let currentTab = 'content';
 
 sideBarTab.forEach(btn => {
+    console.log(btn);
     btn.addEventListener('click', () => {
         const activeTab = document.querySelector('.sidebar-tab.active');
         activeTab.classList.remove('active');

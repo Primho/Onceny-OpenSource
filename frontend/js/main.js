@@ -148,30 +148,26 @@ window.addEventListener('scroll', () => {
 
 // --- Administrador de Tiempo Temporal (SÍNCRONO) ---
 const manageTemporalTime = (card) => {
-    const MAXIMUM_TEMPORAL_TIME = 120000; // ⏳ 2 minutos fijos para pruebas (120,000 ms)
+    const MAXIMUM_TEMPORAL_TIME = 120000; // 2 minutos fijos 
     const EXPIRATION_TIME = card.createdAt + MAXIMUM_TEMPORAL_TIME;
     const TIME_REMAINING = EXPIRATION_TIME - Date.now();
 
-    // Caso Instantáneo: si caducó con la app cerrada
     if (TIME_REMAINING <= 0) {
-        deleteCard(card.id); // Petición asíncrona silenciosa en segundo plano
-        return false;        // No pasa el filtro, no se dibuja
+        deleteCard(card.id);
+        return false;
     }
 
-    // Caso Futuro: Programamos su desintegración reactiva
     setTimeout(async () => {
         // Búsqueda perezosa en el DOM en el momento exacto de la muerte
         const cardElement = document.querySelector(`[data-id="${card.id}"]`);
 
-        // Sincronizamos estado de JS
         let currentCards = getDataCards();
         currentCards = currentCards.filter(c => c.id !== card.id);
         setDataCards(currentCards);
 
-        // Limpieza total en API y DOM
         await deleteCard(card.id);
         if (cardElement) cardElement.remove();
     }, TIME_REMAINING);
 
-    return true; // Pasa el filtro de vida con éxito
+    return true;
 };
