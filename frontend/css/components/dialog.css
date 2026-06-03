@@ -1,20 +1,22 @@
-/* =========================================================================
-   ESTILOS COMPARTIDOS Y CONTROL DEL BODY
-   ========================================================================= */
+/* ─────────────────────────────────────────────────────────────────────────
+   CONTROL DE SCROLL DEL BODY
+───────────────────────────────────────────────────────────────────────── */
 body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     overflow: hidden;
 }
 
-/* Backdrops unificados para los diálogos activos en tu HTML */
+/* ─────────────────────────────────────────────────────────────────────────
+   BACKDROPS UNIFICADOS
+───────────────────────────────────────────────────────────────────────── */
 #card-dialog::backdrop,
 #delete-confirmation-dialog::backdrop {
-    background-color: rgba(0, 0, 0, .2);
+    background-color: oklch(0 0 0 / 0.2);
     backdrop-filter: blur(4px);
     opacity: 0;
-    transition: 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
+    transition:
+        opacity var(--transition-base),
+        display var(--transition-base) allow-discrete,
+        overlay var(--transition-base) allow-discrete;
 }
 
 #card-dialog[open]::backdrop,
@@ -26,7 +28,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-/* Elementos comunes de los formularios internos */
+/* ─────────────────────────────────────────────────────────────────────────
+   ELEMENTOS COMUNES DE FORMULARIOS INTERNOS
+───────────────────────────────────────────────────────────────────────── */
 .dialog-form__title {
     text-align: center;
     margin-bottom: var(--space-lg);
@@ -40,7 +44,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: none;
 }
 
-.dialog-form__input, 
+.dialog-form__input,
 .dialog-form__option input {
     width: 100%;
     min-height: 40px;
@@ -49,15 +53,22 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     font-size: var(--font-base);
     border: 1px solid var(--color-border-light);
     margin-top: 10px;
-    transition: background-color .3s;
+    transition: background-color var(--transition-base);
 
     &:focus {
         outline: none;
         background-color: var(--color-muted);
     }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 1px;
+    }
 }
 
-/* Sistema de selección de color */
+/* ─────────────────────────────────────────────────────────────────────────
+   SELECTOR DE COLOR
+───────────────────────────────────────────────────────────────────────── */
 .color-picker {
     display: flex;
     gap: var(--space-sm);
@@ -71,18 +82,26 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-radius: 50%;
     border: 2px solid transparent;
     cursor: pointer;
-    transition: scale .2s, border .2s;
+    transition: scale 0.2s ease, border-color 0.2s ease;
 
     &:hover {
         scale: 1.1;
     }
 
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 3px;
+    }
+
     &.selected {
-        border-color: var(--color-muted);
+        scale: 1.1;
+        border-color: var(--color-text);
     }
 }
 
-/* Botonería general de acciones */
+/* ─────────────────────────────────────────────────────────────────────────
+   BOTONES DE ACCIÓN DE DIÁLOGOS SIMPLES
+───────────────────────────────────────────────────────────────────────── */
 .dialog-form__actions {
     margin-top: var(--space-lg);
     display: flex;
@@ -98,7 +117,12 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
     background-color: var(--color-surface);
-    transition: color .3s, background-color .3s;
+    transition: color var(--transition-base), background-color var(--transition-base);
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
 .dialog-btn--cancel:hover {
@@ -108,14 +132,18 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 .dialog-btn--confirm {
     color: #fefefe;
     background-color: var(--color-accent);
+
+    &:hover {
+        background-color: var(--color-accent-hover);
+    }
 }
 
 .dialog-btn--danger {
-    color: var(--color-muted);
+    color: #fefefe;
     background-color: var(--color-accent);
 
     &:hover {
-        background-color: rgb(235, 64, 64);
+        background-color: oklch(0.5 0.22 23);
     }
 }
 
@@ -124,25 +152,26 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
    DIALOG 1: WORKSPACE DE LA TARJETA (#card-dialog)
    ========================================================================= */
 #card-dialog {
+    max-height: 90dvh;
+    width: min(1200px, 100dvw);
+    height: min(850px, 92dvh);
+
     display: none;
     margin: auto;
-    min-height: min(800px, 90dvh);
-    max-height: 90dvh;
-    width: min(1000px, 100dvw);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
-    padding: 0; /* Reseteamos padding por defecto del dialog */
-    overflow: hidden; /* Ocultamos overflow principal, se maneja internamente */
+    padding: 0;
+    overflow: hidden;
     opacity: 0;
     transform: scale(0.5);
-    transition: 
-        transform .3s ease, 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
+    transition:
+        transform var(--transition-base),
+        opacity var(--transition-base),
+        display var(--transition-base) allow-discrete,
+        overlay var(--transition-base) allow-discrete;
 
     &[open] {
-        display: block; 
+        display: block;
         opacity: 1;
         transform: scale(1);
 
@@ -153,26 +182,33 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-/* Contenedor principal dentro del Dialog para flexbox */
+/* ─── CONTENEDOR PRINCIPAL (flexbox horizontal) ─── */
 .card-dialog__container {
     display: flex;
     width: 100%;
-    height: 100%;
-    min-height: min(800px, 90dvh);
+    height: 100%; /* FIX: funciona ahora porque #card-dialog tiene height explícita */
+    /* Se eliminó el min-height redundante que impedía el correcto resize */
 }
 
-/* Barra lateral interna de pestañas */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SIDEBAR INTERNA DEL DIALOG
+───────────────────────────────────────────────────────────────────────── */
 .card-dialog__sidebar {
-    width: 100%;
-    max-width: 200px;
+    /* FIX: width fija + flex-shrink:0 evita que se comprima o expanda */
+    width: 200px;
+    flex-shrink: 0;
     background-color: var(--color-surface);
     border-right: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
     padding: 0 var(--space-sm);
     gap: var(--space-sm);
+    /* FIX: overflow:hidden contiene a los hijos dentro del alto del dialog */
+    overflow: hidden;
 }
 
+/* FIX: flex-shrink:0 en top y bottom → nunca se encogen ni hacen overflow */
 .sidebar-top-actions,
 .sidebar-bottom-actions {
     display: flex;
@@ -180,6 +216,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     min-height: 70px;
     justify-content: center;
     gap: var(--space-sm);
+    flex-shrink: 0; /* CRÍTICO: el botón de ajustes nunca será empujado fuera */
 }
 
 .sidebar-top-actions {
@@ -191,11 +228,20 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 }
 
 .sidebar-spaces-menu {
-    flex: 1; /* Toma el espacio disponible y empuja el bottom-actions hacia abajo */
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+    flex: 1;
+    min-height: 0;
+
+    display: grid;
+    grid-auto-rows: min-content;
+
+    gap: 4px;
+
     overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-block: 8px;
+
+    scrollbar-gutter: stable;
 }
 
 .sidebar-divider {
@@ -218,10 +264,16 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     background: transparent;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    font-size: var(--font-md);
-    font-weight: 500;
+    font-size: var(--font-md); /* FIX: --font-md (1rem) ahora está definido */
+    font-weight: var(--font-weight-medium);
     color: var(--color-text);
-    transition: background-color 0.2s, border-color 0.2s;
+    flex-shrink: 0; /* Los botones en el area scrollable no se comprimen */
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: -2px;
+    }
 }
 
 .btn-add-section {
@@ -230,17 +282,21 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 }
 
 .btn-add-section:hover,
-.card-dialog__sidebar .sidebar-tab:hover, 
+.card-dialog__sidebar .sidebar-tab:hover,
 .card-dialog__sidebar .sidebar-tab.active {
     background-color: var(--color-muted);
 }
 
-/* Cuerpo de contenidos del diálogo */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   CUERPO PRINCIPAL DEL DIALOG
+───────────────────────────────────────────────────────────────────────── */
 .card-dialog__body {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evita que el contenedor crezca más que el dialog */
+    overflow: hidden;
 }
 
 .card-dialog__header {
@@ -250,6 +306,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     min-height: 70px;
     padding: 0 var(--space-lg);
     border-bottom: 1px solid var(--color-border-light);
+    flex-shrink: 0;
 }
 
 .card-dialog__title {
@@ -275,23 +332,63 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     background-color: inherit;
     font-size: var(--font-sm);
     color: var(--color-text);
-    transition: border-radius .3s, background-color .3s;
+    border-radius: 0;
+    transition: border-radius var(--transition-base), background-color var(--transition-base);
 
     &:hover {
         border-radius: var(--radius-sm);
         background-color: var(--color-muted);
     }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+    }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   SISTEMA DE PESTAÑAS (TAB VIEWS)
+───────────────────────────────────────────────────────────────────────── */
+
+
+.tab-view {
+    display: none;
+}
+
+.tab-view.active {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    animation: tabFadeIn 0.25s ease-out;
+}
+
+/* FIX: Reemplaza height:100% (que no funciona en flex) con el patrón flex  */
 .card-dialog__content {
     flex: 1;
+    min-height: 0; /* CRÍTICO */
     width: 100%;
     padding: 50px;
     padding-top: var(--space-lg);
-    overflow-y: auto; /* Permite scrollear notas largas */
-    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
 }
 
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── BOTÓN "ADD CONTENT" ─── */
 .add-content {
     display: flex;
     align-items: center;
@@ -302,10 +399,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: none;
     border-radius: var(--radius-sm);
     background-color: inherit;
-    color: #717182; /* Considera usar una variable css para esto si tienes */
+    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
     font-weight: var(--font-weight-medium);
     font-size: var(--font-base);
-    transition: background-color .3s;
+    transition: background-color var(--transition-base);
     gap: var(--space-sm);
 
     & svg {
@@ -315,26 +412,31 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     &:hover {
         background-color: var(--color-muted);
     }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
-/* Popover menus */
+/* ─── POPOVER MENU ─── */
 .add-content-menu[popover] {
     position-area: bottom span-right;
-    position-try-fallbacks: flip-block, flip-inline; 
-    
-    width: 150px; /* Un poco más ancho para los textos nuevos */
+    position-try-fallbacks: flip-block, flip-inline;
+
+    width: 150px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     padding: var(--space-xs) 0;
     margin: 4px 0 0 0;
 
     opacity: 0;
     transform: translateY(-5px);
-    transition: 
-        opacity 0.2s ease, 
-        transform 0.2s ease, 
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
         display 0.2s ease allow-discrete,
         overlay 0.2s ease allow-discrete;
 }
@@ -361,46 +463,37 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     text-align: left;
     cursor: pointer;
     color: var(--color-text);
-    transition: background-color 0.15s ease;
+    transition: background-color var(--transition-fast);
 
-    &:hover { 
-        background-color: var(--color-muted); 
+    &:hover {
+        background-color: var(--color-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: -2px;
     }
 }
 
-/* Control de vistas por pestañas internas */
-.tab-view {
-    display: none;
-}
-
-.tab-view.active {
-    display: block;
-    animation: tabFadeIn 0.25s ease-out;
-}
-
-@keyframes tabFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* =========================================================================
-   PESTAÑA DE CONFIGURACIÓN (.config-panel-container)
+   PESTAÑA DE CONFIGURACIÓN — #tab-config
    ========================================================================= */
+
+/* FIX: min-height:0 hace que overflow-y funcione dentro de flex          */
 .config-panel-container {
+    flex: 1;
+    min-height: 0; /* CRÍTICO: sin esto el área no puede hacer scroll en flex */
     padding: var(--space-lg) 50px;
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
     overflow-y: auto;
-    height: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
 }
 
+/* ─── TARJETAS DE SECCIÓN ─── */
 .config-section-card {
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
@@ -409,14 +502,14 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 .config-section-card legend {
     font-size: var(--font-lg);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     padding: 0 var(--space-sm);
     color: var(--color-text);
 }
 
 .config-section-description {
     font-size: var(--font-sm);
-    color: #717182; /* Similar al card-gray-text */
+    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
     margin-bottom: var(--space-md);
     padding: 0 var(--space-sm);
 }
@@ -425,17 +518,17 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 .dialog-form__option label {
     display: block;
     font-size: var(--font-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     margin-top: var(--space-md);
     color: var(--color-text);
 }
 
 .dialog-form__metadata {
-
     display: flex;
     gap: var(--space-lg);
 }
 
+/* ─── TABLA DE ATAJOS DE TECLADO ─── */
 .shortcuts-table {
     width: 100%;
     border-collapse: collapse;
@@ -463,74 +556,180 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     color: var(--color-text);
 }
 
-.shared-profile--container {
+/* ─────────────────────────────────────────────────────────────────────────
+   SECCIÓN "SHARED WITH" — Semántica mejorada (HTML actualizado en index.html)
+───────────────────────────────────────────────────────────────────────── */
+.shared-profiles-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-sm) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.shared-profile {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
 
-    & button {
-        cursor: pointer;
-        color: #717182;
-        background-color: inherit;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--color-border);
-        font-size: large;
-        width: 30px;
-        height: fit-content;
+    &:hover {
+        background-color: var(--color-muted);
     }
 }
 
-.shared-profile--content {
+.shared-profile__content {
     display: flex;
     align-items: center;
-    gap: 15px;
-
-    & span:last-child {
-        color: #717182;
-        font-size: var(--font-sm);
-    }
-
+    gap: var(--space-md);
 }
 
-.shared-profile-data {
+/* FIX: Los estilos que estaban inline ahora están en CSS */
+.shared-profile__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+}
+
+.shared-profile__info {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 2px;
+}
+
+.shared-profile__name {
+    font-size: var(--font-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    display: block;
+}
+
+.shared-profile__role {
+    font-size: var(--font-xs);
+    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    display: block;
+}
+
+/* FIX: Botón accesible con tamaño mínimo y estilos adecuados */
+.shared-profile__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    font-size: var(--font-base);
+    line-height: 1;
+    transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
+
+    &:hover {
+        color: var(--color-text);
+        background-color: var(--color-surface-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
 .invite {
     cursor: pointer;
-    font-size: var(--font-lg);
-    color: #717182;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    font-size: var(--font-sm);
+    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
     width: 100%;
-    min-height: 30px;
+    min-height: 36px;
     border-radius: var(--radius-sm);
     border: 1px dashed var(--color-border);
-    background-color: inherit;
+    background-color: transparent;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+        background-color: var(--color-muted);
+        color: var(--color-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
+/* FIX: <span> reemplazado por <p> con role="note" en el HTML */
 .soon {
-    font-size: var(--font-sm);
-    color: #717182;
+    font-size: var(--font-xs);
+    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    display: block;
+    margin-top: var(--space-xs);
+    line-height: 1.5;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   BARRA DE ACCIONES DEL PANEL DE CONFIGURACIÓN
+───────────────────────────────────────────────────────────────────────── */
 .config-panel-actions {
-    align-content: center;
-    position: sticky;
-
+    display: flex;
+    align-items: center;
     justify-content: flex-end;
-    bottom: 0;
-    left: 0;
+    gap: var(--space-sm);
+    padding: 0 var(--space-lg);
+    flex-shrink: 0;
     min-height: 70px;
     border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg);
 
     & button {
         width: 100px;
         height: 40px;
         border: none;
         border-radius: var(--radius-md);
+        font-size: var(--font-sm);
+        cursor: pointer;
+        transition: background-color var(--transition-fast);
+
+        &:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    }
+
+    /* Botón Cancel */
+    & button:first-of-type {
+        background-color: var(--color-surface);
+        color: var(--color-text);
+
+        &:hover {
+            background-color: var(--color-surface-hover);
+        }
+    }
+
+    /* Botón Save */
+    & button:last-of-type {
+        background-color: var(--color-accent);
+        color: #fefefe;
+
+        &:hover {
+            background-color: var(--color-accent-hover);
+        }
     }
 }
 
@@ -545,18 +744,18 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     text-align: center;
     margin: auto;
     min-height: 200px;
-    width: 500px;
-    max-width: 950px;
+
+    width: min(500px, 90dvw);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
     overflow: hidden;
     opacity: 0;
     transform: scale(0.5);
-    transition: 
-        transform .3s ease, 
-        opacity .3s ease, 
-        display .3s ease allow-discrete, 
-        overlay .3s ease allow-discrete;
+    transition:
+        transform var(--transition-base),
+        opacity var(--transition-base),
+        display var(--transition-base) allow-discrete,
+        overlay var(--transition-base) allow-discrete;
 
     &[open] {
         display: flex;
@@ -572,7 +771,58 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 .dialog-form__description {
     font-size: var(--font-sm);
-    color: #717182;
+    color: var(--color-text-muted);
     margin-bottom: var(--space-md);
     padding: 0 var(--space-lg);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    #card-dialog,
+    #delete-confirmation-dialog {
+        transform: none;
+        transition:
+            opacity 0.1s ease,
+            display 0.1s ease allow-discrete,
+            overlay 0.1s ease allow-discrete;
+    }
+
+    #card-dialog::backdrop,
+    #delete-confirmation-dialog::backdrop {
+        transition:
+            opacity 0.1s ease,
+            display 0.1s ease allow-discrete,
+            overlay 0.1s ease allow-discrete;
+    }
+
+    .tab-view.active {
+        animation: none;
+    }
+
+    .add-content-menu[popover] {
+        transition:
+            opacity 0.1s ease,
+            display 0.1s ease allow-discrete,
+            overlay 0.1s ease allow-discrete;
+    }
+}
+
+/* Evita bugs */
+.card-dialog__body {
+    min-width: 0;
+}
+
+.tab-view.active {
+    min-height: 0;
+}
+
+.config-panel-container {
+    min-height: 0;
+}
+
+.sidebar-spaces-menu {
+    min-height: 0;
 }

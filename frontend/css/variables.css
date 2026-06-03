@@ -1,61 +1,84 @@
 :root {
-    /* ─────────────────────────────────────
-       TIPOGRAFÍA Y ERGONOMÍA
-    ───────────────────────────────────── */
-    --font-base: 1rem;
-    --font-sm: 0.875rem;
-    --font-lg: 1.125rem;
-    --font-xl: 1.5rem; 
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
+   /* ─────────────────────────────────────
+      TIPOGRAFÍA Y ESCALA
+   ───────────────────────────────────── */
+   --font-xs:   0.75rem;   /* captions, badges, labels secundarios */
+   --font-sm:   0.875rem;  /* texto de apoyo, metas                */
+   --font-md:   1rem;      /* FIX: faltaba — equivale a --font-base */
+   --font-base: 1rem;      /* cuerpo                                */
+   --font-lg:   1.125rem;  /* títulos de sección                    */
+   --font-xl:   1.5rem;    /* títulos de página                     */
 
-    /* RADIUS (Bordes suaves premium) */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 22px;
+   --font-weight-normal:   400;
+   --font-weight-medium:   500;
+   --font-weight-semibold: 600; /* nuevo: para legends y headings    */
 
-    /* ESPACIADO ESCALAR */
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px; 
+   /* ─────────────────────────────────────
+      RADIO (bordes suaves premium)
+   ───────────────────────────────────── */
+   --radius-sm: 8px;
+   --radius-md: 12px;
+   --radius-lg: 22px;
 
-    /* ─────────────────────────────────────
-       SISTEMA DE COLOR INTERFAZ (OKLCH NATIVO)
-    ───────────────────────────────────── */
-    --color-bg: oklch(1 0 0);               /* #ffffff */
-    --sidebar: oklch(0.985 0 0);            /* Tu sidebar original */
-    --color-surface: oklch(0.9824 0.0013 286.38);       /* #f2f2f2 */
-    --color-surface-hover: oklch(0.92 0 0); /* #e5e5e5 */
-    --color-border: oklch(0.89 0 0);        /* #dedede */
-    --color-border-light: oklch(0.94 0 0);  /* #eaeaea */
-    --color-muted: oklch(0.94 0.005 286);   /* #ececf0 */
+   /* ─────────────────────────────────────
+      ESPACIADO ESCALAR
+   ───────────────────────────────────── */
+   --space-xs: 4px;   /* FIX: faltaba — usado en gap y paddings pequeños */
+   --space-sm: 8px;
+   --space-md: 16px;
+   --space-lg: 24px;
+   --space-xl: 32px;
 
-    /* TEXTO */
-    --color-text: oklch(0.1074 0.0447 280.7);   /* #030213 */
-    --color-text-muted: var(--color-muted);
+   /* ─────────────────────────────────────
+      TRANSICIONES (tokens centralizados)
+   ───────────────────────────────────── */
+   --transition-fast: 0.15s ease;
+   --transition-base: 0.3s ease;
 
-    /* ACENTO VIBRANTE */
-    --color-accent: oklch(0.63 0.23 23);    /* Tu rojo original */
+   /* ─────────────────────────────────────
+      SOMBRAS
+   ───────────────────────────────────── */
+   --shadow-sm: 0 2px 8px  oklch(0 0 0 / 0.08);
+   --shadow-md: 0 4px 12px oklch(0 0 0 / 0.10);
 
-    /* ─────────────────────────────────────
-       PALETA CROMÁTICA DE CARDS
-    ───────────────────────────────────── */
-    --card-gray: oklch(0.96 0 0);
-    --card-gray-text: oklch(0.57 0 0);
+   /* ─────────────────────────────────────
+      SISTEMA DE COLOR INTERFAZ (OKLCH nativo)
+   ───────────────────────────────────── */
+   --color-bg:           oklch(1 0 0);
+   --sidebar:            oklch(0.985 0 0);
+   --color-surface:      oklch(0.9824 0.0013 286.38);
+   --color-surface-hover:oklch(0.92 0 0);
+   --color-border:       oklch(0.89 0 0);
+   --color-border-light: oklch(0.94 0 0);
+   --color-muted:        oklch(0.94 0.005 286);   /* fondo atenuado      */
 
-    --card-red: oklch(0.95 0.02 20);
-    --card-red-text: oklch(0.62 0.18 24);
+   /* TEXTO */
+   --color-text:         oklch(0.1074 0.0447 280.7);
+   /* FIX: era var(--color-muted) que es un color de FONDO, no de texto  */
+   --color-text-muted:   oklch(0.55 0.015 285);   /* ≈ #717182 en OKLCH  */
 
-    --card-blue: oklch(0.95 0.03 240);
-    --card-blue-text: oklch(0.61 0.21 243);
+   /* ACENTO */
+   --color-accent:       oklch(0.63 0.23 23);
+   --color-accent-hover: oklch(0.55 0.22 23);   /* nuevo: estado hover del acento */
 
-    --card-green: oklch(0.97 0.04 145);
-    --card-green-text: oklch(0.72 0.19 148);
+   /* ─────────────────────────────────────
+      PALETA CROMÁTICA DE CARDS
+   ───────────────────────────────────── */
+   --card-gray:        oklch(0.96 0 0);
+   --card-gray-text:   oklch(0.57 0 0);
 
-    --card-yellow: oklch(0.97 0.04 85);
-    --card-yellow-text: oklch(0.71 0.16 76);
+   --card-red:         oklch(0.95 0.02 20);
+   --card-red-text:    oklch(0.62 0.18 24);
 
-    --card-purple: oklch(0.94 0.03 285);
-    --card-purple-text: oklch(0.48 0.25 285);
+   --card-blue:        oklch(0.95 0.03 240);
+   --card-blue-text:   oklch(0.61 0.21 243);
+
+   --card-green:       oklch(0.97 0.04 145);
+   --card-green-text:  oklch(0.72 0.19 148);
+
+   --card-yellow:      oklch(0.97 0.04 85);
+   --card-yellow-text: oklch(0.71 0.16 76);
+
+   --card-purple:      oklch(0.94 0.03 285);
+   --card-purple-text: oklch(0.48 0.25 285);
 }

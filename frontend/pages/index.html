@@ -1,58 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Prisma - Your Space</title>
-    <meta name="description" content="Organiza tu día a día con Prisma. Crea listas de tareas, gestiona tus notas personales y personaliza tu espacio de trabajo de forma rápida y sencilla.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://prisma.nertv.com/">
+    <meta name="description"
+        content="Organiza tu día a día con Prisma. Crea listas de tareas, gestiona tus notas personales y personaliza tu espacio de trabajo de forma rápida y sencilla." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://prisma.nertv.com/" />
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Prisma - Tu Espacio Personal de Notas">
-    <meta property="og:description" content="Organiza tu día a día con Prisma. Gestiona tus notas personales de forma rápida y visual.">
-    <meta property="og:image" content="../assets/og-image.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Prisma - Tu Espacio Personal de Notas" />
+    <meta property="og:description"
+        content="Organiza tu día a día con Prisma. Gestiona tus notas personales de forma rápida y visual." />
+    <meta property="og:image" content="../assets/og-image.png" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Prisma - Tu Espacio Personal de Notas">
-    <meta name="twitter:description" content="Organiza tu día a día con Prizma. Gestiona tus notas personales de forma rápida y visual.">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Prisma - Tu Espacio Personal de Notas" />
+    <meta name="twitter:description"
+        content="Organiza tu día a día con Prisma. Gestiona tus notas personales de forma rápida y visual." />
 
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/main.css" />
 </head>
+
 <body>
     <aside id="sidebar" class="sidebar" aria-label="Navegación lateral">
         <div class="sidebar__profile">
-            <img src="../assets/Primh.png" alt="Foto de perfil de Kevin Parra" class="sidebar__profile-img" loading="lazy">
+            <img src="../assets/Primh.png" alt="Foto de perfil de Kevin Parra" class="sidebar__profile-img"
+                loading="lazy" />
             <div class="sidebar__profile-info">
                 <span class="sidebar__profile-name">Kevin Parra</span>
                 <span class="sidebar__profile-email">kevin@example.com</span>
             </div>
         </div>
-    
+
         <nav class="sidebar__nav" aria-label="Menú principal">
             <ul class="sidebar__nav-list">
                 <li class="sidebar__nav-item">
                     <a href="index.html" class="sidebar__nav-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-home"></use>
                         </svg>
                         <span>Home</span>
                     </a>
                 </li>
-    
+
                 <li class="sidebar__nav-item sidebar__nav-item--active">
                     <a href="#" class="sidebar__nav-link" aria-current="page">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-space-dashboard"></use>
                         </svg>
                         <span>Spaces</span>
                     </a>
                 </li>
-    
+
                 <li class="sidebar__nav-item">
                     <a href="#" class="sidebar__nav-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-favorite"></use>
                         </svg>
                         <span>Favorites</span>
@@ -61,7 +67,7 @@
 
                 <li class="sidebar__nav-item">
                     <a href="#" class="sidebar__nav-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-folder"></use>
                         </svg>
                         <span>Folders</span>
@@ -70,7 +76,7 @@
 
                 <li class="sidebar__nav-item">
                     <a href="#" class="sidebar__nav-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-share"></use>
                         </svg>
                         <span>Shared</span>
@@ -78,12 +84,12 @@
                 </li>
             </ul>
         </nav>
-    
+
         <div class="sidebar__settings">
             <ul class="sidebar__settings-list">
                 <li class="sidebar__settings-item">
                     <a href="settings.html" class="sidebar__settings-link">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <svg style="width: 24px; height: 24px" aria-hidden="true">
                             <use href="../assets/icons/sprite.svg#icon-settings"></use>
                         </svg>
                         <span>Settings</span>
@@ -96,24 +102,28 @@
     <main class="main-content">
         <header class="main-content__header">
             <h1 class="main-content__title">Workspace</h1>
-            
+
             <div class="main-content__actions">
-                <button popovertarget="menu-create" class="main-content__btn main-content__btn--create" id="new-space-btn" aria-label="Create new Prisma-Space">
-                    <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                <button popovertarget="menu-create" class="main-content__btn main-content__btn--create"
+                    id="new-space-btn" aria-label="Create new Prisma-Space">
+                    <svg style="width: 24px; height: 24px" aria-hidden="true">
                         <use href="../assets/icons/sprite.svg#icon-add"></use>
                     </svg>
                     New Space
                 </button>
-                
+
                 <div id="menu-create" popover class="main-content__menu" role="menu">
-                    <button id="create-space-btn" class="main-content__menu-btn" data-space="normal">Space</button>
-                    <button id="create-temporal-space-btn" class="main-content__menu-btn" data-space="temporal">Temp Space</button>
+                    <button id="create-space-btn" class="main-content__menu-btn" data-space="normal">
+                        Space
+                    </button>
+                    <button id="create-temporal-space-btn" class="main-content__menu-btn" data-space="temporal">
+                        Temp Space
+                    </button>
                 </div>
             </div>
         </header>
-    
-        <section class="cards-display" aria-label="Mis notas y listas de tareas">
-        </section>
+
+        <section class="cards-display" aria-label="Mis notas y listas de tareas"></section>
     </main>
 
     <dialog id="card-dialog" closedby="any" aria-labelledby="modal-card-title">
@@ -124,18 +134,36 @@
                         <span>➕ Add page</span>
                     </button>
                 </div>
-                
-                <div id="sidebar-spaces-menu" class="sidebar-spaces-menu" role="tablist">
-                    <button type="button" class="sidebar-tab active" data-tab="content" aria-label="Edit content">
-                        <svg style="width: 24px; height: 24px;" aria-hidden="true">
-                            <use href="../assets/icons/sprite.svg#icon-document"></use>
-                        </svg>
-                        <span>Page 1</span>
-                    </button>
+
+                <div id="sidebar-spaces-menu" class="sidebar-spaces-menu" role="tablist" aria-label="Pages">
+                    <div class="sidebar-page">
+
+                        <!-- Botón que cambia de página -->
+                        <button type="button" class="sidebar-tab active" role="tab" aria-selected="true"
+                            aria-controls="tab-content">
+                            <svg aria-hidden="true">
+                                <use href="../assets/icons/sprite.svg#icon-document"></use>
+                            </svg>
+                            <span class="sidebar-tab__label">Page 1</span>
+                        </button>
+
+                        <!-- Botón de acciones -->
+                        <button type="button" class="sidebar-tab__actions" aria-label="Page actions"
+                            popovertarget="page-menu-1">
+
+                            <svg aria-hidden="true">
+                                <use href="../assets/icons/sprite.svg#icon-more-vert"></use>
+                            </svg>
+
+                        </button>
+
+                    </div>
                 </div>
 
                 <div class="sidebar-bottom-actions">
-                    <button id="btn-open-config" class="sidebar-tab sidebar-tap-config" data-tab="config" aria-label="Personalize appearance" role="tab" aria-selected="false" type="button">
+                    <button id="btn-open-config" class="sidebar-tab sidebar-tap-config" data-tab="config" role="tab"
+                        aria-selected="false" aria-controls="tab-config" aria-label="Settings — Personalize appearance"
+                        type="button">
                         <span>⚙️ Settings</span>
                     </button>
                 </div>
@@ -143,123 +171,186 @@
 
             <div class="card-dialog__body">
                 <header class="card-dialog__header">
-                    <input id="modal-card-title" class="card-dialog__title" type="text" placeholder="Untitled" maxlength="80" aria-label="Title of the space (note)">
-                    <button id="card-dialog__close" class="card-dialog__close" aria-label="Close dialog">
-                        <span aria-hidden="true">💾</span>save and close
+                    <input id="modal-card-title" class="card-dialog__title" type="text" placeholder="Untitled"
+                        maxlength="80" aria-label="Title of the space (note)" />
+                    <button id="card-dialog__close" class="card-dialog__close" aria-label="Save and close dialog">
+                        <span aria-hidden="true">💾</span>Save and close
                     </button>
                 </header>
-        
-                <section id="tab-content" class="tab-view active" aria-label="Contenido de la nota">
+
+                <section id="tab-content" class="tab-view active" role="tabpanel" aria-label="Page content"
+                    aria-labelledby="modal-card-title">
                     <div class="card-dialog__content">
-                        <button popovertarget="menu-add-content" class="add-content" aria-label="Opciones de la nota">
-                            <svg style="width: 24px; height: 24px;" aria-hidden="true">
+                        <button popovertarget="menu-change-block" class="add-content" aria-label="Add content block">
+                            <svg style="width: 24px; height: 24px" aria-hidden="true">
                                 <use href="../assets/icons/sprite.svg#icon-add"></use>
                             </svg>
                             Add content
                         </button>
-                        
-                        <div id="menu-add-content" popover class="add-content-menu" role="menu">
-                            <button role="menuitem" class="card-menu__btn">☑️ Task</button>
-                            <button role="menuitem" class="card-menu__btn">📝 Note</button>
-                        </div>
                     </div>
                 </section>
 
-                <section id="tab-config" class="tab-view" aria-label="Panel de configuración">
+                <section id="tab-config" class="tab-view" role="tabpanel" aria-label="Space settings"
+                    aria-labelledby="btn-open-config">
                     <div class="config-panel-container">
+                        <!-- Apariencia -->
                         <fieldset class="config-section-card">
-                            <legend>🎨 Appearance</legend>
-                            <p class="config-section-description">Customize the background and the semantic color of this space.</p>
+                            <legend><span aria-hidden="true">🎨</span> Appearance</legend>
+                            <p class="config-section-description">
+                                Customize the background and the semantic color of this space.
+                            </p>
                             <div class="dialog-form__option">
-                                <span class="dialog-form__label-mock">Background Color</span>
-                                <div class="color-picker" role="radiogroup" aria-label="Seleccionar color de fondo">
-                                    <button type="button" class="color-opt selected" data-color="#f1f1f1" style="background-color: #787878;" role="radio" aria-checked="true" aria-label="Gris"></button>
-                                    <button type="button" class="color-opt" data-color="#fdefee" style="background-color: #ed6b5a;" role="radio" aria-checked="false" aria-label="Rojo"></button>
-                                    <button type="button" class="color-opt" data-color="#e6f2ff" style="background-color: #038cff;" role="radio" aria-checked="false" aria-label="Azul"></button>
-                                    <button type="button" class="color-opt" data-color="#e1fae7" style="background-color: #36c25c;" role="radio" aria-checked="false" aria-label="Verde"></button>
-                                    <button type="button" class="color-opt" data-color="#fcf5db" style="background-color: #e6961f;" role="radio" aria-checked="false" aria-label="Amarillo"></button>
-                                    <button type="button" class="color-opt" data-color="#efeaff" style="background-color: #6d3cfa;" role="radio" aria-checked="false" aria-label="Morado"></button>
+                                <span class="dialog-form__label-mock" id="bg-color-label">Background Color</span>
+                                <div class="color-picker" role="radiogroup" aria-labelledby="bg-color-label">
+                                    <button type="button" class="color-opt selected" data-color="#f1f1f1"
+                                        style="background-color: #787878" role="radio" aria-checked="true"
+                                        aria-label="Gray"></button>
+                                    <button type="button" class="color-opt" data-color="#fdefee"
+                                        style="background-color: #ed6b5a" role="radio" aria-checked="false"
+                                        aria-label="Red"></button>
+                                    <button type="button" class="color-opt" data-color="#e6f2ff"
+                                        style="background-color: #038cff" role="radio" aria-checked="false"
+                                        aria-label="Blue"></button>
+                                    <button type="button" class="color-opt" data-color="#e1fae7"
+                                        style="background-color: #36c25c" role="radio" aria-checked="false"
+                                        aria-label="Green"></button>
+                                    <button type="button" class="color-opt" data-color="#fcf5db"
+                                        style="background-color: #e6961f" role="radio" aria-checked="false"
+                                        aria-label="Yellow"></button>
+                                    <button type="button" class="color-opt" data-color="#efeaff"
+                                        style="background-color: #6d3cfa" role="radio" aria-checked="false"
+                                        aria-label="Purple"></button>
                                 </div>
                             </div>
 
                             <div class="dialog-form__metadata">
                                 <div class="dialog-form__option">
-                                    <label function="marker">Marker</label>
-                                    <input type="text" id="marker" maxlength="2" class="dialog-form__marker" placeholder="📌" name="marker">
+                                    <!-- FIX: atributo "function" no existe en HTML → corregido a "for" -->
+                                    <label for="marker">Marker</label>
+                                    <input type="text" id="marker" maxlength="2"
+                                        class="dialog-form__marker dialog-form__input" placeholder="📌" name="marker"
+                                        aria-label="Space marker emoji" />
                                 </div>
 
                                 <div class="dialog-form__option">
-                                    <label function="card-tags">Tags</label>
-                                    <input type="text" id="card-tags" class="dialog-form__tags" placeholder="Personal" name="tag">
+                                    <!-- FIX: atributo "function" no existe en HTML → corregido a "for" -->
+                                    <label for="card-tags">Tags</label>
+                                    <input type="text" id="card-tags" class="dialog-form__tags dialog-form__input"
+                                        placeholder="Personal" name="tag" aria-label="Space tags" />
                                 </div>
                             </div>
                         </fieldset>
 
+                        <!-- Compartido con -->
                         <fieldset class="config-section-card">
-                            <legend>⌨️ Keyboard Shortcuts</legend>
-                            <p class="config-section-description">System commands for the molecular management of text blocks.</p>
-                            <table class="shortcuts-table">
-                                <tr>
-                                    <td><kbd>Enter</kbd></td>
-                                    <td>Create a new block of plain text below.</td>
-                                </tr>
-                                <tr>
-                                    <td><kbd>Esc</kbd></td>
-                                    <td>Save permanently and close the dialog box.</td>
-                                </tr>
-                                <tr>
-                                    <td><kbd>:</kbd></td>
-                                    <td>Open the floating molecular submenu above the block.</td>
-                                </tr>
+                            <legend><span aria-hidden="true">👥</span> Shared with</legend>
+                            <p class="config-section-description">
+                                People with access to this space.
+                            </p>
+                            <ul class="shared-profiles-list" aria-label="Collaborators with access">
+                                <li class="shared-profile">
+                                    <div class="shared-profile__content">
+                                        <img src="../assets/midudev.jpg" alt="Midudev profile picture"
+                                            class="shared-profile__avatar" width="40" height="40" loading="lazy" />
+                                        <div class="shared-profile__info">
+                                            <strong class="shared-profile__name">Midudev</strong>
+                                            <span class="shared-profile__role badge-editor">Editor</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="shared-profile__remove"
+                                        aria-label="Remove Midudev from shared access">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <button type="button" class="invite">
+                                <span aria-hidden="true">+</span>
+                                Invite someone
+                            </button>
+
+                            <p class="soon" role="note">
+                                Sharing per space and per page will be available soon.
+                            </p>
+                        </fieldset>
+
+                        <!-- Atajos de teclado -->
+                        <fieldset class="config-section-card">
+                            <legend>
+                                <span aria-hidden="true">⌨️</span> Keyboard Shortcuts
+                            </legend>
+                            <p class="config-section-description">
+                                System commands for the molecular management of text blocks.
+                            </p>
+                            <table class="shortcuts-table" aria-label="Keyboard shortcuts reference">
+                                <tbody>
+                                    <tr>
+                                        <td><kbd>Enter</kbd></td>
+                                        <td>Create a new block of plain text below.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Esc</kbd></td>
+                                        <td>Save permanently and close the dialog box.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>:</kbd></td>
+                                        <td>
+                                            Open the floating molecular submenu above the block.
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </fieldset>
-
-                        <fieldset class="config-section-card">
-                            <legend>👥 Shared with</legend>
-                            <p class="config-section-description">Persons you shared with.</p>
-                            <div>
-                                <div class="shared-profile--container">
-                                    <div class="shared-profile--content">
-                                        <img src="../assets/midudev.jpg" style="width: 45px; border-radius: 50%; ">
-                                    <div class="shared-profile-data">
-                                        <span>Midudev</span>
-                                        <span>miduga@gmail.com</span>
-                                    </div>
-                                    </div>    
-                                    <button>x</button>
-                                </div>
-                            </div>
-                            <button class="invite">+ invite someone</button>
-                            <span class="soon">The feature to share the space and per page will be available soon.</span>
-                        </fieldset>
                     </div>
-                    <div class="config-panel-actions">
-                        <button>Cancel</button>
-                        <button>Save</button>
+                    <!-- /config-panel-container -->
+
+                    <div class="config-panel-actions" role="group" aria-label="Configuration actions">
+                        <button type="button">Cancel</button>
+                        <button type="button">Save</button>
                     </div>
                 </section>
+                <!-- /tab-config -->
             </div>
+            <!-- /card-dialog__body -->
         </div>
-        <!-- POP UP MENU ESCONDIBLE -->
-        <div id="menu-change-block" popover class="add-content-menu" role="menu">
-            <button role="menuitem" class="card-menu__btn" data-type="text">📝 Text</button>
-            <button role="menuitem" class="card-menu__btn" data-type="heading">🛑 Title</button>
-            <button role="menuitem" class="card-menu__btn" data-type="task">☑️ Task</button>
+        <!-- /card-dialog__container -->
+
+        <!-- POPOVER MENU DE BLOQUES -->
+        <div id="menu-change-block" popover class="add-content-menu" role="menu" aria-label="Add content options">
+            <button role="menuitem" class="card-menu__btn" data-type="text">
+                📝 Text
+            </button>
+            <button role="menuitem" class="card-menu__btn" data-type="heading">
+                🛑 Title
+            </button>
+            <button role="menuitem" class="card-menu__btn" data-type="task">
+                ☑️ Task
+            </button>
         </div>
     </dialog>
 
-    <dialog id="delete-confirmation-dialog" closedby="any" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
+    <!-- DIALOG DE CONFIRMACIÓN DE BORRADO -->
+    <dialog id="delete-confirmation-dialog" closedby="any" aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-desc">
         <form class="dialog-form" method="dialog">
             <h2 id="delete-dialog-title" class="dialog-form__title">Delete Note</h2>
-            <p id="delete-dialog-desc" class="dialog-form__description">Are you sure you want to permanently delete this note? This action cannot be undone.</p>
-            
+            <p id="delete-dialog-desc" class="dialog-form__description">
+                Are you sure you want to permanently delete this note? This action
+                cannot be undone.
+            </p>
+
             <div class="dialog-form__actions">
-                <button type="button" value="cancel" class="dialog-btn dialog-btn--cancel">Cancel</button>
-                <button type="submit" value="confirm" class="dialog-btn dialog-btn--danger">Delete</button>
+                <button type="button" value="cancel" class="dialog-btn dialog-btn--cancel">
+                    Cancel
+                </button>
+                <button type="submit" value="confirm" class="dialog-btn dialog-btn--danger">
+                    Delete
+                </button>
             </div>
         </form>
     </dialog>
 
     <script type="module" src="../js/main.js"></script>
 </body>
+
 </html>
