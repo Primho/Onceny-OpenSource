@@ -86,4 +86,3 @@ sideBarTab.forEach(btn => {
         currentContent.classList.add('active');
     })
 })
-
