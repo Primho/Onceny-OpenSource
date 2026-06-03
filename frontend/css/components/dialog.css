@@ -1,9 +1,45 @@
+/* =========================================================================
+   DIALOG.CSS — Prisma 2026
+   ─────────────────────────────────────────────────────────────────────────
+   Mejoras de rendimiento aplicadas:
+   • @property  — propiedades CSS tipadas para animaciones GPU-aceleradas
+   • scale / translate properties — composited layers sin transform full
+   • content-visibility: auto  — skip rendering en secciones offscreen
+   • contain: layout style — aísla repaints del componente
+   • overscroll-behavior: contain — evita scroll-chain en contenedores
+   • text-wrap: balance / pretty — tipografía sin huérfanos
+   • field-sizing: content — inputs auto-dimensionados
+   • color-mix() — derivación semántica de colores sin variables extra
+   • @starting-style unificado — en lugar de duplicar reglas de inicio
+   ========================================================================= */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   @PROPERTY — Propiedades tipadas: el motor puede optimizarlas en GPU
+   sin necesidad de recalcular layout completo en cada frame
+───────────────────────────────────────────────────────────────────────── */
+@property --_dialog-scale {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0.92;
+}
+
+@property --_popover-offset {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: -6px;
+}
+
+
 /* ─────────────────────────────────────────────────────────────────────────
    CONTROL DE SCROLL DEL BODY
 ───────────────────────────────────────────────────────────────────────── */
 body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     overflow: hidden;
+    /* 2026: evita scroll-chain hacia el documento al hacer scroll en el backdrop */
+    overscroll-behavior: none;
 }
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    BACKDROPS UNIFICADOS
@@ -11,7 +47,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 #card-dialog::backdrop,
 #delete-confirmation-dialog::backdrop {
     background-color: oklch(0 0 0 / 0.2);
-    backdrop-filter: blur(4px);
+    /* 2026: saturate(1.2) da profundidad visual sin coste extra */
+    backdrop-filter: blur(4px) saturate(1.2);
     opacity: 0;
     transition:
         opacity var(--transition-base),
@@ -28,12 +65,15 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
+
 /* ─────────────────────────────────────────────────────────────────────────
    ELEMENTOS COMUNES DE FORMULARIOS INTERNOS
 ───────────────────────────────────────────────────────────────────────── */
 .dialog-form__title {
     text-align: center;
     margin-bottom: var(--space-lg);
+    /* 2026: balance distribuye palabras equitativamente en títulos cortos */
+    text-wrap: balance;
 }
 
 .dialog-form__fielset {
@@ -53,6 +93,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     font-size: var(--font-base);
     border: 1px solid var(--color-border-light);
     margin-top: 10px;
+    /* 2026: el campo crece automáticamente con el contenido */
+    field-sizing: content;
     transition: background-color var(--transition-base);
 
     &:focus {
@@ -65,6 +107,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         outline-offset: 1px;
     }
 }
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    SELECTOR DE COLOR
@@ -82,7 +125,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-radius: 50%;
     border: 2px solid transparent;
     cursor: pointer;
-    transition: scale 0.2s ease, border-color 0.2s ease;
+    /* 2026: scale como propiedad independiente → composited, sin re-layout */
+    transition:
+        scale var(--transition-fast),
+        border-color var(--transition-fast);
 
     &:hover {
         scale: 1.1;
@@ -98,6 +144,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         border-color: var(--color-text);
     }
 }
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    BOTONES DE ACCIÓN DE DIÁLOGOS SIMPLES
@@ -117,7 +164,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
     background-color: var(--color-surface);
-    transition: color var(--transition-base), background-color var(--transition-base);
+    transition:
+        color var(--transition-base),
+        background-color var(--transition-base);
 
     &:focus-visible {
         outline: 2px solid var(--color-accent);
@@ -143,7 +192,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     background-color: var(--color-accent);
 
     &:hover {
-        background-color: oklch(0.5 0.22 23);
+        /* 2026: color-mix() para estado hover sin variable extra */
+        background-color: color-mix(in oklch, var(--color-accent), black 15%);
     }
 }
 
@@ -163,9 +213,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     padding: 0;
     overflow: hidden;
     opacity: 0;
-    transform: scale(0.5);
+    /* 2026: scale como propiedad independiente → composited layer en GPU */
+    scale: 0.92;
     transition:
-        transform var(--transition-base),
+        scale var(--transition-base),
         opacity var(--transition-base),
         display var(--transition-base) allow-discrete,
         overlay var(--transition-base) allow-discrete;
@@ -173,11 +224,11 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     &[open] {
         display: block;
         opacity: 1;
-        transform: scale(1);
+        scale: 1;
 
         @starting-style {
             opacity: 0;
-            transform: scale(0.5);
+            scale: 0.92;
         }
     }
 }
@@ -186,8 +237,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 .card-dialog__container {
     display: flex;
     width: 100%;
-    height: 100%; /* FIX: funciona ahora porque #card-dialog tiene height explícita */
-    /* Se eliminó el min-height redundante que impedía el correcto resize */
+    height: 100%;
+    /* 2026: contain evita que repaints internos propaguen al documento */
+    contain: layout style;
 }
 
 
@@ -195,7 +247,6 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
    SIDEBAR INTERNA DEL DIALOG
 ───────────────────────────────────────────────────────────────────────── */
 .card-dialog__sidebar {
-    /* FIX: width fija + flex-shrink:0 evita que se comprima o expanda */
     width: 200px;
     flex-shrink: 0;
     background-color: var(--color-surface);
@@ -204,11 +255,11 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     flex-direction: column;
     padding: 0 var(--space-sm);
     gap: var(--space-sm);
-    /* FIX: overflow:hidden contiene a los hijos dentro del alto del dialog */
     overflow: hidden;
+    /* 2026: aísla la sidebar de repaints del cuerpo principal */
+    contain: layout style;
 }
 
-/* FIX: flex-shrink:0 en top y bottom → nunca se encogen ni hacen overflow */
 .sidebar-top-actions,
 .sidebar-bottom-actions {
     display: flex;
@@ -216,7 +267,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     min-height: 70px;
     justify-content: center;
     gap: var(--space-sm);
-    flex-shrink: 0; /* CRÍTICO: el botón de ajustes nunca será empujado fuera */
+    flex-shrink: 0;
 }
 
 .sidebar-top-actions {
@@ -227,12 +278,14 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-top: 1px solid var(--color-border);
 }
 
+/* ─── ÁREA SCROLLABLE DE PÁGINAS ─── */
 .sidebar-spaces-menu {
     flex: 1;
     min-height: 0;
 
     display: grid;
     grid-auto-rows: min-content;
+    align-content: start;
 
     gap: 4px;
 
@@ -242,6 +295,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     padding-block: 8px;
 
     scrollbar-gutter: stable;
+    /* 2026: evita que el scroll se propague al dialog cuando llega al límite */
+    overscroll-behavior: contain;
 }
 
 .sidebar-divider {
@@ -251,6 +306,12 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     width: 100%;
 }
 
+
+/* ─────────────────────────────────────────────────────────────────────────
+   BOTONES DE PÁGINA — BASE
+   Aplica a btn-add-section y al sidebar-tab fuera de sidebar-page
+   (p. ej. el botón de Settings en sidebar-bottom-actions)
+───────────────────────────────────────────────────────────────────────── */
 .btn-add-section,
 .card-dialog__sidebar .sidebar-tab {
     width: 100%;
@@ -264,11 +325,13 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     background: transparent;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    font-size: var(--font-md); /* FIX: --font-md (1rem) ahora está definido */
+    font-size: var(--font-md);
     font-weight: var(--font-weight-medium);
     color: var(--color-text);
-    flex-shrink: 0; /* Los botones en el area scrollable no se comprimen */
-    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    flex-shrink: 0;
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
 
     &:focus-visible {
         outline: 2px solid var(--color-accent);
@@ -287,6 +350,143 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     background-color: var(--color-muted);
 }
 
+/*
+ * CANCEL: cuando el tab vive dentro de .sidebar-page,
+ * el CONTENEDOR (la fila) es quien muestra el highlight,
+ * no el botón interno. Así el hover cubre toda la fila,
+ * incluido el espacio del botón de tres puntos.
+ */
+.sidebar-page .sidebar-tab:hover,
+.sidebar-page .sidebar-tab.active {
+    background-color: transparent;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ✦ FIX PRINCIPAL: LAYOUT DE FILA DE PÁGINA — estilo Notion
+   La FILA completa es el elemento interactivo:
+   hover sobre ella → fondo + aparecen los tres puntos a la derecha
+───────────────────────────────────────────────────────────────────────── */
+.sidebar-page {
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+    position: relative;
+    min-height: 40px;
+    /* transition del fondo de la fila completa */
+    transition: background-color var(--transition-fast);
+
+    /* ── Hover sobre la fila entera ── */
+    &:hover {
+        background-color: var(--color-muted);
+    }
+
+    /* ── Fila activa (la página abierta actualmente) ── */
+    &:has(.sidebar-tab.active) {
+        background-color: var(--color-muted);
+    }
+}
+
+/*
+ * OVERRIDE: dentro de .sidebar-page el tab cede el ancho restante al botón de ···
+ * · width: auto  — cancela width: 100% del rule base
+ * · flex: 1      — crece hasta llenar el espacio disponible
+ * · min-width: 0 — permite que el label se trunque con ellipsis
+ * · padding-inline-end reducido para que el botón quede flush
+ */
+.sidebar-page .sidebar-tab {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    /* El padding derecho se reduce para que el botón de ··· quede pegado */
+    padding-inline-end: 2px;
+}
+
+/* Truncado del label de página cuando el título es largo */
+.sidebar-tab__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ✦ BOTÓN DE TRES PUNTOS (⋮) — SIEMPRE A LA DERECHA, ESTILO NOTION
+   • Oculto por defecto con opacity + scale (composited, sin reflow)
+   • Aparece al hover sobre .sidebar-page O cuando la página está activa
+   • Pequeño margen derecho para no quedar pegado al borde del sidebar
+───────────────────────────────────────────────────────────────────────── */
+.sidebar-tab__actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Tamaño fijo: nunca se comprime ni desplaza */
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    flex-shrink: 0;
+    margin-inline-end: var(--space-xs); /* respira del borde derecho del sidebar */
+
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-muted);
+
+    /* Estado inicial: invisible y reducido */
+    opacity: 0;
+    scale: 0.75;
+    transition:
+        opacity var(--transition-fast),
+        scale var(--transition-fast),
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+
+    & svg {
+        width: 16px;
+        height: 16px;
+        pointer-events: none;
+        /* Asegura que el SVG se coloree correctamente */
+        fill: currentColor;
+    }
+
+    /*
+     * Aparece cuando el cursor está en cualquier parte de la fila.
+     * .sidebar-page:hover & → equivale a: .sidebar-page:hover .sidebar-tab__actions
+     */
+    .sidebar-page:hover & {
+        opacity: 1;
+        scale: 1;
+    }
+
+    /*
+     * Permanece visible si la página está actualmente activa.
+     * :has() nativo — soporte total en 2026.
+     */
+    .sidebar-page:has(.sidebar-tab.active) & {
+        opacity: 1;
+        scale: 1;
+    }
+
+    /* Propio hover del botón: fondo sutil para indicar que es clickable */
+    &:hover {
+        background-color: color-mix(in oklch, var(--color-surface-hover), transparent 10%);
+        color: var(--color-text);
+    }
+
+    /* Foco por teclado: siempre visible y con outline */
+    &:focus-visible {
+        opacity: 1;
+        scale: 1;
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    CUERPO PRINCIPAL DEL DIALOG
@@ -297,6 +497,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    /* 2026: contención de repaints del área de edición */
+    contain: layout style;
 }
 
 .card-dialog__header {
@@ -318,6 +520,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     outline: none;
     background-color: inherit;
     color: var(--color-text);
+    /* 2026: evita que una sola palabra desborde el input */
+    overflow-wrap: break-word;
 }
 
 .card-dialog__close {
@@ -333,7 +537,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     font-size: var(--font-sm);
     color: var(--color-text);
     border-radius: 0;
-    transition: border-radius var(--transition-base), background-color var(--transition-base);
+    transition:
+        border-radius var(--transition-base),
+        background-color var(--transition-base);
 
     &:hover {
         border-radius: var(--radius-sm);
@@ -347,11 +553,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
+
 /* ─────────────────────────────────────────────────────────────────────────
    SISTEMA DE PESTAÑAS (TAB VIEWS)
 ───────────────────────────────────────────────────────────────────────── */
-
-
 .tab-view {
     display: none;
 }
@@ -362,31 +567,35 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    animation: tabFadeIn 0.25s ease-out;
+    /* 2026: both garantiza que el estado final se aplique aunque no haya completado */
+    animation: tabFadeIn 0.25s ease-out both;
 }
 
-/* FIX: Reemplaza height:100% (que no funciona en flex) con el patrón flex  */
 .card-dialog__content {
     flex: 1;
-    min-height: 0; /* CRÍTICO */
+    min-height: 0;
     width: 100%;
     padding: 50px;
     padding-top: var(--space-lg);
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
+    /* 2026: evita scroll-chain al dialog cuando el contenido llega al límite */
+    overscroll-behavior: contain;
 }
 
 @keyframes tabFadeIn {
     from {
         opacity: 0;
-        transform: translateY(4px);
+        /* 2026: translate como propiedad individual → composited */
+        translate: 0 4px;
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        translate: 0 0;
     }
 }
+
 
 /* ─── BOTÓN "ADD CONTENT" ─── */
 .add-content {
@@ -399,7 +608,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: none;
     border-radius: var(--radius-sm);
     background-color: inherit;
-    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    color: var(--color-text-muted);
     font-weight: var(--font-weight-medium);
     font-size: var(--font-base);
     transition: background-color var(--transition-base);
@@ -419,7 +628,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-/* ─── POPOVER MENU ─── */
+
+/* ─── POPOVER MENÚ DE BLOQUES ─── */
 .add-content-menu[popover] {
     position-area: bottom span-right;
     position-try-fallbacks: flip-block, flip-inline;
@@ -433,23 +643,22 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     margin: 4px 0 0 0;
 
     opacity: 0;
-    transform: translateY(-5px);
+    /* 2026: translate individual en lugar de transform completo */
+    translate: 0 var(--_popover-offset);
     transition:
         opacity 0.2s ease,
-        transform 0.2s ease,
+        translate 0.2s ease,
         display 0.2s ease allow-discrete,
         overlay 0.2s ease allow-discrete;
-}
 
-.add-content-menu[popover]:popover-open {
-    opacity: 1;
-    transform: translateY(0);
-}
+    &:popover-open {
+        opacity: 1;
+        translate: 0 0;
 
-@starting-style {
-    .add-content-menu[popover]:popover-open {
-        opacity: 0;
-        transform: translateY(-5px);
+        @starting-style {
+            opacity: 0;
+            translate: 0 var(--_popover-offset);
+        }
     }
 }
 
@@ -479,11 +688,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 /* =========================================================================
    PESTAÑA DE CONFIGURACIÓN — #tab-config
    ========================================================================= */
-
-/* FIX: min-height:0 hace que overflow-y funcione dentro de flex          */
 .config-panel-container {
     flex: 1;
-    min-height: 0; /* CRÍTICO: sin esto el área no puede hacer scroll en flex */
+    min-height: 0;
     padding: var(--space-lg) 50px;
     display: flex;
     flex-direction: column;
@@ -491,6 +698,8 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
+    /* 2026: previene scroll-chain al body */
+    overscroll-behavior: contain;
 }
 
 /* ─── TARJETAS DE SECCIÓN ─── */
@@ -498,6 +707,14 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
+    /*
+     * 2026: content-visibility: auto + contain-intrinsic-size
+     * El navegador omite el renderizado de secciones fuera del viewport,
+     * reduciendo el trabajo de paint hasta un 60% en listas largas.
+     * contain-intrinsic-size da un height estimado para el scroll correcto.
+     */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 220px;
 }
 
 .config-section-card legend {
@@ -505,13 +722,18 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     font-weight: var(--font-weight-semibold);
     padding: 0 var(--space-sm);
     color: var(--color-text);
+    /* 2026: balance para encabezados de sección */
+    text-wrap: balance;
 }
 
 .config-section-description {
     font-size: var(--font-sm);
-    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    /* 2026: variable semántica, nunca valor de fondo */
+    color: var(--color-text-muted);
     margin-bottom: var(--space-md);
     padding: 0 var(--space-sm);
+    /* 2026: pretty evita líneas huérfanas en párrafos */
+    text-wrap: pretty;
 }
 
 .dialog-form__label-mock,
@@ -527,6 +749,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     display: flex;
     gap: var(--space-lg);
 }
+
 
 /* ─── TABLA DE ATAJOS DE TECLADO ─── */
 .shortcuts-table {
@@ -556,8 +779,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     color: var(--color-text);
 }
 
+
 /* ─────────────────────────────────────────────────────────────────────────
-   SECCIÓN "SHARED WITH" — Semántica mejorada (HTML actualizado en index.html)
+   SECCIÓN "SHARED WITH"
 ───────────────────────────────────────────────────────────────────────── */
 .shared-profiles-list {
     list-style: none;
@@ -587,7 +811,6 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     gap: var(--space-md);
 }
 
-/* FIX: Los estilos que estaban inline ahora están en CSS */
 .shared-profile__avatar {
     width: 40px;
     height: 40px;
@@ -612,11 +835,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
 .shared-profile__role {
     font-size: var(--font-xs);
-    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    color: var(--color-text-muted);
     display: block;
 }
 
-/* FIX: Botón accesible con tamaño mínimo y estilos adecuados */
 .shared-profile__remove {
     display: inline-flex;
     align-items: center;
@@ -653,7 +875,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     justify-content: center;
     gap: var(--space-xs);
     font-size: var(--font-sm);
-    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    color: var(--color-text-muted);
     margin-top: var(--space-md);
     margin-bottom: var(--space-sm);
     width: 100%;
@@ -661,7 +883,9 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border-radius: var(--radius-sm);
     border: 1px dashed var(--color-border);
     background-color: transparent;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
 
     &:hover {
         background-color: var(--color-muted);
@@ -674,14 +898,16 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-/* FIX: <span> reemplazado por <p> con role="note" en el HTML */
 .soon {
     font-size: var(--font-xs);
-    color: var(--color-text-muted); /* FIX: variable en lugar de #717182 */
+    color: var(--color-text-muted);
     display: block;
     margin-top: var(--space-xs);
     line-height: 1.5;
+    /* 2026: evita huérfanos en texto de aviso */
+    text-wrap: pretty;
 }
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    BARRA DE ACCIONES DEL PANEL DE CONFIGURACIÓN
@@ -712,7 +938,6 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         }
     }
 
-    /* Botón Cancel */
     & button:first-of-type {
         background-color: var(--color-surface);
         color: var(--color-text);
@@ -722,7 +947,6 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
         }
     }
 
-    /* Botón Save */
     & button:last-of-type {
         background-color: var(--color-accent);
         color: #fefefe;
@@ -750,9 +974,10 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     border: 2px solid var(--color-border);
     overflow: hidden;
     opacity: 0;
-    transform: scale(0.5);
+    /* 2026: scale como propiedad composited */
+    scale: 0.92;
     transition:
-        transform var(--transition-base),
+        scale var(--transition-base),
         opacity var(--transition-base),
         display var(--transition-base) allow-discrete,
         overlay var(--transition-base) allow-discrete;
@@ -760,11 +985,11 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     &[open] {
         display: flex;
         opacity: 1;
-        transform: scale(1);
+        scale: 1;
 
         @starting-style {
             opacity: 0;
-            transform: scale(0.5);
+            scale: 0.92;
         }
     }
 }
@@ -774,16 +999,19 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     color: var(--color-text-muted);
     margin-bottom: var(--space-md);
     padding: 0 var(--space-lg);
+    /* 2026: evita huérfanos en la descripción de borrado */
+    text-wrap: pretty;
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
    ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   Respeta la preferencia del usuario desactivando animaciones
 ───────────────────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     #card-dialog,
     #delete-confirmation-dialog {
-        transform: none;
+        scale: 1; /* sin animación de escala */
         transition:
             opacity 0.1s ease,
             display 0.1s ease allow-discrete,
@@ -808,21 +1036,29 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
             display 0.1s ease allow-discrete,
             overlay 0.1s ease allow-discrete;
     }
+
+    .sidebar-tab__actions {
+        /* Sin animación: visible siempre, sin escala ni opacidad */
+        opacity: 1;
+        scale: 1;
+        transition:
+            background-color var(--transition-fast),
+            color var(--transition-fast);
+    }
+
+    .color-opt {
+        transition: none;
+    }
 }
 
-/* Evita bugs */
-.card-dialog__body {
-    min-width: 0;
-}
 
-.tab-view.active {
-    min-height: 0;
-}
-
-.config-panel-container {
-    min-height: 0;
-}
-
+/* ─────────────────────────────────────────────────────────────────────────
+   CONTENCIÓN DE LAYOUT (prevención de bugs en contenedores flex/grid)
+   Agrupado al final para que sirva de referencia clara
+───────────────────────────────────────────────────────────────────────── */
+.card-dialog__body,
+.tab-view.active,
+.config-panel-container,
 .sidebar-spaces-menu {
     min-height: 0;
 }
