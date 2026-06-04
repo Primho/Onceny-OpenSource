@@ -29,11 +29,16 @@ const setPanel = (panelName) => {
 
 const syncColorPicker = (hexColor) => {
     if (!colorPicker) return;
+    console.log(hexColor);
 
-    colorPicker.querySelectorAll('.color-picker__option').forEach((btn) => {
-        const selected = btn.dataset.color === hexColor;
+    const colorOpt = colorPicker.querySelectorAll('.color-picker__option')
+
+    colorOpt.forEach((btn) => {
+        // verificar si el color es el mismo
+        const selected = btn.dataset.color === hexColor; // true or flase
         btn.classList.toggle('color-picker__option--selected', selected);
         btn.setAttribute('aria-checked', String(selected));
+        console.log(btn);
     });
 };
 

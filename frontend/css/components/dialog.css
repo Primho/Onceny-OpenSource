@@ -513,22 +513,23 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     cursor: pointer;
     transition:
         scale var(--transition-fast),
-        border-color var(--transition-fast);
+        border-color var(--transition-fast),
+        border-radius var(--transition-base);
 
     &:hover {
+        border-radius: var(--radius-sm);
         scale: 1.08;
-    }
-
-    &--selected {
-        scale: 1.08;
-        border-color: var(--accent-solid);
-        box-shadow: var(--focus-shadow);
     }
 
     &:focus-visible {
         outline: none;
         box-shadow: var(--focus-shadow);
     }
+}
+
+.color-picker__option--selected {
+    background-color: black;
+    box-shadow: var(--shadow-md);
 }
 
 .card-dialog__shortcuts {
