@@ -148,8 +148,8 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     transition: background-color var(--transition-fast);
 
     &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: -2px;
+        outline: none;
+        box-shadow: var(--focus-shadow);
     }
 }
 
@@ -170,16 +170,19 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     }
 }
 
-.card-dialog__page-tab--active,
+.card-dialog__page-tab--active {
+    color: var(--color-text);
+}
+
+.card-dialog__nav-bottom .card-dialog__page-tab--active {
+    background-color: var(--color-muted);
+    color: var(--color-text);
+}
+
 .card-dialog__page-add:hover {
     background-color: var(--color-muted);
     color: var(--color-text);
     border-color: var(--color-border);
-}
-
-.card-dialog__page .card-dialog__page-tab:hover,
-.card-dialog__page .card-dialog__page-tab--active {
-    background-color: transparent;
 }
 
 .card-dialog__page-label {
@@ -263,7 +266,6 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     &::placeholder {
         color: var(--color-text-muted);
     }
-
 }
 
 .card-dialog__save {
@@ -277,11 +279,11 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     color: var(--color-text);
     background: transparent;
     cursor: pointer;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
+    transition: background var(--transition-fast), color var(--transition-fast);
 
     &:hover {
-        background-color: var(--color-accent);
-        color: oklch(0.99 0 0);
+        background: var(--accent-gradient);
+        color: var(--accent-on);
     }
 
     &:focus-visible {
@@ -475,17 +477,23 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: var(--radius-sm);
     font-size: var(--font-base);
     font-family: inherit;
+    background-color: var(--color-bg);
     field-sizing: content;
-    transition: background-color var(--transition-fast);
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
 
     &:focus {
         outline: none;
-        background-color: var(--color-muted);
+        background-color: var(--color-bg);
+        border-color: color-mix(in srgb, var(--accent-solid), white 25%);
+        box-shadow: var(--focus-shadow);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 1px;
+        outline: none;
+        box-shadow: var(--focus-shadow);
     }
 }
 
@@ -511,14 +519,15 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         scale: 1.08;
     }
 
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 3px;
-    }
-
     &--selected {
         scale: 1.08;
-        border-color: var(--color-text);
+        border-color: var(--accent-solid);
+        box-shadow: var(--focus-shadow);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-shadow);
     }
 }
 
@@ -684,14 +693,15 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
     font-family: inherit;
-    color: #fefefe;
-    background-color: var(--color-accent);
+    color: var(--accent-on);
+    background: var(--accent-gradient);
     cursor: pointer;
-    
-    transition: background-color var(--transition-fast);
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: filter var(--transition-fast), box-shadow var(--transition-fast);
 
     &:hover {
-        background-color: color-mix(in oklch, var(--color-accent), black 5%);
+        filter: brightness(0.97);
+        box-shadow: 0 6px 18px var(--accent-glow);
     }
 
     &:focus-visible {
@@ -779,11 +789,13 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     }
 
     &--danger {
-        background-color: var(--color-accent);
-        color: oklch(0.99 0 0);
+        background: var(--accent-gradient);
+        color: var(--accent-on);
+        box-shadow: 0 4px 14px var(--accent-glow);
 
         &:hover {
-            background-color: color-mix(in oklch, var(--color-accent), black 15%);
+            filter: brightness(0.96);
+            box-shadow: 0 6px 18px var(--accent-glow);
         }
     }
 }

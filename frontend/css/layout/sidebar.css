@@ -81,7 +81,7 @@
 
     & svg {
         flex-shrink: 0;
-        width: 24px;  /* Forzamos tamaño estándar para que no se desfiguren */
+        width: 24px; 
         height: 24px;
     }
 
@@ -92,10 +92,12 @@
 
 /* Estado Activo (Actualizado para usar la clase del HTML de SEO) */
 .sidebar__nav-item--active .sidebar__nav-link {
-    background-color: var(--color-accent);
-    color: oklch(0.99 0 0);
+    background: var(--accent-gradient);
+    color: var(--color-text);
+    font-weight: var(--font-weight-medium);
 
     & svg {
-        font-variation-settings: 'FILL' 1; 
+        fill: currentColor;
+        color: var(--color-text);
     }
 }

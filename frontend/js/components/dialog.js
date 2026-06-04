@@ -74,7 +74,7 @@ const persistCard = async () => {
     const tagEl = cardEl?.querySelector('.note-card__tag');
 
     const payload = {
-        title: titleInput.value.trim() || 'Sin título',
+        title: titleInput.value.trim() || 'Untitled',
         color: getColor(),
         marker: markerInput.value.trim(),
         tag: tagsInput.value.trim(),
