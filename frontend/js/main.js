@@ -1,173 +1,165 @@
 import { getDataCards, setDataCards, setActiveCard } from './state.js';
 import { makeCard } from './components/card.js';
+import { syncDialogFromCard } from './components/dialog.js';
 import { deleteCard, getCards, createCard } from './api.js';
-import './components/dialog.js'; // Importamos para que ejecute la lógica interna del modal
 
-// --- Variables de Control Global ---
-let cardToDeleteId = null;
-let spaceTypeToCreate = 'normal';
+const TEMPORAL_TTL_MS = 120_000;
 
-// --- Selectores del DOM ---
-const cardsContainer = document.querySelector('.cards-display');
-const addSpaceBtn = document.querySelector('#create-space-btn');
+const workspaceGrid = document.querySelector('#workspace-grid');
+const workspaceEmpty = document.querySelector('#workspace-empty');
+const createMenu = document.querySelector('#workspace-create-menu');
+const createMenuItems = document.querySelectorAll('.workspace__menu-item[data-space]');
 const cardDialog = document.querySelector('#card-dialog');
-const noteDialogTitleInput = document.querySelector('#modal-card-title');
-const typeOfBtn = document.querySelectorAll('.main-content__menu-btn');
+const deleteDialog = document.querySelector('#delete-dialog');
+const titleInput = document.querySelector('#card-dialog-title-input');
+const settingsIcon = document.querySelector('.sidebar__settings-icon');
 
-const deleteConfirmationDialog = document.querySelector('#delete-confirmation-dialog');
-const confirmDeleteBtn = document.querySelector('#delete-confirmation-dialog .dialog-btn--danger');
-const cancelDeleteBtn = document.querySelector('#delete-confirmation-dialog .dialog-btn--cancel');
+let cardToDeleteId = null;
 
-// --- Carga Inicial de Datos ---
+const toggleEmptyState = () => {
+    const hasCards = workspaceGrid.children.length > 0;
+    workspaceEmpty.hidden = hasCards;
+};
+
+const openCardDialog = (card) => {
+    setActiveCard(card);
+    syncDialogFromCard(card);
+    titleInput.value = card.title ?? '';
+    cardDialog.showModal();
+};
+
 const loadCards = async () => {
-    cardsContainer.innerHTML = '';
+    workspaceGrid.replaceChildren();
     const allCards = await getCards();
 
-    // ADUANA: Filtramos las tarjetas en memoria antes de pintar
-    const validCards = allCards.filter(card => {
+    const validCards = allCards.filter((card) => {
         if (card.type === 'temporal') {
-            return manageTemporalTime(card); // Devuelve true si vive, false si ya expiró
+            return scheduleTemporalExpiry(card);
         }
         return true;
     });
 
-    // Pintamos solo las sobrevivientes
-    validCards.forEach(card => {
-        makeCard(card, cardsContainer);
-    });
-
+    validCards.forEach((card) => makeCard(card, workspaceGrid));
     setDataCards(validCards);
+    toggleEmptyState();
 };
-loadCards();
 
-// --- Selector de Tipo de Espacio (Popover) ---
-typeOfBtn.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const menuCreate = document.getElementById('menu-create');
-        spaceTypeToCreate = btn.dataset.space;
-        console.log(spaceTypeToCreate);
-
-        menuCreate.hidePopover();
-        makeSpace(spaceTypeToCreate);
-    });
-});
-
-// --- Crear Nota Nueva Directamente ---
-const makeSpace = async (typeOfSpace) => {
+const createSpace = async (spaceType) => {
     const newCard = {
         color: '#f1f1f1',
         title: '',
         tag: '',
         marker: '📌',
-        type: typeOfSpace
+        type: spaceType,
     };
 
-    if (typeOfSpace === 'temporal') {
+    if (spaceType === 'temporal') {
         newCard.marker = '⏳';
         newCard.createdAt = Date.now();
     }
 
-    // 1. Guardar en Base de Datos
     const savedCard = await createCard(newCard);
-
-    // 2. Actualizar tu estado local
     const cards = getDataCards();
     cards.push(savedCard);
     setDataCards(cards);
 
-    // 3. Pintarla en el contenedor con la animación de nueva
-    makeCard(savedCard, cardsContainer, true);
-    setActiveCard(savedCard);
+    makeCard(savedCard, workspaceGrid, true);
+    toggleEmptyState();
+    openCardDialog(savedCard);
 
-    // 4. Si es temporal, activamos el temporizador perezoso
-    if (typeOfSpace === 'temporal') {
-        manageTemporalTime(savedCard);
+    if (spaceType === 'temporal') {
+        scheduleTemporalExpiry(savedCard);
     }
-    
-    noteDialogTitleInput.value = '';
-    cardDialog.showModal();
 };
 
-// --- Delegación de Eventos (Click en Tarjeta o Borrar) ---
-cardsContainer.addEventListener('click', (e) => {
-    const card = e.target.closest('.note-card');
-    const clickedDeleteBtn = e.target.closest('.delete-card'); 
-    const cardOptionsMenu = e.target.closest('.card-menu-btn');
+const scheduleTemporalExpiry = (card) => {
+    const expiresAt = card.createdAt + TEMPORAL_TTL_MS;
+    const remaining = expiresAt - Date.now();
 
-    if (!card || cardOptionsMenu) return;
-
-    // Caso: Abrir Modal de Confirmación de Borrado
-    if (clickedDeleteBtn) {
-        cardToDeleteId = Number(card.dataset.id);
-        deleteConfirmationDialog.showModal();
-        
-        const audio = new Audio('../assets/sounds/access-denied-alert-sound.m4a');
-        audio.volume = 0.5;
-        audio.play().catch(error => console.log("Audio play m4a no soportado:", error));
-        return;
-    }
-
-    // Caso: Abrir para Editar existente
-    const cardId = Number(card.dataset.id);
-    const currentCard = getDataCards().find(c => c.id === cardId);
-
-    setActiveCard(currentCard);
-    
-    noteDialogTitleInput.value = currentCard.title;
-    cardDialog.showModal();
-});
-
-// --- Confirmar Borrado Manual ---
-confirmDeleteBtn.addEventListener('click', async () => {
-    const cardToDelete = document.querySelector(`[data-id="${cardToDeleteId}"]`);
-    const cardId = cardToDeleteId;
-
-    let cards = getDataCards();
-    cards = cards.filter(c => c.id !== cardId);
-    setDataCards(cards);
-
-    await deleteCard(cardId);
-    if (cardToDelete) cardToDelete.remove();
-    deleteConfirmationDialog.close();
-});
-
-cancelDeleteBtn.addEventListener('click', () => { 
-    deleteConfirmationDialog.close();
-});
-
-// --- Efecto Visual Scroll Ajustes ---
-window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    if (maxScroll <= 0) return;
-    const progress = scrollTop / maxScroll; 
-    const rotation = progress * 360; 
-    const settingsIcon = document.querySelector('.sidebar__settings-link svg');
-    if (settingsIcon) settingsIcon.style.transform = `rotate(${rotation}deg)`;
-});
-
-// --- Administrador de Tiempo Temporal (SÍNCRONO) ---
-const manageTemporalTime = (card) => {
-    const MAXIMUM_TEMPORAL_TIME = 120000; // 2 minutos fijos 
-    const EXPIRATION_TIME = card.createdAt + MAXIMUM_TEMPORAL_TIME;
-    const TIME_REMAINING = EXPIRATION_TIME - Date.now();
-
-    if (TIME_REMAINING <= 0) {
+    if (remaining <= 0) {
         deleteCard(card.id);
         return false;
     }
 
     setTimeout(async () => {
-        // Búsqueda perezosa en el DOM en el momento exacto de la muerte
-        const cardElement = document.querySelector(`[data-id="${card.id}"]`);
-
-        let currentCards = getDataCards();
-        currentCards = currentCards.filter(c => c.id !== card.id);
-        setDataCards(currentCards);
-
+        const cardEl = document.querySelector(`.note-card[data-id="${card.id}"]`);
+        const cards = getDataCards().filter((c) => c.id !== card.id);
+        setDataCards(cards);
         await deleteCard(card.id);
-        if (cardElement) cardElement.remove();
-    }, TIME_REMAINING);
+        cardEl?.remove();
+        toggleEmptyState();
+    }, remaining);
 
     return true;
 };
+
+createMenuItems.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        createMenu.hidePopover();
+        createSpace(btn.dataset.space);
+    });
+});
+
+workspaceGrid.addEventListener('click', (event) => {
+    const cardEl = event.target.closest('.note-card');
+    if (!cardEl) return;
+
+    if (event.target.closest('.note-card__delete')) {
+        cardToDeleteId = Number(cardEl.dataset.id);
+        deleteDialog.showModal();
+
+        const audio = new Audio('../assets/sounds/access-denied-alert-sound.m4a');
+        audio.volume = 0.5;
+        audio.play().catch(() => {});
+        return;
+    }
+
+    if (event.target.closest('[data-action="edit"]')) {
+        event.target.closest('.note-card__menu-panel')?.hidePopover?.();
+        const card = getDataCards().find((c) => c.id === Number(cardEl.dataset.id));
+        if (card) openCardDialog(card);
+        return;
+    }
+
+    if (event.target.closest('.note-card__menu-trigger, .note-card__menu-panel')) {
+        return;
+    }
+
+    const card = getDataCards().find((c) => c.id === Number(cardEl.dataset.id));
+    if (card) openCardDialog(card);
+});
+
+deleteDialog.querySelector('[data-action="delete-cancel"]')?.addEventListener('click', () => {
+    deleteDialog.close();
+});
+
+deleteDialog.addEventListener('close', async (event) => {
+    if (event.target.returnValue !== 'confirm' || cardToDeleteId == null) {
+        cardToDeleteId = null;
+        return;
+    }
+
+    const cardId = cardToDeleteId;
+    cardToDeleteId = null;
+
+    const cardEl = document.querySelector(`.note-card[data-id="${cardId}"]`);
+    setDataCards(getDataCards().filter((c) => c.id !== cardId));
+    await deleteCard(cardId);
+    cardEl?.remove();
+    toggleEmptyState();
+});
+
+window.addEventListener(
+    'scroll',
+    () => {
+        if (!settingsIcon) return;
+
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+
+        settingsIcon.style.transform = `rotate(${(window.scrollY / maxScroll) * 360}deg)`;
+    },
+    { passive: true },
+);
+
+loadCards();

@@ -66,12 +66,13 @@
     opacity: 0.8; 
 }
 
-/* Contenedor del menú de acción */
-.note-card__menu-container {
+/* Menú contextual de la tarjeta */
+.note-card__menu {
     display: inline-flex;
+    flex-shrink: 0;
 }
 
-.card-menu-btn {
+.note-card__menu-trigger {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -93,8 +94,7 @@
     border: 2px dashed var(--color-border-light) !important;
 }
 
-/* Popover menu */
-.card-menu[popover] {
+.note-card__menu-panel[popover] {
     position-area: bottom right; 
     position-try-fallbacks: flip-block, flip-inline; 
     
@@ -115,19 +115,19 @@
         overlay 0.2s ease allow-discrete;
 }
 
-.card-menu[popover]:popover-open {
+.note-card__menu-panel[popover]:popover-open {
     opacity: 1;
     transform: translateY(0);
 }
 
 @starting-style {
-    .card-menu[popover]:popover-open {
+    .note-card__menu-panel[popover]:popover-open {
         opacity: 0;
         transform: translateY(-5px);
     }
 }
 
-.card-menu__btn {
+.note-card__menu-item {
     display: block;
     width: 100%;
     padding: var(--space-sm) var(--space-md);
@@ -144,20 +144,42 @@
     }
 }
 
-.delete-card {
+.note-card__delete {
     color: var(--card-red-text) !important;
     border-top: 1px solid var(--color-border-light);
 }
 
 /* Card Preview */
 .note-card__preview {
-    width: 100%;
-    flex-grow: 1;
+    flex: 1;
     padding: var(--space-sm);
     border-radius: var(--radius-sm);
+    background-color: oklch(1 0 0 / 0.45);
+}
 
-    background-color: rgba(255, 255, 255, 0.45);
+.note-card__preview-text {
+    margin: 0;
     font-size: var(--font-sm);
     line-height: 1.5;
     color: var(--color-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.note-card__menu-item:focus-visible,
+.note-card__menu-trigger:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .note-card {
+        transition: none;
+    }
+
+    .note-card--new {
+        animation: none;
+    }
 }

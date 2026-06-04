@@ -1,23 +1,33 @@
 let selectedColor = '#f1f1f1';
 let dataCards = [];
-let counter = 0;
 let activeCard = null;
 
-const setColor = (color) => { selectedColor = color };
+const setColor = (color) => {
+    selectedColor = color;
+};
+
 const getColor = () => selectedColor;
 
-const setCounter = (i) => { counter = i };
-const getCounter = () => counter;
+const setDataCards = (cards) => {
+    dataCards = cards;
+};
 
-const setDataCards = (nCard) => { dataCards = nCard };
 const getDataCards = () => dataCards;
 
-const setActiveCard = (card) => { activeCard = card };
+const setActiveCard = (card) => {
+    activeCard = card;
+    if (card?.color) {
+        selectedColor = card.color;
+    }
+};
+
 const getActiveCard = () => activeCard;
 
-export { 
-    setColor, getColor, 
-    setDataCards, getDataCards, 
-    setCounter, getCounter, 
-    setActiveCard, getActiveCard 
+export {
+    setColor,
+    getColor,
+    setDataCards,
+    getDataCards,
+    setActiveCard,
+    getActiveCard,
 };

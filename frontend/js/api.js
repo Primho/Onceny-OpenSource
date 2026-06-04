@@ -1,31 +1,38 @@
+const API_BASE = 'http://127.0.0.1:5000/api/cards';
+
+const parseJson = async (response) => {
+    if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+    }
+    return response.json();
+};
+
 const getCards = async () => {
-    const response = await fetch('http://127.0.0.1:5000/api/cards');
-    const data = await response.json()
-    return data;
+    const response = await fetch(API_BASE);
+    return parseJson(response);
 };
 
 const createCard = async (cardData) => {
-    const response = await fetch('http://127.0.0.1:5000/api/cards', {
+    const response = await fetch(API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cardData)
+        body: JSON.stringify(cardData),
     });
-
-    return await response.json();
+    return parseJson(response);
 };
 
-const updateCard = async (cardDataId, cardDataTitle) => {
-    const response = await fetch(`http://127.0.0.1:5000/api/cards/${cardDataId}`, {
+const updateCard = async (id, payload) => {
+    const response = await fetch(`${API_BASE}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: cardDataTitle })
+        body: JSON.stringify(payload),
     });
-    return await response.json();
-}
-
-const deleteCard = async (cardDataId) => {
-    const response = await fetch(`http://127.0.0.1:5000/api/cards/${cardDataId}`, { method: 'DELETE' });
-    return await response.json();
+    return parseJson(response);
 };
 
-export {getCards, createCard, updateCard, deleteCard};
+const deleteCard = async (id) => {
+    const response = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+    return parseJson(response);
+};
+
+export { getCards, createCard, updateCard, deleteCard };

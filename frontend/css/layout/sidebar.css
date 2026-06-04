@@ -7,7 +7,7 @@
     top: 0;
     align-self: start;
     height: 100dvh;
-    width: 250px;
+    width: var(--sidebar-width);
     background-color: var(--sidebar);
     border-right: 1px solid var(--color-border);
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
@@ -46,9 +46,6 @@
     color: var(--color-text);
 }
 
-/* =========================================================================
-   ESTRUCTURAS DE LISTAS (Se unificó el reseteo para evitar repetir código)
-   ========================================================================= */
 .sidebar__nav,
 .sidebar__settings {
     padding: var(--space-lg);
@@ -68,9 +65,6 @@
     padding: 0;
 }
 
-/* =========================================================================
-   ENLACES Y ACCIONES (Navegación y Configuración agrupados)
-   ========================================================================= */
 .sidebar__nav-link,
 .sidebar__settings-link {
     display: flex;
@@ -98,8 +92,8 @@
 
 /* Estado Activo (Actualizado para usar la clase del HTML de SEO) */
 .sidebar__nav-item--active .sidebar__nav-link {
-    background-color: var(--color-muted);
-    color: var(--color-text);
+    background-color: var(--color-accent);
+    color: oklch(0.99 0 0);
 
     & svg {
         font-variation-settings: 'FILL' 1; 

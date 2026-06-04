@@ -1,25 +1,17 @@
-@property --_dialog-scale {
-    syntax: "<number>";
-    inherits: false;
-    initial-value: 0.92;
-}
-
 @property --_popover-offset {
     syntax: "<length>";
     inherits: false;
     initial-value: -6px;
 }
 
-/* No deja hacer Scroll en el backdrop mientras el Dialog */
-body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
+body:has(#card-dialog[open], #delete-dialog[open]) {
     overflow: hidden;
     overscroll-behavior: none;
 }
 
 #card-dialog::backdrop,
-#delete-confirmation-dialog::backdrop {
+#delete-dialog::backdrop {
     background-color: oklch(0 0 0 / 0.2);
-    /* 2026: saturate(1.2) da profundidad visual sin coste extra */
     backdrop-filter: blur(4px) saturate(1.2);
     opacity: 0;
     transition:
@@ -29,7 +21,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 }
 
 #card-dialog[open]::backdrop,
-#delete-confirmation-dialog[open]::backdrop {
+#delete-dialog[open]::backdrop {
     opacity: 1;
 
     @starting-style {
@@ -37,133 +29,11 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────
-   ELEMENTOS COMUNES DE FORMULARIOS INTERNOS
-───────────────────────────────────────────────────────────────────────── */
-.dialog-form__title {
-    text-align: center;
-    margin-bottom: var(--space-lg);
-    
-    text-wrap: balance;
-}
-
-.dialog-form__input,
-.dialog-form__option input {
-    width: 100%;
-    min-height: 40px;
-    padding: 0 var(--space-sm);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-base);
-    border: 1px solid var(--color-border-light);
-    margin-top: 10px;
-    
-    field-sizing: content;
-    transition: background-color var(--transition-base);
-
-    &:focus {
-        outline: none;
-        background-color: var(--color-muted);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 1px;
-    }
-}
-
-.color-picker {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-sm);
-}
-
-.color-opt {
-    appearance: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    
-    transition:
-        scale var(--transition-fast),
-        border-color var(--transition-fast);
-
-    &:hover {
-        scale: 1.1;
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 3px;
-    }
-
-    &.selected {
-        scale: 1.1;
-        border-color: var(--color-text);
-    }
-}
-
-
-/* Botones de acion dialog simple */
-.dialog-form__actions {
-    margin-top: var(--space-lg);
-    display: flex;
-    justify-content: center;
-    gap: var(--space-lg);
-}
-
-.dialog-btn {
-    cursor: pointer;
-    min-width: 120px;
-    min-height: 40px;
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: var(--font-sm);
-    background-color: var(--color-surface);
-    transition:
-        color var(--transition-base),
-        background-color var(--transition-base);
-
-    &:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 2px;
-    }
-}
-
-.dialog-btn--cancel:hover {
-    background-color: var(--color-surface-hover);
-}
-
-.dialog-btn--confirm {
-    color: #fefefe;
-    background-color: var(--color-accent);
-
-    &:hover {
-        background-color: var(--color-accent-hover);
-    }
-}
-
-.dialog-btn--danger {
-    color: #fefefe;
-    background-color: var(--color-accent);
-
-    &:hover {
-        /* 2026: color-mix() para estado hover sin variable extra */
-        background-color: color-mix(in oklch, var(--color-accent), black 15%);
-    }
-}
-
-
-/* =========================================================================
-   DIALOG 1: WORKSPACE DE LA TARJETA (#card-dialog)
-   ========================================================================= */
+/* ─── Diálogo de espacio (editor) ─── */
 #card-dialog {
     max-height: 90dvh;
-    width: min(1200px, 100dvw);
-    height: min(850px, 92dvh);
-
+    width: min(75rem, 100dvw);
+    height: min(53rem, 92dvh);
     display: none;
     margin: auto;
     border-radius: var(--radius-lg);
@@ -171,8 +41,7 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     padding: 0;
     overflow: hidden;
     opacity: 0;
-    /* 2026: scale como propiedad independiente → composited layer en GPU */
-    scale: 0.92;
+    scale: 0.96;
     transition:
         scale var(--transition-base),
         opacity var(--transition-base),
@@ -186,161 +55,134 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
         @starting-style {
             opacity: 0;
-            scale: 0.92;
+            scale: 0.96;
         }
     }
 }
 
-/* ─── CONTENEDOR PRINCIPAL (flexbox horizontal) ─── */
-.card-dialog__container {
+.card-dialog__layout {
     display: flex;
     width: 100%;
     height: 100%;
-    /* 2026: contain evita que repaints internos propaguen al documento */
     contain: layout style;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────
-   SIDEBAR INTERNA DEL DIALOG
-───────────────────────────────────────────────────────────────────────── */
-.card-dialog__sidebar {
-    width: 200px;
+/* Navegación lateral del diálogo */
+.card-dialog__nav {
+    width: 12.5rem;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-inline: var(--space-sm);
     background-color: var(--color-surface);
     border-right: 1px solid var(--color-border-light);
-    display: flex;
-    flex-direction: column;
-    padding: 0 var(--space-sm);
-    gap: var(--space-sm);
-    overflow: hidden;
-    /* 2026: aísla la sidebar de repaints del cuerpo principal */
     contain: layout style;
 }
 
-.sidebar-top-actions,
-.sidebar-bottom-actions {
+.card-dialog__nav-top,
+.card-dialog__nav-bottom {
     display: flex;
     flex-direction: column;
-    min-height: 70px;
     justify-content: center;
     gap: var(--space-sm);
+    min-height: 4.375rem;
     flex-shrink: 0;
 }
 
-.sidebar-top-actions {
+.card-dialog__nav-top {
     border-bottom: 1px solid var(--color-border);
 }
 
-.sidebar-bottom-actions {
+.card-dialog__nav-bottom {
     border-top: 1px solid var(--color-border);
+    margin-top: auto;
 }
 
-/* ─── ÁREA SCROLLABLE DE PÁGINAS ─── */
-.sidebar-spaces-menu {
+.card-dialog__pages {
     flex: 1;
     min-height: 0;
-
     display: grid;
     grid-auto-rows: min-content;
     align-content: start;
-
-    gap: 4px;
-
+    gap: var(--space-xs);
+    padding-block: var(--space-sm);
     overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-block: 8px;
-
-    scrollbar-gutter: stable;
-    /* 2026: evita que el scroll se propague al dialog cuando llega al límite */
     overscroll-behavior: contain;
+    scrollbar-gutter: stable;
 }
 
-.sidebar-divider {
-    border: none;
-    border-top: 1px solid var(--color-border-light);
-    margin: var(--space-sm) 0;
-    width: 100%;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────
-   BOTONES DE PÁGINA — BASE
-   Aplica a btn-add-section y al sidebar-tab fuera de sidebar-page
-   (p. ej. el botón de Settings en sidebar-bottom-actions)
-───────────────────────────────────────────────────────────────────────── */
-.btn-add-section,
-.card-dialog__sidebar .sidebar-tab {
-    width: 100%;
-    min-height: 40px;
+.card-dialog__page {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--space-sm);
-    padding: 0 var(--space-md);
-    border: none;
-    background: transparent;
-    cursor: pointer;
+    min-height: 2.5rem;
     border-radius: var(--radius-sm);
-    font-size: var(--font-md);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text);
-    flex-shrink: 0;
-    transition:
-        background-color var(--transition-fast),
-        border-color var(--transition-fast);
-
-    &:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: -2px;
-    }
-}
-
-.btn-add-section {
-    border: 1px dashed var(--color-border);
-    justify-content: center;
-}
-
-.btn-add-section:hover,
-.card-dialog__sidebar .sidebar-tab:hover,
-.card-dialog__sidebar .sidebar-tab.active {
-    background-color: var(--color-muted);
-}
-
-.sidebar-page .sidebar-tab:hover,
-.sidebar-page .sidebar-tab.active {
-    background-color: transparent;
-}
-
-
-.sidebar-page {
-    display: flex;
-    align-items: center;
-    border-radius: var(--radius-sm);
-    position: relative;
-    min-height: 40px;
-
     transition: background-color var(--transition-fast);
 
     &:hover {
         background-color: var(--color-muted);
     }
 
-    &:has(.sidebar-tab.active) {
+    &:has(.card-dialog__page-tab--active) {
         background-color: var(--color-muted);
     }
 }
 
-.sidebar-page .sidebar-tab {
-    width: auto;
-    flex: 1;
-    min-width: 0;
+.card-dialog__page-tab,
+.card-dialog__page-add {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 var(--space-md);
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+    font-family: inherit;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
 
-    padding-inline-end: 2px;
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: -2px;
+    }
 }
 
-.sidebar-tab__label {
+.card-dialog__page-add {
+    width: 100%;
+    justify-content: center;
+    border: 2px dashed var(--color-border-light);    
+}
+
+.card-dialog__page-tab {
+    color: var(--color-text-muted);
+    min-width: 0;
+    justify-content: flex-start;
+
+    &:hover {
+        color: var(--color-text);
+        background-color: var(--color-muted);
+    }
+}
+
+.card-dialog__page-tab--active,
+.card-dialog__page-add:hover {
+    background-color: var(--color-muted);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.card-dialog__page .card-dialog__page-tab:hover,
+.card-dialog__page .card-dialog__page-tab--active {
+    background-color: transparent;
+}
+
+.card-dialog__page-label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -349,175 +191,170 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     text-align: left;
 }
 
-
-.sidebar-tab__actions {
+.card-dialog__page-menu {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    flex-shrink: 0;
-    margin-inline-end: var(--space-xs);
-
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-inline-end: var(--space-md);
     border: none;
     border-radius: 6px;
     background: transparent;
-    cursor: pointer;
     color: var(--color-text-muted);
-
+    cursor: pointer;
     opacity: 0;
-    scale: 0.75;
+    scale: 0.85;
     transition:
         opacity var(--transition-fast),
         scale var(--transition-fast),
-        background-color var(--transition-fast),
-        color var(--transition-fast);
+        background-color var(--transition-fast);
 
-    .sidebar-page:hover & {
-        opacity: 1;
-        scale: 1;
-    }
-
-    .sidebar-page:has(.sidebar-tab.active) & {
+    .card-dialog__page:hover &,
+    .card-dialog__page:has(.card-dialog__page-tab--active) & {
         opacity: 1;
         scale: 1;
     }
 
     &:hover {
-        background-color: color-mix(in oklch, var(--color-surface-hover), transparent 10%);
+        background-color: var(--color-surface-hover);
         color: var(--color-text);
     }
 
     &:focus-visible {
         opacity: 1;
         scale: 1;
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: 2px;
     }
 }
 
-
-/* CUERPO DEL DIALOG */
-.card-dialog__body {
+/* Cuerpo principal */
+.card-dialog__main {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-
     contain: layout style;
 }
 
 .card-dialog__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    min-height: 70px;
-    padding: 0 var(--space-lg);
+    gap: var(--space-md);
+    min-height: 4.375rem;
+    padding-inline: var(--space-lg);
     border-bottom: 1px solid var(--color-border-light);
     flex-shrink: 0;
 }
 
-.card-dialog__title {
+.card-dialog__title-input {
     flex: 1;
-    height: 100%;
+    min-height: 2.75rem;
     border: none;
-    min-height: 50px;
     font-size: var(--font-lg);
-    outline: none;
-    background-color: inherit;
+    font-family: inherit;
+    font-weight: var(--font-weight-medium);
     color: var(--color-text);
-   
-    overflow-wrap: break-word;
+    background: transparent;
+    outline: none;
+
+    &::placeholder {
+        color: var(--color-text-muted);
+    }
+
 }
 
-.card-dialog__close {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-xs);
-    height: 35px;
+.card-dialog__save {
+    flex-shrink: 0;
+    min-height: 2.25rem;
     padding: 0 var(--space-md);
     border: none;
-    cursor: pointer;
-    background-color: inherit;
+    border-radius: var(--radius-sm);
     font-size: var(--font-sm);
+    font-family: inherit;
     color: var(--color-text);
-    border-radius: 0;
-    transition:
-        border-radius var(--transition-base),
-        background-color var(--transition-base);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 
     &:hover {
-        border-radius: var(--radius-sm);
-        background-color: var(--color-muted);
+        background-color: var(--color-accent);
+        color: oklch(0.99 0 0);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: 2px;
-        border-radius: var(--radius-sm);
     }
 }
 
-
-/* Tab Views */
-.tab-view {
+.card-dialog__panel {
     display: none;
-}
-
-.tab-view.active {
-    display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
     overflow: hidden;
 
-    animation: tabFadeIn 0.25s ease-out both;
+    &[hidden] {
+        display: none !important;
+    }
 }
 
-.card-dialog__content {
+.card-dialog__panel--active {
+    display: flex;
+    animation: card-dialog-panel-in 0.2s ease-out both;
+}
+
+.card-dialog__editor,
+.card-dialog__config {
     flex: 1;
     min-height: 0;
-    width: 100%;
-    padding: 50px;
-    padding-top: var(--space-lg);
     overflow-y: auto;
+    overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
-
-    overscroll-behavior: contain;
 }
 
-@keyframes tabFadeIn {
+.card-dialog__editor {
+    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+}
+
+.card-dialog__config {
+    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+@keyframes card-dialog-panel-in {
     from {
         opacity: 0;
         translate: 0 4px;
     }
+
     to {
         opacity: 1;
         translate: 0 0;
     }
 }
 
-/* Add content button */
-.add-content {
+.card-dialog__add-block {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    cursor: pointer;
+    gap: var(--space-sm);
     width: 100%;
     padding: var(--space-sm) var(--space-lg);
     border: none;
     border-radius: var(--radius-sm);
-    background-color: inherit;
-    color: var(--color-text-muted);
-    font-weight: var(--font-weight-medium);
     font-size: var(--font-base);
-    transition: background-color var(--transition-base);
-    gap: var(--space-sm);
+    font-family: inherit;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
 
     & svg {
         fill: currentColor;
@@ -525,30 +362,25 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
     &:hover {
         background-color: var(--color-muted);
+        color: var(--color-text);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: 2px;
     }
 }
 
-
-/* ─── POPOVER MENÚ DE BLOQUES ─── */
-.add-content-menu[popover] {
+.card-dialog__block-menu[popover] {
     position-area: bottom span-right;
     position-try-fallbacks: flip-block, flip-inline;
-
-    width: 150px;
+    width: 9.5rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
     box-shadow: var(--shadow-md);
     padding: var(--space-xs) 0;
-    margin: 4px 0 0 0;
-
     opacity: 0;
-    /* 2026: translate individual en lugar de transform completo */
     translate: 0 var(--_popover-offset);
     transition:
         opacity 0.2s ease,
@@ -567,16 +399,17 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-.card-menu__btn {
+.card-dialog__block-menu-item {
     display: block;
     width: 100%;
     padding: var(--space-sm) var(--space-md);
     border: none;
     background: none;
     font-size: var(--font-sm);
+    font-family: inherit;
     text-align: left;
-    cursor: pointer;
     color: var(--color-text);
+    cursor: pointer;
     transition: background-color var(--transition-fast);
 
     &:hover {
@@ -584,111 +417,147 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: -2px;
     }
 }
 
-
-/* Config Tab */
-.config-panel-container {
-    flex: 1;
-    min-height: 0;
-    padding: var(--space-lg) 50px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border) transparent;
-
-    overscroll-behavior: contain;
-}
-
-/* ─── TARJETAS DE SECCIÓN ─── */
-.config-section-card {
+/* Configuración */
+.card-dialog__config-section {
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
-
     content-visibility: auto;
-    contain-intrinsic-size: auto 220px;
+    contain-intrinsic-size: auto 14rem;
 }
 
-.config-section-card legend {
+.card-dialog__config-section legend {
     font-size: var(--font-lg);
     font-weight: var(--font-weight-semibold);
     padding: 0 var(--space-sm);
     color: var(--color-text);
-    text-wrap: balance;
 }
 
-.config-section-description {
-    font-size: var(--font-sm);
-
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-md);
+.card-dialog__config-desc {
+    margin: 0 0 var(--space-md);
     padding: 0 var(--space-sm);
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
     text-wrap: pretty;
 }
 
-.dialog-form__label-mock,
-.dialog-form__option label {
+.card-dialog__field-label,
+.card-dialog__field label {
     display: block;
+    margin-top: var(--space-md);
     font-size: var(--font-sm);
     font-weight: var(--font-weight-medium);
-    margin-top: var(--space-md);
     color: var(--color-text);
 }
 
-.dialog-form__metadata {
+.card-dialog__field-row {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-lg);
 }
 
-
-/* ─── TABLA DE ATAJOS DE TECLADO ─── */
-.shortcuts-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: var(--space-md);
+.card-dialog__field-row .card-dialog__field {
+    flex: 1;
+    min-width: 8rem;
 }
 
-.shortcuts-table td {
+.card-dialog__input {
+    width: 100%;
+    min-height: 2.5rem;
+    margin-top: var(--space-sm);
+    padding: 0 var(--space-sm);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-base);
+    font-family: inherit;
+    field-sizing: content;
+    transition: background-color var(--transition-fast);
+
+    &:focus {
+        outline: none;
+        background-color: var(--color-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 1px;
+    }
+}
+
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.color-picker__option {
+    appearance: none;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+        scale var(--transition-fast),
+        border-color var(--transition-fast);
+
+    &:hover {
+        scale: 1.08;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 3px;
+    }
+
+    &--selected {
+        scale: 1.08;
+        border-color: var(--color-text);
+    }
+}
+
+.card-dialog__shortcuts {
+    width: 100%;
+    margin-top: var(--space-md);
+    border-collapse: collapse;
+}
+
+.card-dialog__shortcuts td {
     padding: var(--space-sm);
     border-bottom: 1px solid var(--color-border-light);
     font-size: var(--font-sm);
     color: var(--color-text);
 }
 
-.shortcuts-table tr:last-child td {
+.card-dialog__shortcuts tr:last-child td {
     border-bottom: none;
 }
 
-.shortcuts-table kbd {
-    background-color: var(--color-muted);
+.card-dialog__shortcuts kbd {
+    padding: 2px 8px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    padding: 2px 8px;
-    font-family: monospace;
+    font-family: ui-monospace, monospace;
     font-size: 0.9em;
-    color: var(--color-text);
+    background-color: var(--color-muted);
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────
-   SECCIÓN "SHARED WITH"
-───────────────────────────────────────────────────────────────────────── */
-.shared-profiles-list {
+.card-dialog__shared-list {
     list-style: none;
-    padding: 0;
     margin: var(--space-sm) 0 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.shared-profile {
+.card-dialog__shared-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -701,57 +570,52 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 }
 
-.shared-profile__content {
+.card-dialog__shared-body {
     display: flex;
     align-items: center;
     gap: var(--space-md);
+    min-width: 0;
 }
 
-.shared-profile__avatar {
-    width: 40px;
-    height: 40px;
+.card-dialog__shared-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
-    display: block;
 }
 
-.shared-profile__info {
+.card-dialog__shared-meta {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
 }
 
-.shared-profile__name {
+.card-dialog__shared-name {
     font-size: var(--font-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
-    display: block;
 }
 
-.shared-profile__role {
+.card-dialog__shared-role {
     font-size: var(--font-xs);
     color: var(--color-text-muted);
-    display: block;
 }
 
-.shared-profile__remove {
+.card-dialog__shared-remove {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    background-color: transparent;
-    border-radius: var(--radius-sm);
+    width: 1.75rem;
+    height: 1.75rem;
     border: 1px solid var(--color-border);
-    font-size: var(--font-base);
-    line-height: 1;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
     transition:
         color var(--transition-fast),
-        background-color var(--transition-fast),
-        border-color var(--transition-fast);
+        background-color var(--transition-fast);
 
     &:hover {
         color: var(--color-text);
@@ -759,26 +623,26 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: 2px;
     }
 }
 
-.invite {
-    cursor: pointer;
+.card-dialog__invite {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-xs);
-    font-size: var(--font-sm);
-    color: var(--color-text-muted);
-    margin-top: var(--space-md);
-    margin-bottom: var(--space-sm);
     width: 100%;
-    min-height: 36px;
-    border-radius: var(--radius-sm);
+    min-height: 2.25rem;
+    margin-top: var(--space-md);
     border: 1px dashed var(--color-border);
-    background-color: transparent;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    font-family: inherit;
+    color: var(--color-text-muted);
+    background: transparent;
+    cursor: pointer;
     transition:
         background-color var(--transition-fast),
         color var(--transition-fast);
@@ -789,86 +653,67 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-accent);
+        outline: 2px solid var(--color-focus);
         outline-offset: 2px;
     }
 }
 
-.soon {
+.card-dialog__soon {
+    margin: var(--space-xs) 0 0;
     font-size: var(--font-xs);
     color: var(--color-text-muted);
-    display: block;
-    margin-top: var(--space-xs);
-    line-height: 1.5;
     text-wrap: pretty;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────
-   BARRA DE ACCIONES DEL PANEL DE CONFIGURACIÓN
-───────────────────────────────────────────────────────────────────────── */
-.config-panel-actions {
+.card-dialog__config-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--space-sm);
+    gap: var(--space-md);
+    min-height: 4.375rem;
     padding: 0 var(--space-lg);
-    flex-shrink: 0;
-    min-height: 70px;
     border-top: 1px solid var(--color-border);
     background-color: var(--color-bg);
+    flex-shrink: 0;
+}
 
-    & button {
-        width: 100px;
-        height: 40px;
-        border: none;
-        border-radius: var(--radius-md);
-        font-size: var(--font-sm);
-        cursor: pointer;
-        transition: background-color var(--transition-fast);
+.card-dialog__config-btn {
+    min-width: 6.25rem;
+    min-height: 2.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    font-family: inherit;
+    color: #fefefe;
+    background-color: var(--color-accent);
+    cursor: pointer;
+    
+    transition: background-color var(--transition-fast);
 
-        &:focus-visible {
-            outline: 2px solid var(--color-accent);
-            outline-offset: 2px;
-        }
+    &:hover {
+        background-color: color-mix(in oklch, var(--color-accent), black 5%);
     }
 
-    & button:first-of-type {
-        background-color: var(--color-surface);
-        color: var(--color-text);
-
-        &:hover {
-            background-color: var(--color-surface-hover);
-        }
-    }
-
-    & button:last-of-type {
-        background-color: var(--color-accent);
-        color: #fefefe;
-
-        &:hover {
-            background-color: var(--color-accent-hover);
-        }
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
     }
 }
 
-
-/* Dialog confirmacion de borrado */
-#delete-confirmation-dialog {
+/* Diálogo de confirmación de borrado */
+#delete-dialog {
     display: none;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
+    width: min(31rem, 90dvw);
+    min-height: 12.5rem;
     margin: auto;
-    min-height: 200px;
-
-    width: min(500px, 90dvw);
+    padding: var(--space-lg);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
-    overflow: hidden;
+    text-align: center;
     opacity: 0;
-
-    scale: 0.92;
+    scale: 0.96;
     transition:
         scale var(--transition-base),
         opacity var(--transition-base),
@@ -882,24 +727,77 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
 
         @starting-style {
             opacity: 0;
-            scale: 0.92;
+            scale: 0.96;
         }
     }
 }
 
-.dialog-form__description {
+.confirm-dialog__title {
+    margin: 0 0 var(--space-lg);
+    font-size: var(--font-lg);
+    text-wrap: balance;
+}
+
+.confirm-dialog__desc {
+    margin: 0 0 var(--space-md);
+    padding-inline: var(--space-md);
     font-size: var(--font-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-md);
-    padding: 0 var(--space-lg);
-
     text-wrap: pretty;
 }
 
+.confirm-dialog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.confirm-dialog__btn {
+    min-width: 7.5rem;
+    min-height: 2.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+    }
+
+    &--ghost:hover {
+        background-color: var(--color-surface-hover);
+    }
+
+    &--ghost {
+        background-color: var(--color-surface);
+        color: var(--color-text);
+    }
+
+    &--danger {
+        background-color: var(--color-accent);
+        color: oklch(0.99 0 0);
+
+        &:hover {
+            background-color: color-mix(in oklch, var(--color-accent), black 15%);
+        }
+    }
+}
+
+.card-dialog__main,
+.card-dialog__panel--active,
+.card-dialog__config,
+.card-dialog__pages {
+    min-height: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
     #card-dialog,
-    #delete-confirmation-dialog {
+    #delete-dialog {
         scale: 1;
         transition:
             opacity 0.1s ease,
@@ -908,41 +806,30 @@ body:has(#card-dialog[open], #delete-confirmation-dialog[open]) {
     }
 
     #card-dialog::backdrop,
-    #delete-confirmation-dialog::backdrop {
+    #delete-dialog::backdrop {
         transition:
             opacity 0.1s ease,
             display 0.1s ease allow-discrete,
             overlay 0.1s ease allow-discrete;
     }
 
-    .tab-view.active {
+    .card-dialog__panel--active {
         animation: none;
     }
 
-    .add-content-menu[popover] {
+    .card-dialog__block-menu[popover] {
         transition:
             opacity 0.1s ease,
             display 0.1s ease allow-discrete,
             overlay 0.1s ease allow-discrete;
     }
 
-    .sidebar-tab__actions {
-        /* Sin animación: visible siempre, sin escala ni opacidad */
+    .card-dialog__page-menu {
         opacity: 1;
         scale: 1;
-        transition:
-            background-color var(--transition-fast),
-            color var(--transition-fast);
     }
 
-    .color-opt {
+    .color-picker__option {
         transition: none;
     }
-}
-
-.card-dialog__body,
-.tab-view.active,
-.config-panel-container,
-.sidebar-spaces-menu {
-    min-height: 0;
 }
