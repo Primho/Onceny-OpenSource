@@ -41,14 +41,12 @@
     --color-bg-base: #fbfcfe;
 
     /* Acento verde Android (degradado visible: verde → más claro arriba) */
-    --color-accent: #48d07f;
-    --accent-solid: #3ddc84;
+    --color-accent: #00E676;
+    --accent-solid: #00B871;
     --accent-gradient: linear-gradient(
-        180deg,
-        #8af0b8 0%,
-        #6ce89f 28%,
-        #52dc88 58%,
-        #3ddc84 100%
+        135deg, 
+        #05FF95 0%, 
+        #00FF87 100%
     );
     --accent-on: var(--color-text);
     --accent-glow: rgba(61, 220, 132, 0.22);

@@ -710,6 +710,45 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     }
 }
 
+.card-dialog__canvas {
+    flex-grow: 1;
+    overflow-y: auto; /* Solo scrolea la hoja de contenido */
+    padding: var(--space-xl);
+    background-color: var(--color-bg);
+}
+
+.card-dialog__editor {
+    max-width: 45rem; /* Ancho perfecto de lectura tipo Notion / Docs */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+/* 📦 El Bloque Atómico Molecular */
+.editor-block-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.editor-block {
+    width: 100%;
+    min-height: 1.5rem;
+    outline: none;
+    font-size: var(--font-md);
+    line-height: 1.6;
+    color: var(--color-text);
+    word-break: break-word;
+}
+
+/* Truco CSS para simular un Placeholder nativo en divs editables */
+.editor-block:empty::before {
+    content: attr(placeholder);
+    color: oklch(0.6 0 0);
+    pointer-events: none;
+    display: block;
+}
+
 /* Diálogo de confirmación de borrado */
 #delete-dialog {
     display: none;
@@ -779,25 +818,27 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         outline-offset: 2px;
     }
 
-    &--ghost:hover {
-        background-color: var(--color-surface-hover);
-    }
-
-    &--ghost {
+    &:first-child {
         background-color: var(--color-surface);
         color: var(--color-text);
     }
 
-    &--danger {
-        background: var(--accent-gradient);
-        color: var(--accent-on);
-        box-shadow: 0 4px 14px var(--accent-glow);
-
-        &:hover {
-            filter: brightness(0.96);
-            box-shadow: 0 6px 18px var(--accent-glow);
-        }
+    &:first-child:hover {
+        background-color: var(--color-surface-hover);
     }
+}
+
+.confirm-dialog__btn:last-child {
+    background: var(--accent-gradient);
+    color: var(--accent-on);
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: filter var(--transition-fast), box-shadow var(--transition-fast);
+
+    &:hover {
+        filter: brightness(0.96);
+        box-shadow: 0 6px 18px var(--accent-glow);
+    }
+    
 }
 
 .card-dialog__main,

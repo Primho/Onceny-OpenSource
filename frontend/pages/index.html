@@ -192,19 +192,16 @@
                     </button>
                 </header>
 
-                <section id="card-dialog-panel-content" class="card-dialog__panel card-dialog__panel--active"
+                <main id="card-dialog-panel-content" class=".card-dialog__canvas card-dialog__panel card-dialog__panel--active"
                     role="tabpanel" tabindex="0" aria-labelledby="card-dialog-tab-content">
-                    <div class="card-dialog__editor">
-                        <button type="button" popovertarget="card-dialog-block-menu"
-                            class="card-dialog__add-block" aria-haspopup="menu"
-                            aria-controls="card-dialog-block-menu" aria-label="Add content block">
-                            <svg class="icon" aria-hidden="true" focusable="false">
-                                <use href="../assets/icons/sprite.svg#icon-add"></use>
-                            </svg>
-                            Add content
-                        </button>
+                    <div id="project-blocks-container" class="card-dialog__editor">
+                    
+                        <div class="editor-block-wrapper" data-block-id="default-1">
+                            <div class="editor-block editor-block--text" contenteditable="true" placeholder="Escribe aquí tu contenido o usa '/' para comandos..."></div>
+                        </div>
+    
                     </div>
-                </section>
+                </main>
 
                 <section id="card-dialog-panel-config" class="card-dialog__panel" role="tabpanel" hidden
                     tabindex="0" aria-labelledby="card-dialog-tab-config">
