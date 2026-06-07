@@ -60,6 +60,7 @@ const createSpace = async (spaceType) => {
 
     const savedCard = await createCard(newCard);
     const cards = getDataCards();
+    
     cards.push(savedCard);
     setDataCards(cards);
 
