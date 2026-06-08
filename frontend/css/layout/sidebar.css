@@ -74,7 +74,7 @@
     padding: var(--space-sm) var(--space-md);
     font-size: var(--font-base);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
+    color: var(--color-text-muted);
     text-decoration: none;
     border-radius: var(--radius-sm);
     transition: background-color .2s, color .2s;
@@ -86,6 +86,7 @@
     }
 
     &:hover {
+        color: var(--color-text);
         background-color: var(--color-muted);
     }
 }

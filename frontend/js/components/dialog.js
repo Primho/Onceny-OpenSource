@@ -5,6 +5,7 @@ import { titleColor } from './card.js';
 const cardDialog = document.querySelector('#card-dialog');
 const closeBtn = document.querySelector('#card-dialog-close');
 const titleInput = document.querySelector('#card-dialog-title-input');
+const settingsTitle = document.querySelector('#card-dialog-settings-title');
 const markerInput = document.querySelector('#card-dialog-marker');
 const tagsInput = document.querySelector('#card-dialog-tags');
 const colorPicker = document.querySelector('.color-picker');
@@ -25,6 +26,16 @@ const setPanel = (panelName) => {
         panel.hidden = !isActive;
         panel.classList.toggle('card-dialog__panel--active', isActive);
     });
+
+    if(panelName === 'config') {
+        titleInput.hidden = true;
+        closeBtn.hidden = true;
+        settingsTitle.hidden = false;
+    } else {
+        titleInput.hidden = false;
+        closeBtn.hidden = false;
+        settingsTitle.hidden = true;
+    }
 };
 
 const syncColorPicker = (hexColor) => {
@@ -38,7 +49,7 @@ const syncColorPicker = (hexColor) => {
         const selected = btn.dataset.color === hexColor; // true or flase
         btn.classList.toggle('color-picker__option--selected', selected);
         btn.setAttribute('aria-checked', String(selected));
-        console.log(btn);
+        
     });
 };
 

@@ -182,14 +182,20 @@
             </nav>
 
             <div class="card-dialog__main">
+
                 <header class="card-dialog__header">
-                    <label class="visually-hidden" for="card-dialog-title-input">Space Title</label>
+
+                    <label class="visually-hidden" for="card-dialog-title-input">Untitled</label>
+
                     <input id="card-dialog-title-input" class="card-dialog__title-input" type="text"
                         placeholder="Untitled" maxlength="80" autocomplete="off" />
+
                     <button type="button" id="card-dialog-close" class="card-dialog__save"
                         aria-label="Save and close">
                         💾 Save and close
                     </button>
+
+                    <h2 id="card-dialog-settings-title" hidden>Settings</h2>
                 </header>
 
                 <main id="card-dialog-panel-content" class=".card-dialog__canvas card-dialog__panel card-dialog__panel--active"

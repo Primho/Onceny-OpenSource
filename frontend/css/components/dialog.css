@@ -156,7 +156,16 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 .card-dialog__page-add {
     width: 100%;
     justify-content: center;
-    border: 2px dashed var(--color-border-light);    
+    color: var(--color-text-muted);
+    fill: var(--color-text-muted);
+    border: 2px dashed var(--color-border-light); 
+    
+    &:hover {
+        fill: var(--color-text);
+        background-color: var(--color-muted);
+        color: var(--color-text);
+        border-color: var(--color-border);
+    }
 }
 
 .card-dialog__page-tab {
@@ -177,12 +186,6 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 .card-dialog__nav-bottom .card-dialog__page-tab--active {
     background-color: var(--color-muted);
     color: var(--color-text);
-}
-
-.card-dialog__page-add:hover {
-    background-color: var(--color-muted);
-    color: var(--color-text);
-    border-color: var(--color-border);
 }
 
 .card-dialog__page-label {
