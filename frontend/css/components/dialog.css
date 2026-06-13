@@ -852,6 +852,38 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     min-height: 0;
 }
 
+@media (max-width: 450px) {
+    #card-dialog {
+        min-width: 100dvw;
+        min-height: 100dvh; 
+        border-radius: 0;
+    }
+
+    .card-dialog__page-menu {
+        display: none;
+    }
+
+    .card-dialog__nav {
+        max-width: 70px;
+    }
+
+    .card-dialog__page-add,
+    .card-dialog__page-tab {
+        padding: 0;
+        justify-content: center;
+        & span {
+            display: none;
+        }
+    }
+
+    .card-dialog__save {
+        & span {
+            display: none;
+        }
+    }
+
+}
+
 @media (prefers-reduced-motion: reduce) {
     #card-dialog,
     #delete-dialog {
