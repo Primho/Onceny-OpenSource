@@ -94,6 +94,10 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-bottom: 1px solid var(--color-border);
 }
 
+.icon-add-page {
+    display: none;
+}
+
 .card-dialog__nav-bottom {
     border-top: 1px solid var(--color-border);
     margin-top: auto;
@@ -880,6 +884,10 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         & span {
             display: none;
         }
+    }
+
+    .icon-add-page {
+        display: block;
     }
 
 }
