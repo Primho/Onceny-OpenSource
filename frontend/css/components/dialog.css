@@ -67,6 +67,21 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     contain: layout style;
 }
 
+.card-dialog__layout .card-dialog__menu {
+    position: absolute;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--card-green-text);
+    background-color: var(--card-green);
+
+    & svg {
+        color: var(--color-text);
+    }
+}
+
 /* Navegación lateral del diálogo */
 .card-dialog__nav {
     width: 12.5rem;
@@ -93,6 +108,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 .card-dialog__nav-top {
     border-bottom: 1px solid var(--color-border);
 }
+
 
 .icon-add-page {
     display: none;
@@ -162,7 +178,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     justify-content: center;
     color: var(--color-text-muted);
     fill: var(--color-text-muted);
-    border: 2px dashed var(--color-border-light); 
+    border: 2px dashed var(--color-border-light);
     
     &:hover {
         fill: var(--color-text);
@@ -863,6 +879,10 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         border-radius: 0;
     }
 
+    .card-dialog__nav {
+        display: none;
+    }
+
     .card-dialog__page-menu {
         display: none;
     }
@@ -880,15 +900,6 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         }
     }
 
-    .card-dialog__save {
-        & span {
-            display: none;
-        }
-    }
-
-    .icon-add-page {
-        display: block;
-    }
 
 }
 

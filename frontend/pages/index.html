@@ -139,16 +139,19 @@
 
     <dialog id="card-dialog" closedby="any" aria-modal="true" aria-labelledby="card-dialog-title-input">
         <div class="card-dialog__layout">
+            <button type="button" class="card-dialog__menu" role="menuitem">
+                <svg class="icon" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-menu"></use>
+                </svg>
+            </button>
+
             <nav class="card-dialog__nav" aria-label="Pages in this section">
                 <div class="card-dialog__nav-top">
                     <button type="button" id="card-dialog-page-add" class="card-dialog__page-add">
-                        <svg class="icon" aria-hidden="true" focusable="false">
-                            <use href="../assets/icons/sprite.svg#icon-add"></use>
-                        </svg>
-                        <span>Add page</span>
                         <svg class="icon icon-add-page" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-add-page"></use>
                         </svg>
+                        <span>Add page</span>
                     </button>
                 </div>
 
