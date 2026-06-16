@@ -16,17 +16,14 @@ const escapeHtml = (value) =>
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;');
 
-/**
- * Inserta una tarjeta de espacio en el grid del workspace.
- */
+// Mete la tarjet a el grid
 const makeCard = (card, container, isNew = false) => {
     const displayTitle = card.title?.trim() || 'Sin título';
     const contrast = titleColor(card.color);
     const temporalClass = card.type === 'temporal' ? ' note-card--temporal' : '';
     const tag = card.tag ? escapeHtml(card.tag) : '';
-    const tagMarkup = tag
-        ? `<span class="note-card__tag">${tag}</span>`
-        : '';
+    const tagMarkup = tag ? `<span class="note-card__tag">${tag}</span>` : '';
+    
 
     container.insertAdjacentHTML(
         'afterbegin',
@@ -70,5 +67,6 @@ const makeCard = (card, container, isNew = false) => {
         `,
     );
 };
+
 
 export { makeCard, titleColor };

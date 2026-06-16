@@ -1,5 +1,5 @@
-import { getDataCards, setDataCards, setActiveCard } from './state.js';
-import { makeCard } from './components/card.js';
+import { getDataCards, setDataCards, setActiveCard, getColor } from './state.js';
+import { makeCard, titleColor } from './components/card.js';
 import { syncDialogFromCard } from './components/dialog.js';
 import { deleteCard, getCards, createCard } from './api.js';
 
@@ -14,6 +14,9 @@ const deleteDialog = document.querySelector('#delete-dialog');
 const titleInput = document.querySelector('#card-dialog-title-input');
 const settingsIcon = document.querySelector('.sidebar__settings-icon');
 
+const dialogMenuBtn = document.querySelector('.card-dialog__menu');
+const dialogMenuBtnIcon = document.querySelector('.card-dialog__menu svg');
+
 let cardToDeleteId = null;
 
 const toggleEmptyState = () => {
@@ -25,6 +28,13 @@ const openCardDialog = (card) => {
     setActiveCard(card);
     syncDialogFromCard(card);
     titleInput.value = card.title ?? '';
+
+    if (dialogMenuBtn) {
+        console.log("color: ", getColor());
+        dialogMenuBtn.style.backgroundColor = getColor();
+        dialogMenuBtnIcon.style.color = titleColor(card.color);
+    };
+
     cardDialog.showModal();
 };
 

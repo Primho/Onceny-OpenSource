@@ -74,7 +74,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    border: 1px solid var(--card-green-text);
+    border: none;
     background-color: var(--card-green);
 
     & svg {
@@ -900,6 +900,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         }
     }
 
+    
 
 }
 

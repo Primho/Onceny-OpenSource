@@ -61,9 +61,12 @@ const applyCardColorToDom = (cardEl, hexColor, theme) => {
 
     const titleEl = cardEl.querySelector('.note-card__title');
     const menuIcon = cardEl.querySelector('.note-card__menu-trigger svg');
+    const dialogMenuBtn = document.querySelector('.card-dialog__menu');
+    
 
     if (titleEl) titleEl.style.color = contrast;
     if (menuIcon) menuIcon.style.color = contrast;
+
 
     if (theme) {
         cardEl.dataset.theme = theme;
