@@ -179,26 +179,28 @@
 
 @media (max-width: 450px) {
 
-  .workspace__btn {
-    border-radius: 50%;
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
+    .workspace__btn {
+        border-radius: 50%;
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
 
-    .hidden-text-btn {
-        display: none;
-    }
+        .hidden-text-btn {
+            display: none;
+        }
 
-    &:active {
-        transform: scale(.9);
+        &:active {
+            transform: scale(.9);
+        }
     }
-  }
 
     .workspace__menu[popover] {
+        max-width: 150px;
         position-area: top center;
         position-try-fallbacks: flip-block, flip-inline;
+        margin: 0 var(--space-md) var(--space-sm) 0;
         translate: 0 5px;
 
         &:popover-open {
@@ -210,11 +212,10 @@
                 translate: 0 5px;
             }
         }
-    }
 
-    .note-card__menu-panel[popover] {
-        position-area: bottom right; 
-        position-try-fallbacks: flip-block, flip-inline; 
+        & button {
+            text-align: center;
+        }
     }
 }
 

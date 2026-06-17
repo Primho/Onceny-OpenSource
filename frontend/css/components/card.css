@@ -9,7 +9,7 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     border: 1.5px solid var(--color-border-light);
     cursor: pointer;
-    transition: transform 1s ease, box-shadow .3s;
+    transition: transform var(--transition-base), box-shadow var(--transition-fast);
 }
 
 .note-card:hover {
@@ -38,12 +38,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-sm);
     margin-bottom: var(--space-md);
 }
 
 .note-card__info {
+    flex: 1;
     display: flex;
+
     flex-direction: column;
     gap: 2px;
     min-width: 0;
@@ -59,10 +60,15 @@
 }
 
 .note-card__tag {
-    font-size: var(--font-sm);
+    width: fit-content;
+    padding: 3px 6px;
+    border-radius: 5px;
+    text-transform: lowercase;
+    font-size: var(--font-xs);
     font-weight: var(--font-weight-medium);
     
-    color: currentColor;
+    color: var(--color-text-muted);
+    background-color: oklch(1 0 0 / 0.45);
     opacity: 0.8; 
 }
 
@@ -95,7 +101,7 @@
 }
 
 .note-card__menu-panel[popover] {
-    position-area: bottom right; 
+    position-area: bottom; 
     position-try-fallbacks: flip-block, flip-inline; 
     
     border: 1px solid var(--color-border);
@@ -103,7 +109,7 @@
     background-color: var(--color-surface);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: var(--space-xs) 0;
-    margin: 4px 0 0 0;
+    margin: 0 var(--space-lg) 0 0;
 
     /* Estado cerrado por defecto */
     opacity: 0;
@@ -163,6 +169,7 @@
     line-height: 1.5;
     color: var(--color-text);
     display: -webkit-box;
+    line-clamp: 3;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;

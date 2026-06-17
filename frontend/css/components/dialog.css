@@ -744,7 +744,6 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 
 .card-dialog__editor {
     max-width: 45rem; /* Ancho perfecto de lectura tipo Notion / Docs */
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
@@ -752,7 +751,9 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 
 /* 📦 El Bloque Atómico Molecular */
 .editor-block-wrapper {
+    background-color: var(--color-surface);
     position: relative;
+    border-radius: var(--radius-md);
     width: 100%;
 }
 
