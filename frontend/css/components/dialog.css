@@ -68,6 +68,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 }
 
 .card-dialog__layout .card-dialog__menu {
+    display: none;
     position: absolute;
     bottom: var(--space-md);
     right: var(--space-md);
@@ -900,7 +901,22 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         }
     }
 
-    
+    .card-dialog__layout > .card-dialog__menu {
+        display: block;
+
+        &:focus-visible {
+            outline: none;
+        }
+
+    }
+
+    .card-dialog__layout > button:active {
+        transform: scale(0.95);
+    }
+
+    .hidden {
+        display: none;
+    }
 
 }
 
