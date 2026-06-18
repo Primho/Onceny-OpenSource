@@ -751,10 +751,15 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 
 /* 📦 El Bloque Atómico Molecular */
 .editor-block-wrapper {
-    background-color: var(--color-surface);
     position: relative;
-    border-radius: var(--radius-md);
-    width: 100%;
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-base);
+
+    &:hover {
+        background-color: var(--color-surface);
+    }
 }
 
 .editor-block {
