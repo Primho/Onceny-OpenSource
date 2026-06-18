@@ -1,6 +1,7 @@
-import { updateCard } from '../api.js';
+import { createCard, updateCard } from '../api.js';
 import { getActiveCard, getColor, setColor } from '../state.js';
 import { titleColor } from './card.js';
+import { createNewBlock } from './dialogblock.js';
 
 const cardDialog = document.querySelector('#card-dialog');
 const closeBtn = document.querySelector('#card-dialog-close');
@@ -147,7 +148,6 @@ if (colorPicker) {
         const theme = option.dataset.theme;
 
         setColor(hex);
-        card.color = hex;
         syncColorPicker(hex);
 
         const cardEl = getCardElement(card.id);
@@ -174,4 +174,74 @@ document.querySelector('[data-action="config-save"]')?.addEventListener('click',
     setPanel('content');
 });
 
-export { syncDialogFromCard };
+const spaceBlocksContainer = document.querySelector('#space-blocks-container');
+const dialogBlockMenu = document.querySelector('#card-dialog-block-menu');
+
+spaceBlocksContainer.addEventListener('keydown', (e) => {
+    if (!e.target.classList.contains('editor-block')) return;
+    const currentWrapper = e.target.closest('.editor-block-wrapper');
+
+    if (e.key === 'Enter') {
+        if (e.shiftKey) return; 
+        else {
+            e.preventDefault();            
+            // Llamamos a la función que fabricará tu HTML específico
+            const currentWrapper = e.target.closest('.editor-block-wrapper');
+            createNewBlock(currentWrapper);
+        }
+    }
+
+    if(e.key === 'Backspace') {
+        if(e.target.textContent === '' && spaceBlocksContainer.children.length > 1) {
+            e.preventDefault();
+
+            const prevWrapper = currentWrapper.previousElementSibling;
+            if (prevWrapper) {
+                const prevBlock = prevWrapper.querySelector('.editor-block');
+                currentWrapper.remove();
+
+                prevBlock.focus();
+
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(prevBlock);
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+    }
+
+});
+
+spaceBlocksContainer.addEventListener('input', (e) => {
+    const activeBlock = e.target;
+    if (!activeBlock.classList.contains('editor-block')) return;
+
+    const text = activeBlock.textContent;
+
+    // Esta expresión regular busca si hay un ":" al final o seguido de letras
+    const isValidCommand = text.match(/(?:^|\s):([a-zA-Z]*)$/);
+
+    if (isValidCommand) {
+        const rect = activeBlock.getBoundingClientRect();
+
+        // 2. Forzar la posición del Popover nativo justo debajo
+        dialogBlockMenu.style.position = 'fixed';
+        dialogBlockMenu.style.margin = '0'; // Resetea el centrado por defecto
+        dialogBlockMenu.style.top = `${rect.bottom + 8}px`; // 8px de margen inferior
+        dialogBlockMenu.style.left = `${rect.left}px`;
+
+        // 3. Mostrar el popover si no está abierto
+        if (!dialogBlockMenu.matches(':popover-open')) {
+            dialogBlockMenu.showPopover();
+        }
+    } else {
+        // Si ya no cumple la condición (se borró el ":" o se escribió un espacio/carácter no válido), se cierra
+        if (dialogBlockMenu.matches(':popover-open')) {
+            dialogBlockMenu.hidePopover();
+        }
+    }
+});
+
+export { syncDialogFromCard, syncColorPicker };

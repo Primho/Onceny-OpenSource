@@ -1,6 +1,6 @@
 import { getDataCards, setDataCards, setActiveCard, getColor } from './state.js';
 import { makeCard, titleColor } from './components/card.js';
-import { syncDialogFromCard } from './components/dialog.js';
+import { syncDialogFromCard, syncColorPicker } from './components/dialog.js';
 import { deleteCard, getCards, createCard } from './api.js';
 
 const TEMPORAL_TTL_MS = 120_000;
@@ -35,6 +35,7 @@ const openCardDialog = (card) => {
         dialogMenuBtnIcon.style.color = titleColor(card.color);
     };
 
+    syncColorPicker(card.color);
     cardDialog.showModal();
 };
 
