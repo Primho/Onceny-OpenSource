@@ -139,12 +139,13 @@
 
     <dialog id="card-dialog" closedby="any" aria-modal="true" aria-labelledby="card-dialog-title-input">
         <div class="card-dialog__layout">
+            
             <button type="button" class="card-dialog__menu" role="menuitem">
                 <svg class="icon" aria-hidden="true" focusable="false">
                     <use href="../assets/icons/sprite.svg#icon-menu"></use>
                 </svg>
             </button>
-
+    
             <nav class="card-dialog__nav" aria-label="Pages in this section">
                 <div class="card-dialog__nav-top">
                     <button type="button" id="card-dialog-page-add" class="card-dialog__page-add">
@@ -154,9 +155,8 @@
                         <span>Add page</span>
                     </button>
                 </div>
-
-                <div id="card-dialog-pages" class="card-dialog__pages" role="tablist"
-                    aria-label="List of pages">
+    
+                <div id="card-dialog-pages" class="card-dialog__pages" role="tablist" aria-label="List of pages">
                     <div class="card-dialog__page" role="presentation">
                         <button type="button" class="card-dialog__page-tab card-dialog__page-tab--active"
                             role="tab" id="card-dialog-tab-content" aria-selected="true"
@@ -166,19 +166,17 @@
                             </svg>
                             <span class="card-dialog__page-label">Page 1</span>
                         </button>
-                        <button type="button" class="card-dialog__page-menu" aria-label="Page Actions"
-                            aria-disabled="true" title="Coming soon">
+                        <button type="button" class="card-dialog__page-menu" aria-label="Page Actions" aria-disabled="true" title="Coming soon">
                             <svg class="icon" aria-hidden="true" focusable="false">
                                 <use href="../assets/icons/sprite.svg#icon-more-vert"></use>
                             </svg>
                         </button>
                     </div>
                 </div>
-
+    
                 <div class="card-dialog__nav-bottom">
                     <button type="button" id="card-dialog-tab-config" class="card-dialog__page-tab"
-                        role="tab" aria-selected="false" aria-controls="card-dialog-panel-config"
-                        data-panel="config">
+                        role="tab" aria-selected="false" aria-controls="card-dialog-panel-config" data-panel="config">
                         <svg class="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-settings"></use>
                         </svg>
@@ -186,119 +184,88 @@
                     </button>
                 </div>
             </nav>
-
+    
             <div class="card-dialog__main">
-
+    
                 <header class="card-dialog__header">
-
                     <label class="visually-hidden" for="card-dialog-title-input">Untitled</label>
-
                     <input id="card-dialog-title-input" class="card-dialog__title-input" type="text"
                         placeholder="Untitled" maxlength="80" autocomplete="off" />
-
-                    <button type="button" id="card-dialog-close" class="card-dialog__save"
-                        aria-label="Save and close">
+    
+                    <button type="button" id="card-dialog-close" class="card-dialog__save" aria-label="Save and close">
                         💾 <span class="hidden">Save and close</span>
                     </button>
-
+    
                     <h2 id="card-dialog-settings-title" hidden>Settings</h2>
                 </header>
-
-                <main id="card-dialog-panel-content" class=".card-dialog__canvas card-dialog__panel card-dialog__panel--active"
+    
+                <main id="card-dialog-panel-content" class="card-dialog__canvas card-dialog__panel card-dialog__panel--active"
                     role="tabpanel" tabindex="0" aria-labelledby="card-dialog-tab-content">
                     <div id="space-blocks-container" class="card-dialog__editor">
-                    
                         <div class="editor-block-wrapper" data-block-id="default-1">
                             <div class="editor-block editor-block--text" contenteditable="true" placeholder="Escribe aquí tu contenido o usa '/' para comandos..."></div>
                         </div>
-    
                     </div>
                 </main>
-
+    
                 <section id="card-dialog-panel-config" class="card-dialog__panel" role="tabpanel" hidden
                     tabindex="0" aria-labelledby="card-dialog-tab-config">
                     <div class="card-dialog__config">
+                        
                         <fieldset class="card-dialog__config-section">
                             <legend>🎨 Appearance</legend>
-                            <p class="card-dialog__config-desc">
-                                Customize the background and highlight color for this Space.
-                            </p>
+                            <p class="card-dialog__config-desc">Customize the background and highlight color for this Space.</p>
+                            
                             <div class="card-dialog__field">
                                 <span class="card-dialog__field-label" id="card-dialog-bg-label">Background color</span>
-                                <div class="color-picker" role="radiogroup"
-                                    aria-labelledby="card-dialog-bg-label">
-                                    <button type="button" class="color-picker__option color-picker__option--selected"
-                                        data-color="#f1f1f1" data-theme="gray"
-                                        style="background-color: #787878" role="radio" aria-checked="true"
-                                        aria-label="Grey"></button>
-                                    <button type="button" class="color-picker__option" data-color="#fdefee"
-                                        data-theme="red" style="background-color: #ed6b5a" role="radio"
-                                        aria-checked="false" aria-label="Red"></button>
-                                    <button type="button" class="color-picker__option" data-color="#e6f2ff"
-                                        data-theme="blue" style="background-color: #038cff" role="radio"
-                                        aria-checked="false" aria-label="Blue"></button>
-                                    <button type="button" class="color-picker__option" data-color="#e1fae7"
-                                        data-theme="green" style="background-color: #36c25c" role="radio"
-                                        aria-checked="false" aria-label="Green"></button>
-                                    <button type="button" class="color-picker__option" data-color="#fcf5db"
-                                        data-theme="yellow" style="background-color: #e6961f" role="radio"
-                                        aria-checked="false" aria-label="Yellow"></button>
-                                    <button type="button" class="color-picker__option" data-color="#efeaff"
-                                        data-theme="purple" style="background-color: #6d3cfa" role="radio"
-                                        aria-checked="false" aria-label="Purple"></button>
+                                <div class="color-picker" role="radiogroup" aria-labelledby="card-dialog-bg-label">
+                                    <button type="button" class="color-picker__option color-picker__option--selected" data-color="#f1f1f1" data-theme="gray" style="background-color: #787878" role="radio" aria-checked="true" aria-label="Grey"></button>
+                                    <button type="button" class="color-picker__option" data-color="#fdefee" data-theme="red" style="background-color: #ed6b5a" role="radio" aria-checked="false" aria-label="Red"></button>
+                                    <button type="button" class="color-picker__option" data-color="#e6f2ff" data-theme="blue" style="background-color: #038cff" role="radio" aria-checked="false" aria-label="Blue"></button>
+                                    <button type="button" class="color-picker__option" data-color="#e1fae7" data-theme="green" style="background-color: #36c25c" role="radio" aria-checked="false" aria-label="Green"></button>
+                                    <button type="button" class="color-picker__option" data-color="#fcf5db" data-theme="yellow" style="background-color: #e6961f" role="radio" aria-checked="false" aria-label="Yellow"></button>
+                                    <button type="button" class="color-picker__option" data-color="#efeaff" data-theme="purple" style="background-color: #6d3cfa" role="radio" aria-checked="false" aria-label="Purple"></button>
                                 </div>
                             </div>
-
+    
                             <div class="card-dialog__field-row">
                                 <div class="card-dialog__field">
                                     <label for="card-dialog-marker">Marker</label>
-                                    <input type="text" id="card-dialog-marker" maxlength="2"
-                                        class="card-dialog__input" placeholder="📌" name="marker"
-                                        inputmode="text" />
+                                    <input type="text" id="card-dialog-marker" maxlength="2" class="card-dialog__input" placeholder="📌" name="marker" inputmode="text" />
                                 </div>
                                 <div class="card-dialog__field">
                                     <label for="card-dialog-tags">Tags</label>
-                                    <input type="text" id="card-dialog-tags" class="card-dialog__input"
-                                        placeholder="Personal" name="tag" />
+                                    <input type="text" id="card-dialog-tags" class="card-dialog__input" placeholder="Personal" name="tag" />
                                 </div>
                             </div>
                         </fieldset>
-
+    
                         <fieldset class="card-dialog__config-section">
                             <legend>👥 Shared with</legend>
-                            <p class="card-dialog__config-desc">
-                                People with access to this space.
-                            </p>
+                            <p class="card-dialog__config-desc">People with access to this space.</p>
                             <ul class="card-dialog__shared-list" aria-label="Contributors">
                                 <li class="card-dialog__shared-item">
                                     <div class="card-dialog__shared-body">
-                                        <img src="../assets/midudev.jpg" alt="midudev's profile picture" class="card-dialog__shared-avatar"
-                                            width="40" height="40" decoding="async" />
+                                        <img src="../assets/midudev.jpg" alt="midudev's profile picture" class="card-dialog__shared-avatar" width="40" height="40" decoding="async" />
                                         <div class="card-dialog__shared-meta">
                                             <strong class="card-dialog__shared-name">Midudev</strong>
                                             <span class="card-dialog__shared-role">Editor</span>
                                         </div>
                                     </div>
-                                    <button type="button" class="card-dialog__shared-remove"
-                                        aria-label="Remove Midudev from the shared space">
+                                    <button type="button" class="card-dialog__shared-remove" aria-label="Remove Midudev from the shared space">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </li>
                             </ul>
                             <button type="button" class="card-dialog__invite">
-                                <span aria-hidden="true">+</span>
-                                Invite someone
+                                <span aria-hidden="true">+</span> Invite someone
                             </button>
-                            <p class="card-dialog__soon" role="note">
-                                Usage by space and by page will be available soon.
-                            </p>
+                            <p class="card-dialog__soon" role="note">Usage by space and by page will be available soon.</p>
                         </fieldset>
-
+    
                         <fieldset class="card-dialog__config-section">
                             <legend>⌨️ Keyboard shortcuts</legend>
-                            <p class="card-dialog__config-desc">
-                                Commands for managing blocks of text.
-                            </p>
+                            <p class="card-dialog__config-desc">Commands for managing blocks of text.</p>
                             <table class="card-dialog__shortcuts" aria-label="Keyboard Shortcut Reference">
                                 <tbody>
                                     <tr>
@@ -317,25 +284,18 @@
                             </table>
                         </fieldset>
                     </div>
-
+    
                     <footer class="card-dialog__config-actions">
                         <button type="button" class="card-dialog__config-btn card-dialog__config-btn--primary" data-action="config-save">Save</button>
                     </footer>
                 </section>
             </div>
         </div>
-
-        <div id="card-dialog-block-menu" popover="auto" class="card-dialog__block-menu" role="menu"
-            aria-label="Tipos de contenido">
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="text">
-                ✏️ Text
-            </button>
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="heading">
-                Títle
-            </button>
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="task">
-                ☑️ Task
-            </button>
+    
+        <div id="card-dialog-block-menu" popover="auto" class="card-dialog__block-menu" role="menu" aria-label="Tipos de contenido">
+            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="text">✏️ Text</button>
+            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="heading">🛑 Títle</button>
+            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="task">☑️ Task</button>
         </div>
     </dialog>
 

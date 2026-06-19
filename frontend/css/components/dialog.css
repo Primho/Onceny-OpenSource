@@ -4,13 +4,16 @@
     initial-value: -6px;
 }
 
-body:has(#card-dialog[open], #delete-dialog[open]) {
+/* ==========================================================================
+   1. BASE Y BACKDROP
+   ========================================================================== */
+
+body:has(dialog[open]) {
     overflow: hidden;
     overscroll-behavior: none;
 }
 
-#card-dialog::backdrop,
-#delete-dialog::backdrop {
+dialog::backdrop {
     background-color: oklch(0 0 0 / 0.2);
     backdrop-filter: blur(4px) saturate(1.2);
     opacity: 0;
@@ -20,26 +23,30 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         overlay var(--transition-base) allow-discrete;
 }
 
-#card-dialog[open]::backdrop,
-#delete-dialog[open]::backdrop {
+dialog[open]::backdrop {
     opacity: 1;
-
-    @starting-style {
-        opacity: 0;
-    }
+    @starting-style { opacity: 0; }
 }
 
-/* ─── Diálogo de espacio (editor) ─── */
+.hidden { display: none !important; }
+
+/* ==========================================================================
+   2. DIÁLOGO PRINCIPAL (MOBILE FIRST)
+   ========================================================================== */
+
 #card-dialog {
-    max-height: 90dvh;
-    width: min(75rem, 100dvw);
-    height: min(53rem, 92dvh);
     display: none;
-    margin: auto;
-    border-radius: var(--radius-lg);
-    border: 2px solid var(--color-border);
+    width: 100dvw;
+    height: 100dvh;
+    max-width: 100dvw;
+    max-height: 100dvh;
+    margin: 0;
     padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: var(--color-bg);
     overflow: hidden;
+    
     opacity: 0;
     scale: 0.96;
     transition:
@@ -52,11 +59,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         display: block;
         opacity: 1;
         scale: 1;
-
-        @starting-style {
-            opacity: 0;
-            scale: 0.96;
-        }
+        @starting-style { opacity: 0; scale: 0.96; }
     }
 }
 
@@ -67,8 +70,9 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     contain: layout style;
 }
 
-.card-dialog__layout .card-dialog__menu {
-    display: none;
+/* Menú Flotante (Solo Mobile) */
+.card-dialog__menu {
+    display: block;
     position: absolute;
     bottom: var(--space-md);
     right: var(--space-md);
@@ -77,17 +81,22 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: 50%;
     border: none;
     background-color: var(--card-green);
-
-    & svg {
-        color: var(--color-text);
-    }
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+    
+    &:focus-visible { outline: none; }
+    &:active { transform: scale(0.95); }
+    & svg { color: var(--color-text); }
 }
 
-/* Navegación lateral del diálogo */
+/* ==========================================================================
+   3. NAVEGACIÓN LATERAL (Oculta en Mobile)
+   ========================================================================== */
+
 .card-dialog__nav {
-    width: 12.5rem;
+    display: none; 
     flex-shrink: 0;
-    display: flex;
     flex-direction: column;
     gap: var(--space-sm);
     padding-inline: var(--space-sm);
@@ -106,19 +115,10 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     flex-shrink: 0;
 }
 
-.card-dialog__nav-top {
-    border-bottom: 1px solid var(--color-border);
-}
+.card-dialog__nav-top { border-bottom: 1px solid var(--color-border); }
+.card-dialog__nav-bottom { border-top: 1px solid var(--color-border); margin-top: auto; }
 
-
-.icon-add-page {
-    display: none;
-}
-
-.card-dialog__nav-bottom {
-    border-top: 1px solid var(--color-border);
-    margin-top: auto;
-}
+.icon-add-page { display: none; }
 
 .card-dialog__pages {
     flex: 1;
@@ -130,7 +130,6 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     padding-block: var(--space-sm);
     overflow-y: auto;
     overscroll-behavior: contain;
-    scrollbar-gutter: stable;
 }
 
 .card-dialog__page {
@@ -141,13 +140,14 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-fast);
 
-    &:hover {
+    &:hover, &:has(.card-dialog__page-tab--active) {
         background-color: var(--color-muted);
     }
+}
 
-    &:has(.card-dialog__page-tab--active) {
-        background-color: var(--color-muted);
-    }
+.card-dialog__page:hover,
+.card-dialog__page-tab:hover {
+    background-color: var(--color-muted); 
 }
 
 .card-dialog__page-tab,
@@ -164,25 +164,20 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     font-size: var(--font-md);
     font-family: inherit;
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 
-    &:focus-visible {
-        outline: none;
-        box-shadow: var(--focus-shadow);
-    }
+    &:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
 }
 
 .card-dialog__page-add {
-    width: 100%;
     justify-content: center;
     color: var(--color-text-muted);
-    fill: var(--color-text-muted);
     border: 2px dashed var(--color-border-light);
     
+    & svg { fill: currentColor; }
+    
     &:hover {
-        fill: var(--color-text);
         background-color: var(--color-muted);
         color: var(--color-text);
         border-color: var(--color-border);
@@ -191,22 +186,17 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
 
 .card-dialog__page-tab {
     color: var(--color-text-muted);
-    min-width: 0;
     justify-content: flex-start;
-
-    &:hover {
-        color: var(--color-text);
-        background-color: var(--color-muted);
-    }
 }
 
-.card-dialog__page-tab--active {
-    color: var(--color-text);
+/* AQUÍ EL ARREGLO: Clases independientes para los modificadores */
+.card-dialog__page-tab:hover,
+.card-dialog__page-tab--active { 
+    color: var(--color-text); 
 }
 
-.card-dialog__nav-bottom .card-dialog__page-tab--active {
+.card-dialog__nav-bottom .card-dialog__page-tab--active { 
     background-color: var(--color-muted);
-    color: var(--color-text);
 }
 
 .card-dialog__page-label {
@@ -214,52 +204,17 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1;
-    min-width: 0;
     text-align: left;
 }
 
-.card-dialog__page-menu {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-inline-end: var(--space-md);
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    opacity: 0;
-    scale: 0.85;
-    transition:
-        opacity var(--transition-fast),
-        scale var(--transition-fast),
-        background-color var(--transition-fast);
+/* ==========================================================================
+   4. ÁREA PRINCIPAL Y EDITOR
+   ========================================================================== */
 
-    .card-dialog__page:hover &,
-    .card-dialog__page:has(.card-dialog__page-tab--active) & {
-        opacity: 1;
-        scale: 1;
-    }
-
-    &:hover {
-        background-color: var(--color-surface-hover);
-        color: var(--color-text);
-    }
-
-    &:focus-visible {
-        opacity: 1;
-        scale: 1;
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
-}
-
-/* Cuerpo principal */
 .card-dialog__main {
     flex: 1;
     min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -281,15 +236,12 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     min-height: 2.75rem;
     border: none;
     font-size: var(--font-lg);
-    font-family: inherit;
     font-weight: var(--font-weight-medium);
     color: var(--color-text);
     background: transparent;
     outline: none;
 
-    &::placeholder {
-        color: var(--color-text-muted);
-    }
+    &::placeholder { color: var(--color-text-muted); }
 }
 
 .card-dialog__save {
@@ -299,169 +251,99 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border: none;
     border-radius: var(--radius-sm);
     font-size: var(--font-sm);
-    font-family: inherit;
     color: var(--color-text);
     background: transparent;
     cursor: pointer;
     transition: background var(--transition-fast), color var(--transition-fast);
 
-    &:hover {
-        background: var(--accent-gradient);
-        color: var(--accent-on);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
+    &:hover { background: var(--accent-gradient); color: var(--accent-on); }
+    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 }
 
+/* Pestañas / Paneles */
 .card-dialog__panel {
     display: none;
     flex-direction: column;
     flex: 1;
     min-height: 0;
     overflow: hidden;
-
-    &[hidden] {
-        display: none !important;
-    }
 }
 
+/* AQUÍ EL ARREGLO: La clase activa debe estar separada */
 .card-dialog__panel--active {
     display: flex;
     animation: card-dialog-panel-in 0.2s ease-out both;
 }
 
-.card-dialog__editor,
-.card-dialog__config {
-    flex: 1;
-    min-height: 0;
+@keyframes card-dialog-panel-in {
+    from { opacity: 0; translate: 0 4px; }
+    to { opacity: 1; translate: 0 0; }
+}
+
+.card-dialog__canvas {
+    flex-grow: 1;
     overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border) transparent;
+    padding: var(--space-xl);
 }
 
 .card-dialog__editor {
-    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+    max-width: 45rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
 }
+
+.editor-block-wrapper {
+    position: relative;
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-base);
+
+    &:hover { background-color: var(--color-surface); }
+}
+
+.editor-block {
+    width: 100%;
+    min-height: 1.5rem;
+    outline: none;
+    font-size: var(--font-md);
+    line-height: 1.6;
+    color: var(--color-text);
+    word-break: break-word;
+}
+
+.editor-block:empty::before {
+    content: attr(placeholder);
+    color: oklch(0.6 0 0);
+    pointer-events: none;
+    display: block;
+}
+
+/* ==========================================================================
+   5. PANEL DE CONFIGURACIÓN (Settings)
+   ========================================================================== */
 
 .card-dialog__config {
     padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
-@keyframes card-dialog-panel-in {
-    from {
-        opacity: 0;
-        translate: 0 4px;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-.card-dialog__add-block {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    width: 100%;
-    padding: var(--space-sm) var(--space-lg);
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: var(--font-base);
-    font-family: inherit;
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-muted);
-    background: transparent;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-
-    & svg {
-        fill: currentColor;
-    }
-
-    &:hover {
-        background-color: var(--color-muted);
-        color: var(--color-text);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
-}
-
-.card-dialog__block-menu[popover] {
-    position-area: bottom span-right;
-    position-try-fallbacks: flip-block, flip-inline;
-    width: 9.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background-color: var(--color-surface);
-    box-shadow: var(--shadow-md);
-    padding: var(--space-xs) 0;
-    opacity: 0;
-    translate: 0 var(--_popover-offset);
-    transition:
-        opacity 0.2s ease,
-        translate 0.2s ease,
-        display 0.2s ease allow-discrete,
-        overlay 0.2s ease allow-discrete;
-
-    &:popover-open {
-        opacity: 1;
-        translate: 0 0;
-
-        @starting-style {
-            opacity: 0;
-            translate: 0 var(--_popover-offset);
-        }
-    }
-}
-
-.card-dialog__block-menu-item {
-    display: block;
-    width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    border: none;
-    background: none;
-    font-size: var(--font-sm);
-    font-family: inherit;
-    text-align: left;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-
-    &:hover {
-        background-color: var(--color-muted);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: -2px;
-    }
-}
-
-/* Configuración */
 .card-dialog__config-section {
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
-    content-visibility: auto;
-    contain-intrinsic-size: auto 14rem;
-}
-
-.card-dialog__config-section legend {
-    font-size: var(--font-lg);
-    font-weight: var(--font-weight-semibold);
-    padding: 0 var(--space-sm);
-    color: var(--color-text);
+    
+    & legend {
+        font-size: var(--font-lg);
+        font-weight: var(--font-weight-semibold);
+        padding: 0 var(--space-sm);
+        color: var(--color-text);
+    }
 }
 
 .card-dialog__config-desc {
@@ -472,8 +354,9 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     text-wrap: pretty;
 }
 
-.card-dialog__field-label,
-.card-dialog__field label {
+/* Formularios en Config */
+.card-dialog__field label,
+.card-dialog__field-label {
     display: block;
     margin-top: var(--space-md);
     font-size: var(--font-sm);
@@ -485,11 +368,8 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-lg);
-}
-
-.card-dialog__field-row .card-dialog__field {
-    flex: 1;
-    min-width: 8rem;
+    
+    & .card-dialog__field { flex: 1; min-width: 8rem; }
 }
 
 .card-dialog__input {
@@ -502,25 +382,16 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     font-size: var(--font-base);
     font-family: inherit;
     background-color: var(--color-bg);
-    field-sizing: content;
-    transition:
-        background-color var(--transition-fast),
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast);
+    transition: all var(--transition-fast);
 
-    &:focus {
+    &:focus, &:focus-visible {
         outline: none;
-        background-color: var(--color-bg);
-        border-color: color-mix(in srgb, var(--accent-solid), white 25%);
-        box-shadow: var(--focus-shadow);
-    }
-
-    &:focus-visible {
-        outline: none;
+        border-color: var(--color-focus);
         box-shadow: var(--focus-shadow);
     }
 }
 
+/* Selector de Color */
 .color-picker {
     display: flex;
     flex-wrap: wrap;
@@ -535,53 +406,19 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border: 2px solid transparent;
     border-radius: 50%;
     cursor: pointer;
-    transition:
-        scale var(--transition-fast),
-        border-color var(--transition-fast),
-        border-radius var(--transition-base);
+    transition: scale var(--transition-fast), border-radius var(--transition-base);
 
-    &:hover {
-        border-radius: var(--radius-sm);
-        scale: 1.08;
-    }
-
-    &:focus-visible {
-        outline: none;
-        box-shadow: var(--focus-shadow);
-    }
+    &:hover { border-radius: var(--radius-sm); scale: 1.08; }
+    &:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
 }
 
+/* AQUÍ EL ARREGLO: Selector de estado seleccionado */
 .color-picker__option--selected {
-    background-color: black;
+    border-radius: var(--radius-sm); scale: 1.08;
     box-shadow: var(--shadow-md);
 }
 
-.card-dialog__shortcuts {
-    width: 100%;
-    margin-top: var(--space-md);
-    border-collapse: collapse;
-}
-
-.card-dialog__shortcuts td {
-    padding: var(--space-sm);
-    border-bottom: 1px solid var(--color-border-light);
-    font-size: var(--font-sm);
-    color: var(--color-text);
-}
-
-.card-dialog__shortcuts tr:last-child td {
-    border-bottom: none;
-}
-
-.card-dialog__shortcuts kbd {
-    padding: 2px 8px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    font-family: ui-monospace, monospace;
-    font-size: 0.9em;
-    background-color: var(--color-muted);
-}
-
+/* Listas y Botones Secundarios */
 .card-dialog__shared-list {
     list-style: none;
     margin: var(--space-sm) 0 0;
@@ -599,16 +436,13 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-fast);
 
-    &:hover {
-        background-color: var(--color-muted);
-    }
+    &:hover { background-color: var(--color-muted); }
 }
 
 .card-dialog__shared-body {
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    min-width: 0;
 }
 
 .card-dialog__shared-avatar {
@@ -616,25 +450,16 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     height: 2.5rem;
     border-radius: 50%;
     object-fit: cover;
-    flex-shrink: 0;
 }
 
 .card-dialog__shared-meta {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-width: 0;
 }
 
-.card-dialog__shared-name {
-    font-size: var(--font-sm);
-    font-weight: var(--font-weight-medium);
-}
-
-.card-dialog__shared-role {
-    font-size: var(--font-xs);
-    color: var(--color-text-muted);
-}
+.card-dialog__shared-name { font-size: var(--font-sm); font-weight: var(--font-weight-medium); }
+.card-dialog__shared-role { font-size: var(--font-xs); color: var(--color-text-muted); }
 
 .card-dialog__shared-remove {
     display: inline-flex;
@@ -647,19 +472,8 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     background: transparent;
     color: var(--color-text-muted);
     cursor: pointer;
-    transition:
-        color var(--transition-fast),
-        background-color var(--transition-fast);
 
-    &:hover {
-        color: var(--color-text);
-        background-color: var(--color-surface-hover);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
+    &:hover { color: var(--color-text); background-color: var(--color-surface-hover); }
 }
 
 .card-dialog__invite {
@@ -673,30 +487,42 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-sm);
     font-size: var(--font-sm);
-    font-family: inherit;
     color: var(--color-text-muted);
     background: transparent;
     cursor: pointer;
-    transition:
-        background-color var(--transition-fast),
-        color var(--transition-fast);
 
-    &:hover {
-        background-color: var(--color-muted);
-        color: var(--color-text);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
+    &:hover { background-color: var(--color-muted); color: var(--color-text); }
 }
 
 .card-dialog__soon {
     margin: var(--space-xs) 0 0;
     font-size: var(--font-xs);
     color: var(--color-text-muted);
-    text-wrap: pretty;
+}
+
+/* Atajos */
+.card-dialog__shortcuts {
+    width: 100%;
+    margin-top: var(--space-md);
+    border-collapse: collapse;
+    
+    & td {
+        padding: var(--space-sm);
+        border-bottom: 1px solid var(--color-border-light);
+        font-size: var(--font-sm);
+        color: var(--color-text);
+    }
+    
+    & tr:last-child td { border-bottom: none; }
+    
+    & kbd {
+        padding: 2px 8px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        font-family: ui-monospace, monospace;
+        font-size: 0.9em;
+        background-color: var(--color-muted);
+    }
 }
 
 .card-dialog__config-actions {
@@ -717,70 +543,65 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border: none;
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
-    font-family: inherit;
     color: var(--accent-on);
     background: var(--accent-gradient);
     cursor: pointer;
     box-shadow: 0 4px 14px var(--accent-glow);
     transition: filter var(--transition-fast), box-shadow var(--transition-fast);
 
-    &:hover {
-        filter: brightness(0.97);
-        box-shadow: 0 6px 18px var(--accent-glow);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
+    &:hover { filter: brightness(0.97); box-shadow: 0 6px 18px var(--accent-glow); }
 }
 
-.card-dialog__canvas {
-    flex-grow: 1;
-    overflow-y: auto; /* Solo scrolea la hoja de contenido */
-    padding: var(--space-xl);
-    background-color: var(--color-bg);
-}
+/* ==========================================================================
+   6. POPOVER (Menú de Bloques)
+   ========================================================================== */
 
-.card-dialog__editor {
-    max-width: 45rem; /* Ancho perfecto de lectura tipo Notion / Docs */
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-}
+.card-dialog__block-menu[popover] {
+    margin: 0; 
+    position-area: bottom span-right;
+    position-try-fallbacks: flip-block, flip-inline;
+    width: 9.5rem;
+    padding: var(--space-xs) 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    
+    opacity: 0;
+    translate: 0 var(--_popover-offset);
+    transition:
+        opacity 0.2s ease,
+        translate 0.2s ease,
+        display 0.2s ease allow-discrete,
+        overlay 0.2s ease allow-discrete;
 
-/* 📦 El Bloque Atómico Molecular */
-.editor-block-wrapper {
-    position: relative;
-    cursor: pointer;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-sm);
-    transition: var(--transition-base);
-
-    &:hover {
-        background-color: var(--color-surface);
+    &:popover-open {
+        opacity: 1;
+        translate: 0 0;
+        @starting-style { opacity: 0; translate: 0 var(--_popover-offset); }
     }
 }
 
-.editor-block {
-    width: 100%;
-    min-height: 1.5rem;
-    outline: none;
-    font-size: var(--font-md);
-    line-height: 1.6;
-    color: var(--color-text);
-    word-break: break-word;
-}
-
-/* Truco CSS para simular un Placeholder nativo en divs editables */
-.editor-block:empty::before {
-    content: attr(placeholder);
-    color: oklch(0.6 0 0);
-    pointer-events: none;
+.card-dialog__block-menu-item {
     display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: transparent;
+    font-size: var(--font-sm);
+    text-align: left;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+
+    &:hover { background-color: var(--color-muted); }
+    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
 }
 
-/* Diálogo de confirmación de borrado */
+/* ==========================================================================
+   7. DIÁLOGO DE ELIMINACIÓN
+   ========================================================================== */
+
 #delete-dialog {
     display: none;
     flex-direction: column;
@@ -792,6 +613,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
     text-align: center;
+    
     opacity: 0;
     scale: 0.96;
     transition:
@@ -804,11 +626,7 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
         display: flex;
         opacity: 1;
         scale: 1;
-
-        @starting-style {
-            opacity: 0;
-            scale: 0.96;
-        }
+        @starting-style { opacity: 0; scale: 0.96; }
     }
 }
 
@@ -840,127 +658,88 @@ body:has(#card-dialog[open], #delete-dialog[open]) {
     border: none;
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
-    font-family: inherit;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: all var(--transition-fast);
 
-    &:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
-    }
-
-    &:first-child {
-        background-color: var(--color-surface);
-        color: var(--color-text);
-    }
-
-    &:first-child:hover {
-        background-color: var(--color-surface-hover);
-    }
+    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 }
 
-.confirm-dialog__btn:last-child {
+/* AQUÍ EL ARREGLO: Botones de peligro y fantasma separados */
+.confirm-dialog__btn--ghost {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+.confirm-dialog__btn--ghost:hover { 
+    background-color: var(--color-surface-hover); 
+}
+
+.confirm-dialog__btn--danger {
     background: var(--accent-gradient);
     color: var(--accent-on);
     box-shadow: 0 4px 14px var(--accent-glow);
-    transition: filter var(--transition-fast), box-shadow var(--transition-fast);
-
-    &:hover {
-        filter: brightness(0.96);
-        box-shadow: 0 6px 18px var(--accent-glow);
-    }
-    
+}
+.confirm-dialog__btn--danger:hover { 
+    filter: brightness(0.96); 
+    box-shadow: 0 6px 18px var(--accent-glow); 
 }
 
-.card-dialog__main,
-.card-dialog__panel--active,
-.card-dialog__config,
-.card-dialog__pages {
-    min-height: 0;
-}
+/* ==========================================================================
+   8. MEDIA QUERIES
+   ========================================================================== */
 
-@media (max-width: 450px) {
+/* Desktop */
+@media (min-width: 768px) {
     #card-dialog {
-        min-width: 100dvw;
-        min-height: 100dvh; 
-        border-radius: 0;
+        margin: auto;
+        max-height: 90dvh;
+        width: min(75rem, 90dvw);
+        height: min(53rem, 92dvh);
+        border-radius: var(--radius-lg);
+        border: 2px solid var(--color-border);
     }
 
     .card-dialog__nav {
+        display: flex;
+        width: 12.5rem;
+    }
+
+    .card-dialog__menu {
         display: none;
     }
 
     .card-dialog__page-menu {
-        display: none;
-    }
-
-    .card-dialog__nav {
-        max-width: 70px;
-    }
-
-    .card-dialog__page-add,
-    .card-dialog__page-tab {
-        padding: 0;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        & span {
-            display: none;
-        }
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-inline-end: var(--space-md);
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        opacity: 0;
+        scale: 0.85;
+        transition: all var(--transition-fast);
+
+        &:hover { background-color: var(--color-surface-hover); color: var(--color-text); }
+        &:focus-visible { opacity: 1; scale: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }
     }
 
-    .card-dialog__layout > .card-dialog__menu {
-        display: block;
-
-        &:focus-visible {
-            outline: none;
-        }
-
-    }
-
-    .card-dialog__layout > button:active {
-        transform: scale(0.95);
-    }
-
-    .hidden {
-        display: none;
-    }
-
-}
-
-@media (prefers-reduced-motion: reduce) {
-    #card-dialog,
-    #delete-dialog {
-        scale: 1;
-        transition:
-            opacity 0.1s ease,
-            display 0.1s ease allow-discrete,
-            overlay 0.1s ease allow-discrete;
-    }
-
-    #card-dialog::backdrop,
-    #delete-dialog::backdrop {
-        transition:
-            opacity 0.1s ease,
-            display 0.1s ease allow-discrete,
-            overlay 0.1s ease allow-discrete;
-    }
-
-    .card-dialog__panel--active {
-        animation: none;
-    }
-
-    .card-dialog__block-menu[popover] {
-        transition:
-            opacity 0.1s ease,
-            display 0.1s ease allow-discrete,
-            overlay 0.1s ease allow-discrete;
-    }
-
-    .card-dialog__page-menu {
+    .card-dialog__page:hover .card-dialog__page-menu,
+    .card-dialog__page:has(.card-dialog__page-tab--active) .card-dialog__page-menu {
         opacity: 1;
         scale: 1;
     }
+}
 
-    .color-picker__option {
-        transition: none;
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    #card-dialog, #delete-dialog, dialog::backdrop, .card-dialog__block-menu[popover] {
+        scale: 1;
+        transition: opacity 0.1s ease, display 0.1s ease allow-discrete, overlay 0.1s ease allow-discrete;
     }
+    .card-dialog__panel--active { animation: none; }
+    .card-dialog__page-menu { opacity: 1; scale: 1; }
 }

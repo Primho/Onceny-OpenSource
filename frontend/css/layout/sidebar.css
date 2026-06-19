@@ -1,91 +1,74 @@
-/* SIDEBAR */
+/* ==========================================================================
+   SIDEBAR (ESTILOS BASE: MÓVIL FIRST)
+   ========================================================================== */
 .sidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     position: sticky;
     top: 0;
     align-self: start;
     min-height: 100dvh;
-    width: var(--sidebar-width);
-    background-color: var(--sidebar);
-    border-right: 1px solid var(--color-border);
-    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-
-    transition: var(--transition-base);
+    width: 75px; 
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border-light);
+    padding-block: var(--space-lg);
+    transition: width var(--transition-base);
+    z-index: 100;
 }
 
-/* Profile */
+/* --- Perfil --- */
 .sidebar__profile {
     display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    min-height: 70px;
-    padding: var(--space-lg);
+    justify-content: center;
+    padding: 0;
 
     & img {
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         object-fit: cover;
-        transition: var(--transition-fast);
     }
 }
 
-.sidebar__profile-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
+.sidebar__profile-info { display: none; }
 
-.sidebar__profile-name {
-    font-size: var(--font-base);
-    color: var(--color-text);
-    font-weight: var(--font-weight-medium);
-}
-
-.sidebar__profile-email {
-    font-size: var(--font-sm);
-    color: var(--color-text);
-}
-
-.sidebar__nav,
-.sidebar__settings {
-    padding: var(--space-lg);
-}
-
+/* --- Navegación --- */
 .sidebar__nav {
     flex: 1;
+    padding-block: var(--space-lg);
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .sidebar__nav-list,
 .sidebar__settings-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: var(--space-xs);
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
 }
 
 .sidebar__nav-link,
 .sidebar__settings-link {
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    min-height: 40px;
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-base);
-    font-weight: var(--font-weight-medium);
+    justify-content: center;
+    width: 48px;
+    height: 48px;
     color: var(--color-text-muted);
-    text-decoration: none;
     border-radius: var(--radius-sm);
-    transition: background-color .2s, color .2s;
+    transition: all var(--transition-fast);
 
-    & svg {
-        flex-shrink: 0;
-        width: 24px; 
-        height: 24px;
+    & svg { 
+        width: 24px; height: 24px; 
     }
 
     &:hover {
@@ -94,57 +77,90 @@
     }
 }
 
-/* Estado Activo (Actualizado para usar la clase del HTML de SEO) */
-.sidebar__nav-item--active .sidebar__nav-link {
-    background: var(--accent-gradient);
-    color: var(--color-text);
-    font-weight: var(--font-weight-medium);
-
-    & svg {
-        fill: currentColor;
-        color: var(--color-text);
-    }
+.sidebar__nav-text,
+.sidebar__settings-link span {
+    display: none;
 }
 
-@media (max-width: 450px) {
+/* --- Estado Activo (Mejora: Indicador visual en móvil) --- */
+.sidebar__nav-item--active .sidebar__nav-link {
+    background-color: var(--color-muted);
+    color: var(--color-text);
+    position: relative;
+}
+
+/* Pequeño indicador de "activo" tipo barra lateral izquierda */
+.sidebar__nav-item--active .sidebar__nav-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 3px;
+    background: var(--color-accent);
+    border-radius: 0 2px 2px 0;
+}
+
+/* ==========================================================================
+   MEDIA QUERY: ESCRITORIO
+   ========================================================================== */
+@media (min-width: 768px) {
     .sidebar {
-        padding-block: var(--space-md);
-        align-items: center;
-        max-width: 75px;
-        
+        width: 240px; /* Ajusta según tu variable global */
+        align-items: stretch;
+        padding-block: var(--space-lg);
     }
 
     .sidebar__profile {
-        padding: 0;
-        & img {
-            width: 40px;
-            height: 40px;
-        }
-        & div {
-            display: none;
-        }
+        justify-content: flex-start;
+        padding-inline: var(--space-md);
+        gap: var(--space-sm);
     }
 
-    .sidebar__nav {
-        padding: var(--space-lg) 0;
-        transition: var(--transition-fast);
+    .sidebar__profile-info {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        overflow: hidden;
     }
 
-    .sidebar__nav-item {
-        width: fit-content;
-        transition: var(--transition-fast);
+    .sidebar__profile-name {
+        font-size: var(--font-md);
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .sidebar__nav-text {
-        display: none;
+    .sidebar__profile-email {
+        font-size: var(--font-xs);
+        color: var(--color-text-muted);
     }
 
-    .sidebar__settings {
-        padding: 0;
-        transition: var(--transition-fast);
-        & a span {
-            display: none;
-        }
+    .sidebar__nav-list,
+    .sidebar__settings-list {
+        align-items: stretch;
+        padding-inline: var(--space-sm);
     }
-    
+
+    .sidebar__nav-link,
+    .sidebar__settings-link {
+        justify-content: flex-start;
+        width: 100%;
+        gap: var(--space-sm);
+        padding-inline: var(--space-md);
+    }
+
+    .sidebar__nav-text,
+    .sidebar__settings-link span {
+        display: inline;
+        font-weight: 500;
+    }
+
+    /* Ajuste del indicador activo para escritorio */
+    .sidebar__nav-item--active .sidebar__nav-link::before {
+        left: 0;
+        top: 20%;
+        bottom: 20%;
+    }
 }
