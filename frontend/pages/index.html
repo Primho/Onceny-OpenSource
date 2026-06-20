@@ -87,7 +87,7 @@
         <div class="sidebar__settings">
             <ul class="sidebar__settings-list">
                 <li class="sidebar__settings-item">
-                    <a href="settings.html" class="sidebar__settings-link">
+                    <a href="#" role="button" aria-haspopup="dialog" class="sidebar__settings-link" >
                         <svg class="icon sidebar__settings-icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-settings"></use>
                         </svg>
@@ -140,13 +140,13 @@
     <dialog id="card-dialog" closedby="any" aria-modal="true" aria-labelledby="card-dialog-title-input">
         <div class="card-dialog__layout">
             
-            <button type="button" class="card-dialog__menu" role="menuitem">
+            <button type="button" class="card-dialog__menu" popovertarget="card-dialog-mobile-menu" role="menuitem">
                 <svg class="icon" aria-hidden="true" focusable="false">
                     <use href="../assets/icons/sprite.svg#icon-menu"></use>
                 </svg>
             </button>
     
-            <nav class="card-dialog__nav" aria-label="Pages in this section">
+            <nav id="card-dialog-mobile-menu" class="card-dialog__nav" popover="auto" aria-label="Pages in this section">
                 <div class="card-dialog__nav-top">
                     <button type="button" id="card-dialog-page-add" class="card-dialog__page-add">
                         <svg class="icon icon-add-page" aria-hidden="true" focusable="false">
@@ -299,8 +299,7 @@
         </div>
     </dialog>
 
-    <dialog id="delete-dialog" closedby="any" aria-labelledby="delete-dialog-title"
-        aria-describedby="delete-dialog-desc">
+    <dialog id="delete-dialog" closedby="any" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
         <form class="confirm-dialog" method="dialog">
             <h2 id="delete-dialog-title" class="confirm-dialog__title">Delete Space</h2>
             <p id="delete-dialog-desc" class="confirm-dialog__desc">
@@ -316,6 +315,25 @@
                 </button>
             </div>
         </form>
+    </dialog>
+
+    <dialog id="settings-dialog" closedby="any" aria-labelledby="dialog-settings" aria-describedby="dialog-settings">
+        <h2>Settings</h2>
+        <fieldset class="card-dialog__config-section">
+            <legend>🖍️ Theme</legend>
+            <p class="card-dialog__config-desc">Chosse your favorite theme.</p>
+            <div class="card-dialog__field">
+                <div class="color-theme-picker" role="radiogroup" aria-labelledby="card-dialog-bg-label">
+                    <button type="button" class="color-picker__option color-picker__option--selected" data-color="#f1f1f1" data-theme="white" style="background-color: #ddd" role="radio" aria-checked="true" aria-label="Black"></button>
+                    <button type="button" class="color-picker__option" data-color="#fdefee" data-theme="black" style="background-color: #222" role="radio" aria-checked="false" aria-label="White"></button>
+                </div>
+            </div> 
+        </fieldset>
+
+        <footer class="settings-dialog__config-actions">
+            <button type="button" class="settings-dialog__config-btn settings-dialog__config-btn" data-action="config-cancel">Cancel</button> 
+            <button type="button" class="settings-dialog__config-btn settings-dialog__config-btn--primary" data-action="config-save">Save</button>
+        </footer>
     </dialog>
 
     <script type="module" src="../js/main.js"></script>

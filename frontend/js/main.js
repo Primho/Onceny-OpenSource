@@ -12,6 +12,9 @@ const createMenuItems = document.querySelectorAll('.workspace__menu-item[data-sp
 const cardDialog = document.querySelector('#card-dialog');
 const deleteDialog = document.querySelector('#delete-dialog');
 const titleInput = document.querySelector('#card-dialog-title-input');
+
+const userSettings = document.querySelector('.sidebar__settings-link');
+const userSettingsDialog = document.querySelector('#settings-dialog');
 const settingsIcon = document.querySelector('.sidebar__settings-icon');
 
 const dialogMenuBtn = document.querySelector('.card-dialog__menu');
@@ -160,6 +163,11 @@ deleteDialog.addEventListener('close', async (event) => {
     cardEl?.remove();
     toggleEmptyState();
 });
+
+userSettings.addEventListener('click', (e) => {
+    e.preventDefault();
+    userSettingsDialog.showModal();
+})
 
 window.addEventListener(
     'scroll',

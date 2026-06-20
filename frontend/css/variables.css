@@ -84,3 +84,65 @@
     --card-purple: oklch(0.94 0.03 285);
     --card-purple-text: oklch(0.48 0.25 285);
 }
+
+/* ==========================================================================
+   MODO OSCURO
+   Activar añadiendo el atributo data-theme="dark" en <html> o <body>.
+   Tipografía, radios, espaciado, layout y transiciones no cambian:
+   solo se redefinen color, fondo y sombra.
+   ========================================================================== */
+:root[data-theme="dark"] {
+    /* Sombras (más opacas; en fondo oscuro un shadow tenue no se nota) */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.55);
+    --shadow-island: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+    /* Fondo */
+    --color-bg-base: oklch(0.15 0.012 280);
+
+    /* Acento verde Android (se mantiene la identidad de marca, ajustado para contraste) */
+    --color-accent: #00E676;
+    --accent-solid: #00CC78;
+    --accent-gradient: linear-gradient(
+        135deg,
+        #05FF95 0%,
+        #00FF87 100%
+    );
+    /* Importante: NO heredar de --color-text (ahora casi blanco).
+       El texto sobre el verde debe seguir siendo oscuro para mantener contraste. */
+    --accent-on: oklch(0.14 0.03 150);
+    --accent-glow: rgba(0, 230, 118, 0.35);
+    --color-focus: var(--accent-solid);
+    --focus-shadow: 0 0 0 3px rgba(0, 230, 118, 0.35), 0 4px 14px rgba(0, 230, 118, 0.25);
+
+    /* Color interfaz */
+    --color-bg: oklch(0.19 0.013 280);
+    --sidebar: oklch(0.17 0.012 280);
+    --color-surface: oklch(0.22 0.013 280);
+    --color-surface-hover: oklch(0.27 0.013 280);
+    --color-border: oklch(0.30 0.012 280);
+    --color-border-light: oklch(0.25 0.012 280);
+    --color-muted: oklch(0.24 0.012 280);
+
+    --color-text: oklch(0.95 0.006 280);
+    --color-text-muted: oklch(0.68 0.014 285);
+
+    /* Paleta de tarjetas (fondo oscuro saturado + texto claro del mismo matiz) */
+    --card-gray: oklch(0.26 0.005 286);
+    --card-gray-text: oklch(0.78 0.005 286);
+
+    --card-red: oklch(0.27 0.06 20);
+    --card-red-text: oklch(0.80 0.16 25);
+
+    --card-blue: oklch(0.27 0.07 240);
+    --card-blue-text: oklch(0.80 0.15 235);
+
+    --card-green: oklch(0.27 0.08 145);
+    --card-green-text: oklch(0.82 0.16 148);
+
+    --card-yellow: oklch(0.27 0.07 85);
+    --card-yellow-text: oklch(0.82 0.14 80);
+
+    --card-purple: oklch(0.26 0.08 285);
+    --card-purple-text: oklch(0.80 0.18 285);
+}

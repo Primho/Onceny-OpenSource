@@ -30,11 +30,26 @@ dialog[open]::backdrop {
 
 .hidden { display: none !important; }
 
-/* ==========================================================================
-   2. DIÁLOGO PRINCIPAL (MOBILE FIRST)
-   ========================================================================== */
+/* -- DIALOGO DE AJUSTES -- */
+#settings-dialog > h2 {
+    text-align: center;
+    color: var(--color-text);
+    padding-bottom: var(--space-lg);
+}
 
-#card-dialog {
+.settings-dialog__config-actions {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+
+/* -- DIALOGO DE LOS SPACES -- */
+
+#card-dialog,
+#settings-dialog {
+    position: relative;
     display: none;
     width: 100dvw;
     height: 100dvh;
@@ -62,6 +77,8 @@ dialog[open]::backdrop {
         @starting-style { opacity: 0; scale: 0.96; }
     }
 }
+
+#settings-dialog { padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem); }
 
 .card-dialog__layout {
     display: flex;
@@ -91,18 +108,43 @@ dialog[open]::backdrop {
 }
 
 /* ==========================================================================
-   3. NAVEGACIÓN LATERAL (Oculta en Mobile)
+   3. NAVEGACIÓN LATERAL (Popover en Mobile)
    ========================================================================== */
-
-.card-dialog__nav {
+.card-dialog__nav[popover] {
     display: none; 
+    position: fixed;
+    margin: 0;
+    inset: auto;
+    bottom: calc(var(--space-md) + 60px); /* Arriba del botón flotante */
+    right: var(--space-md); /* Alineado a la derecha */
+    width: min(280px, 50dvw);
+    max-height: 50dvh;
     flex-shrink: 0;
     flex-direction: column;
     gap: var(--space-sm);
     padding-inline: var(--space-sm);
     background-color: var(--color-surface);
-    border-right: 1px solid var(--color-border-light);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
     contain: layout style;
+
+    /* Animación de entrada suave */
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 
+        opacity var(--transition-fast), 
+        transform var(--transition-fast), 
+        display var(--transition-fast) allow-discrete,
+        overlay var(--transition-fast) allow-discrete;
+}
+
+/* Cuando el popover se abre en celular */
+.card-dialog__nav[popover]:popover-open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+    @starting-style { opacity: 0; transform: translateY(10px); }
 }
 
 .card-dialog__nav-top,
@@ -143,6 +185,32 @@ dialog[open]::backdrop {
     &:hover, &:has(.card-dialog__page-tab--active) {
         background-color: var(--color-muted);
     }
+}
+
+.card-dialog__page-menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-inline-end: var(--space-md);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    scale: 0.85;
+    transition: all var(--transition-fast);
+
+    &:hover { background-color: var(--color-surface-hover); color: var(--color-text); }
+    &:focus-visible { opacity: 1; scale: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }
+}
+
+.card-dialog__page:hover .card-dialog__page-menu,
+.card-dialog__page:has(.card-dialog__page-tab--active) .card-dialog__page-menu {
+    opacity: 1;
+    scale: 1;
 }
 
 .card-dialog__page:hover,
@@ -189,7 +257,6 @@ dialog[open]::backdrop {
     justify-content: flex-start;
 }
 
-/* AQUÍ EL ARREGLO: Clases independientes para los modificadores */
 .card-dialog__page-tab:hover,
 .card-dialog__page-tab--active { 
     color: var(--color-text); 
@@ -228,6 +295,7 @@ dialog[open]::backdrop {
     min-height: 4.375rem;
     padding-inline: var(--space-lg);
     border-bottom: 1px solid var(--color-border-light);
+    color: var(--color-text);
     flex-shrink: 0;
 }
 
@@ -269,7 +337,6 @@ dialog[open]::backdrop {
     overflow: hidden;
 }
 
-/* AQUÍ EL ARREGLO: La clase activa debe estar separada */
 .card-dialog__panel--active {
     display: flex;
     animation: card-dialog-panel-in 0.2s ease-out both;
@@ -383,6 +450,7 @@ dialog[open]::backdrop {
     font-family: inherit;
     background-color: var(--color-bg);
     transition: all var(--transition-fast);
+    color: var(--color-text);
 
     &:focus, &:focus-visible {
         outline: none;
@@ -412,7 +480,6 @@ dialog[open]::backdrop {
     &:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
 }
 
-/* AQUÍ EL ARREGLO: Selector de estado seleccionado */
 .color-picker__option--selected {
     border-radius: var(--radius-sm); scale: 1.08;
     box-shadow: var(--shadow-md);
@@ -458,7 +525,7 @@ dialog[open]::backdrop {
     gap: 2px;
 }
 
-.card-dialog__shared-name { font-size: var(--font-sm); font-weight: var(--font-weight-medium); }
+.card-dialog__shared-name { color: var(--color-text); font-size: var(--font-md); font-weight: var(--font-weight-medium); }
 .card-dialog__shared-role { font-size: var(--font-xs); color: var(--color-text-muted); }
 
 .card-dialog__shared-remove {
@@ -525,7 +592,8 @@ dialog[open]::backdrop {
     }
 }
 
-.card-dialog__config-actions {
+.card-dialog__config-actions,
+.settings-dialog__config-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -537,19 +605,28 @@ dialog[open]::backdrop {
     flex-shrink: 0;
 }
 
-.card-dialog__config-btn {
+.card-dialog__config-btn,
+.settings-dialog__config-btn {
     min-width: 6.25rem;
     min-height: 2.5rem;
     border: none;
     border-radius: var(--radius-md);
-    font-size: var(--font-sm);
+    font-size: var(--font-md);
     color: var(--accent-on);
-    background: var(--accent-gradient);
+    background: var(--color-surface-hover);
     cursor: pointer;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    color: var(--color-text);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
     transition: filter var(--transition-fast), box-shadow var(--transition-fast);
 
     &:hover { filter: brightness(0.97); box-shadow: 0 6px 18px var(--accent-glow); }
+}
+
+.card-dialog__config-btn--primary,
+.settings-dialog__config-btn--primary {
+    color: var(--accent-on);
+    background-color: var(--color-accent);
+    box-shadow: 0 4px 14px var(--accent-glow);
 }
 
 /* ==========================================================================
@@ -612,6 +689,7 @@ dialog[open]::backdrop {
     padding: var(--space-lg);
     border-radius: var(--radius-lg);
     border: 2px solid var(--color-border);
+    background-color: var(--color-bg);
     text-align: center;
     
     opacity: 0;
@@ -631,6 +709,7 @@ dialog[open]::backdrop {
 }
 
 .confirm-dialog__title {
+    color: var(--color-text);
     margin: 0 0 var(--space-lg);
     font-size: var(--font-lg);
     text-wrap: balance;
@@ -664,7 +743,6 @@ dialog[open]::backdrop {
     &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 }
 
-/* AQUÍ EL ARREGLO: Botones de peligro y fantasma separados */
 .confirm-dialog__btn--ghost {
     background-color: var(--color-surface);
     color: var(--color-text);
@@ -689,6 +767,15 @@ dialog[open]::backdrop {
 
 /* Desktop */
 @media (min-width: 768px) {
+    #settings-dialog {
+        margin: auto;
+        max-height: 90dvh;
+        width: min(75rem, 500px);
+        height: min(53rem, 92dvh);
+        border-radius: var(--radius-lg);
+        border: 2px solid var(--color-border);
+    }
+
     #card-dialog {
         margin: auto;
         max-height: 90dvh;
@@ -698,39 +785,27 @@ dialog[open]::backdrop {
         border: 2px solid var(--color-border);
     }
 
-    .card-dialog__nav {
-        display: flex;
-        width: 12.5rem;
+    /* ARREGLO: Desactivar el popover y restaurar el Aside original en Desktop */
+    .card-dialog__nav[popover] {
+        display: flex !important;
+        position: static !important;
+        width: 12.5rem !important;
+        height: 100% !important;
+        max-height: none !important;
+        border: none !important;
+        border-right: 1px solid var(--color-border-light) !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding-inline: var(--space-sm) !important;
+        transform: none !important;
+        opacity: 1 !important;
+        inset: auto !important;
+        margin: 0 !important;
     }
 
-    .card-dialog__menu {
+    .card-dialog__menu,
+    .card-dialog__menu.hidden {
         display: none;
-    }
-
-    .card-dialog__page-menu {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-inline-end: var(--space-md);
-        border: none;
-        border-radius: 6px;
-        background: transparent;
-        color: var(--color-text-muted);
-        cursor: pointer;
-        opacity: 0;
-        scale: 0.85;
-        transition: all var(--transition-fast);
-
-        &:hover { background-color: var(--color-surface-hover); color: var(--color-text); }
-        &:focus-visible { opacity: 1; scale: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }
-    }
-
-    .card-dialog__page:hover .card-dialog__page-menu,
-    .card-dialog__page:has(.card-dialog__page-tab--active) .card-dialog__page-menu {
-        opacity: 1;
-        scale: 1;
     }
 }
 

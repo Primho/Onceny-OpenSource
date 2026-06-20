@@ -59,18 +59,20 @@ def update_card(id):
     data = request.get_json()
     conn = get_db()
 
-    # UPDATE extensible para soportar la mutación de colores y tags en caliente
-    conn.execute('''
-        UPDATE cards
-        SET title = ?, color = ?, tag = ?, marker = ?
-        WHERE id = ?
-    ''', (
-        data.get('title', ''),
-        data.get('color', '#f1f1f1'),
-        data.get('tag', ''),
-        data.get('marker', ''),
-        id
-    ))
+    # Whitelist de campos editables: solo se actualizan las columnas
+    # que realmente vienen en el body, así un guardado parcial
+    # (ej. solo color/marker/tag) no pisa el title con un valor vacío.
+    allowed_fields = ['title', 'color', 'tag', 'marker']
+    fields_to_update = {f: data[f] for f in allowed_fields if f in data}
+
+    if not fields_to_update:
+        conn.close()
+        return jsonify({'message': 'Nothing to update'}), 400
+
+    set_clause = ', '.join(f'{field} = ?' for field in fields_to_update)
+    values = list(fields_to_update.values()) + [id]
+
+    conn.execute(f'UPDATE cards SET {set_clause} WHERE id = ?', values)
 
     conn.commit()
     conn.close()

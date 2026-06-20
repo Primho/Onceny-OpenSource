@@ -106,7 +106,7 @@
 
 .workspace__btn--primary {
     background: var(--accent-gradient);
-    color: var(--color-text);
+    color: var(--accent-on);
     font-weight: var(--font-weight-medium);
     box-shadow: 0 4px 14px var(--accent-glow);
 

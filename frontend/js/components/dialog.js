@@ -12,6 +12,8 @@ const tagsInput = document.querySelector('#card-dialog-tags');
 const colorPicker = document.querySelector('.color-picker');
 const pageTabs = document.querySelectorAll('.card-dialog__page-tab[data-panel]');
 const panels = document.querySelectorAll('.card-dialog__panel');
+const mobileMenu = document.querySelector('#card-dialog-mobile-menu');
+const dialogMenuBtn = document.querySelector('.card-dialog__menu');
 
 const getCardElement = (id) => document.querySelector(`.note-card[data-id="${id}"]`);
 
@@ -28,11 +30,18 @@ const setPanel = (panelName) => {
         panel.classList.toggle('card-dialog__panel--active', isActive);
     });
 
+    if(mobileMenu && mobileMenu.matches(':popover-open')) {
+        mobileMenu.hidePopover();
+    }
+
     if(panelName === 'config') {
         titleInput.hidden = true;
         closeBtn.hidden = true;
         settingsTitle.hidden = false;
+        
+        dialogMenuBtn.classList.add('hidden');
     } else {
+        dialogMenuBtn.classList.remove('hidden');
         titleInput.hidden = false;
         closeBtn.hidden = false;
         settingsTitle.hidden = true;
@@ -62,8 +71,6 @@ const applyCardColorToDom = (cardEl, hexColor, theme) => {
 
     const titleEl = cardEl.querySelector('.note-card__title');
     const menuIcon = cardEl.querySelector('.note-card__menu-trigger svg');
-    const dialogMenuBtn = document.querySelector('.card-dialog__menu');
-    
 
     if (titleEl) titleEl.style.color = contrast;
     if (menuIcon) menuIcon.style.color = contrast;
@@ -91,24 +98,38 @@ const persistCard = async () => {
 
     const cardEl = getCardElement(card.id);
     const titleEl = cardEl?.querySelector('.note-card__title');
+
+    const newTitle = titleInput.value.trim() || 'Untitled';
+    const changed = newTitle !== (card.title ?? '');
+
+    card.title = newTitle;
+    if (titleEl) titleEl.textContent = newTitle;
+
+    if (changed) {
+        await updateCard(card.id, { title: newTitle });
+    }
+   
+}
+
+const persistConfig = async () => {
+    const card = getActiveCard();
+    if (!card) return;
+
+    const cardEl = getCardElement(card.id);
     const tagEl = cardEl?.querySelector('.note-card__tag');
 
     const payload = {
-        title: titleInput.value.trim() || 'Untitled',
         color: getColor(),
         marker: markerInput.value.trim(),
         tag: tagsInput.value.trim(),
     };
 
     const changed =
-        payload.title !== (card.title ?? '') ||
         payload.color !== (card.color ?? '#f1f1f1') ||
         payload.marker !== (card.marker ?? '') ||
         payload.tag !== (card.tag ?? '');
 
     Object.assign(card, payload);
-
-    if (titleEl) titleEl.textContent = payload.title;
     applyCardColorToDom(cardEl, payload.color);
 
     if (payload.tag && cardEl) {
@@ -163,16 +184,14 @@ cardDialog?.addEventListener('close', () => {
     persistCard();
 });
 
-document.querySelector('[data-action="config-cancel"]')?.addEventListener('click', () => {
-    const card = getActiveCard();
-    if (card) syncDialogFromCard(card);
-    setPanel('content');
+document.querySelector('[data-action="content-save"]')?.addEventListener('click', async () => {
+    await persistCard();
 });
 
 document.querySelector('[data-action="config-save"]')?.addEventListener('click', async () => {
-    await persistCard();
+    await persistConfig();
     setPanel('content');
-});
+})
 
 const spaceBlocksContainer = document.querySelector('#space-blocks-container');
 const dialogBlockMenu = document.querySelector('#card-dialog-block-menu');
@@ -241,6 +260,12 @@ spaceBlocksContainer.addEventListener('input', (e) => {
         if (dialogBlockMenu.matches(':popover-open')) {
             dialogBlockMenu.hidePopover();
         }
+    }
+});
+
+window.addEventListener('resize', () => {
+    if(dialogBlockMenu && dialogBlockMenu.matches(':popover-open')) {
+        dialogBlockMenu.hidePopover();
     }
 });
 
