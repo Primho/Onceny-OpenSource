@@ -1,5 +1,5 @@
 import { getDataCards, setDataCards, setActiveCard, getColor } from './state.js';
-import { makeCard, titleColor } from './components/card.js';
+import { makeCard, getCardColors } from './components/card.js';
 import { syncDialogFromCard, syncColorPicker } from './components/dialog.js';
 import { deleteCard, getCards, createCard } from './api.js';
 
@@ -15,6 +15,7 @@ const titleInput = document.querySelector('#card-dialog-title-input');
 
 const userSettings = document.querySelector('.sidebar__settings-link');
 const userSettingsDialog = document.querySelector('#settings-dialog');
+const saveConfigBtn = userSettingsDialog.querySelector('.settings-dialog__config-btn');
 const settingsIcon = document.querySelector('.sidebar__settings-icon');
 
 const dialogMenuBtn = document.querySelector('.card-dialog__menu');
@@ -35,7 +36,8 @@ const openCardDialog = (card) => {
     if (dialogMenuBtn) {
         console.log("color: ", getColor());
         dialogMenuBtn.style.backgroundColor = getColor();
-        dialogMenuBtnIcon.style.color = titleColor(card.color);
+        const colors = getCardColors(card.color);
+        dialogMenuBtnIcon.style.color = colors.text;
     };
 
     syncColorPicker(card.color);
@@ -181,5 +183,24 @@ window.addEventListener(
     },
     { passive: true },
 );
+
+const colorThemePicker = document.querySelector('.color-theme-picker');
+const colorTheme = colorThemePicker.querySelectorAll('.color-picker__option');
+colorTheme.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const btnThemeColor = btn.dataset.theme;
+        if(btnThemeColor === 'black') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            return;
+        }
+        document.documentElement.removeAttribute('data-theme');
+    })
+});
+
+saveConfigBtn.addEventListener('click', () => {
+    userSettingsDialog.close();
+})
+
+
 
 loadCards();

@@ -1,6 +1,6 @@
 import { createCard, updateCard } from '../api.js';
 import { getActiveCard, getColor, setColor } from '../state.js';
-import { titleColor } from './card.js';
+import { getCardColors } from './card.js';
 import { createNewBlock } from './dialogblock.js';
 
 const cardDialog = document.querySelector('#card-dialog');
@@ -66,15 +66,15 @@ const syncColorPicker = (hexColor) => {
 const applyCardColorToDom = (cardEl, hexColor, theme) => {
     if (!cardEl) return;
 
-    const contrast = titleColor(hexColor);
-    cardEl.style.backgroundColor = hexColor;
+    const colors = getCardColors(hexColor);
+
+    cardEl.style.backgroundColor = colors.bg;
 
     const titleEl = cardEl.querySelector('.note-card__title');
     const menuIcon = cardEl.querySelector('.note-card__menu-trigger svg');
 
-    if (titleEl) titleEl.style.color = contrast;
-    if (menuIcon) menuIcon.style.color = contrast;
-
+    if (titleEl) titleEl.style.color = colors.text;
+    if (menuIcon) menuIcon.style.color = colors.text;
 
     if (theme) {
         cardEl.dataset.theme = theme;

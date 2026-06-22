@@ -1,13 +1,35 @@
 const COLOR_MAP = {
-    '#f1f1f1': 'var(--card-gray-text)',
-    '#fdefee': 'var(--card-red-text)',
-    '#e6f2ff': 'var(--card-blue-text)',
-    '#e1fae7': 'var(--card-green-text)',
-    '#fcf5db': 'var(--card-yellow-text)',
-    '#efeaff': 'var(--card-purple-text)',
+    '#f1f1f1': {
+        bg: 'var(--card-gray)',
+        text: 'var(--card-gray-text)',
+    },
+    '#fdefee': {
+        bg: 'var(--card-red)',
+        text: 'var(--card-red-text)',
+    },
+    '#e6f2ff': {
+        bg: 'var(--card-blue)',
+        text: 'var(--card-blue-text)',
+    },
+    '#e1fae7': {
+        bg: 'var(--card-green)',
+        text: 'var(--card-green-text)',
+    },
+    '#fcf5db': {
+        bg: 'var(--card-yellow)',
+        text: 'var(--card-yellow-text)',
+    },
+    '#efeaff': {
+        bg: 'var(--card-purple)',
+        text: 'var(--card-purple-text)',
+    },
 };
 
-const titleColor = (hex) => COLOR_MAP[hex] ?? 'inherit';
+const getCardColors = (hex) =>
+    COLOR_MAP[hex] ?? {
+        bg: hex,
+        text: 'inherit',
+    };
 
 const escapeHtml = (value) =>
     String(value)
@@ -19,10 +41,14 @@ const escapeHtml = (value) =>
 // Mete la tarjet a el grid
 const makeCard = (card, container, isNew = false) => {
     const displayTitle = card.title?.trim() || 'Sin título';
-    const contrast = titleColor(card.color);
     const temporalClass = card.type === 'temporal' ? ' note-card--temporal' : '';
     const tag = card.tag ? escapeHtml(card.tag) : '';
     const tagMarkup = tag ? `<span class="note-card__tag">${tag}</span>` : '';
+
+    const colors = COLOR_MAP[card.color] ?? {
+        bg: card.color,
+        text: 'inherit',
+    };
     
 
     container.insertAdjacentHTML(
@@ -31,10 +57,10 @@ const makeCard = (card, container, isNew = false) => {
         <article class="note-card${isNew ? ' note-card--new' : ''}${temporalClass}"
             role="listitem"
             data-id="${card.id}"
-            style="background-color: ${escapeHtml(card.color)};">
+            style="background-color: ${colors.bg};">
             <header class="note-card__header">
                 <div class="note-card__info">
-                    <h2 class="note-card__title" style="color: ${contrast};">${escapeHtml(displayTitle)}</h2>
+                    <h2 class="note-card__title" style="color: ${colors.text};">${escapeHtml(displayTitle)}</h2>
                     ${tagMarkup}
                 </div>
                 <div class="note-card__menu">
@@ -44,7 +70,7 @@ const makeCard = (card, container, isNew = false) => {
                         style="anchor-name: --note-anchor-${card.id};"
                         aria-label="Opciones de ${escapeHtml(displayTitle)}"
                         aria-haspopup="menu">
-                        <svg class="icon" style="color: ${contrast};" aria-hidden="true" focusable="false">
+                        <svg class="icon" style="color: ${colors.text};" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
                         </svg>
                     </button>
@@ -69,4 +95,4 @@ const makeCard = (card, container, isNew = false) => {
 };
 
 
-export { makeCard, titleColor };
+export { makeCard, getCardColors };
