@@ -2,6 +2,7 @@ import { createCard, updateCard } from '../api.js';
 import { getActiveCard, getColor, setColor } from '../state.js';
 import { getCardColors } from './card.js';
 import { createNewBlock } from './dialogblock.js';
+import { addPage } from './page.js';
 
 const cardDialog = document.querySelector('#card-dialog');
 const closeBtn = document.querySelector('#card-dialog-close');
@@ -10,15 +11,27 @@ const settingsTitle = document.querySelector('#card-dialog-settings-title');
 const markerInput = document.querySelector('#card-dialog-marker');
 const tagsInput = document.querySelector('#card-dialog-tags');
 const colorPicker = document.querySelector('.color-picker');
+
 const pageTabs = document.querySelectorAll('.card-dialog__page-tab[data-panel]');
+const pageAddBtn = document.querySelector('#card-dialog-page-add');
+const pagesContainer = document.querySelector('#card-dialog-pages');
+
 const panels = document.querySelectorAll('.card-dialog__panel');
 const mobileMenu = document.querySelector('#card-dialog-mobile-menu');
 const dialogMenuBtn = document.querySelector('.card-dialog__menu');
 
+//  SELECTORES CORREGIDOS SEGÚN TU HTML
+const spaceBlocksContainer = document.querySelector('#space-blocks-container'); // Sincronizado con tu HTML
+const dialogBlockMenu = document.querySelector('#card-dialog-block-menu');
+
+let currentCommandBlock = null;
+
 const getCardElement = (id) => document.querySelector(`.note-card[data-id="${id}"]`);
 
 const setPanel = (panelName) => {
-    pageTabs.forEach((tab) => {
+    const currentTabs = document.querySelectorAll('.card-dialog__page-tab[data-panel]');
+
+    currentTabs.forEach((tab) => {
         const isActive = tab.dataset.panel === panelName;
         tab.classList.toggle('card-dialog__page-tab--active', isActive);
         tab.setAttribute('aria-selected', String(isActive));
@@ -38,7 +51,6 @@ const setPanel = (panelName) => {
         titleInput.hidden = true;
         closeBtn.hidden = true;
         settingsTitle.hidden = false;
-        
         dialogMenuBtn.classList.add('hidden');
     } else {
         dialogMenuBtn.classList.remove('hidden');
@@ -50,26 +62,20 @@ const setPanel = (panelName) => {
 
 const syncColorPicker = (hexColor) => {
     if (!colorPicker) return;
-    console.log(hexColor);
-
-    const colorOpt = colorPicker.querySelectorAll('.color-picker__option')
+    const colorOpt = colorPicker.querySelectorAll('.color-picker__option');
 
     colorOpt.forEach((btn) => {
-        // verificar si el color es el mismo
-        const selected = btn.dataset.color === hexColor; // true or flase
+        const selected = btn.dataset.color === hexColor;
         btn.classList.toggle('color-picker__option--selected', selected);
         btn.setAttribute('aria-checked', String(selected));
-        
     });
 };
 
 const applyCardColorToDom = (cardEl, hexColor, theme) => {
     if (!cardEl) return;
-
     const colors = getCardColors(hexColor);
 
     cardEl.style.backgroundColor = colors.bg;
-
     const titleEl = cardEl.querySelector('.note-card__title');
     const menuIcon = cardEl.querySelector('.note-card__menu-trigger svg');
 
@@ -92,6 +98,8 @@ const syncDialogFromCard = (card) => {
     setPanel('content');
 };
 
+// --- MÉTODOS DE PERSISTENCIA MANUAL ORIGINALES ---
+
 const persistCard = async () => {
     const card = getActiveCard();
     if (!card) return;
@@ -108,8 +116,7 @@ const persistCard = async () => {
     if (changed) {
         await updateCard(card.id, { title: newTitle });
     }
-   
-}
+};
 
 const persistConfig = async () => {
     const card = getActiveCard();
@@ -151,6 +158,8 @@ const persistConfig = async () => {
     }
 };
 
+// --- LISTENERS DE INTERFAZ Y EVENTOS ---
+
 pageTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
         setPanel(tab.dataset.panel);
@@ -191,12 +200,11 @@ document.querySelector('[data-action="content-save"]')?.addEventListener('click'
 document.querySelector('[data-action="config-save"]')?.addEventListener('click', async () => {
     await persistConfig();
     setPanel('content');
-})
+});
 
-const spaceBlocksContainer = document.querySelector('#space-blocks-container');
-const dialogBlockMenu = document.querySelector('#card-dialog-block-menu');
+// --- GESTIÓN INTERNA DE BLOQUES Y COMANDOS DE TECLADO ---
 
-spaceBlocksContainer.addEventListener('keydown', (e) => {
+spaceBlocksContainer?.addEventListener('keydown', (e) => {
     if (!e.target.classList.contains('editor-block')) return;
     const currentWrapper = e.target.closest('.editor-block-wrapper');
 
@@ -204,8 +212,6 @@ spaceBlocksContainer.addEventListener('keydown', (e) => {
         if (e.shiftKey) return; 
         else {
             e.preventDefault();            
-            // Llamamos a la función que fabricará tu HTML específico
-            const currentWrapper = e.target.closest('.editor-block-wrapper');
             createNewBlock(currentWrapper);
         }
     }
@@ -230,34 +236,31 @@ spaceBlocksContainer.addEventListener('keydown', (e) => {
             }
         }
     }
-
 });
 
-spaceBlocksContainer.addEventListener('input', (e) => {
+spaceBlocksContainer?.addEventListener('input', (e) => {
     const activeBlock = e.target;
     if (!activeBlock.classList.contains('editor-block')) return;
 
     const text = activeBlock.textContent;
-
     // Esta expresión regular busca si hay un ":" al final o seguido de letras
     const isValidCommand = text.match(/(?:^|\s):([a-zA-Z]*)$/);
 
-    if (isValidCommand) {
+    if (isValidCommand && dialogBlockMenu) { // <-- Validamos que exista el menú primero
         const rect = activeBlock.getBoundingClientRect();
 
-        // 2. Forzar la posición del Popover nativo justo debajo
+        // Forzar la posición del Popover nativo justo debajo
         dialogBlockMenu.style.position = 'fixed';
-        dialogBlockMenu.style.margin = '0'; // Resetea el centrado por defecto
-        dialogBlockMenu.style.top = `${rect.bottom + 8}px`; // 8px de margen inferior
+        dialogBlockMenu.style.margin = '0'; 
+        dialogBlockMenu.style.top = `${rect.bottom + 8}px`; 
         dialogBlockMenu.style.left = `${rect.left}px`;
 
-        // 3. Mostrar el popover si no está abierto
         if (!dialogBlockMenu.matches(':popover-open')) {
             dialogBlockMenu.showPopover();
         }
     } else {
-        // Si ya no cumple la condición (se borró el ":" o se escribió un espacio/carácter no válido), se cierra
-        if (dialogBlockMenu.matches(':popover-open')) {
+        // Usamos ?. para que si dialogBlockMenu es null, no lance un error en la consola
+        if (dialogBlockMenu?.matches(':popover-open')) {
             dialogBlockMenu.hidePopover();
         }
     }
@@ -268,5 +271,8 @@ window.addEventListener('resize', () => {
         dialogBlockMenu.hidePopover();
     }
 });
+
+// Inicialización modular segura del componente de páginas
+addPage(pageAddBtn, pagesContainer, setPanel);
 
 export { syncDialogFromCard, syncColorPicker };

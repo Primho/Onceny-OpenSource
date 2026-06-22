@@ -71,6 +71,9 @@ dialog[open]::backdrop {
         overlay var(--transition-base) allow-discrete;
 
     &[open] {
+        position: fixed;
+        top: 0;
+        left: 0;
         display: block;
         opacity: 1;
         scale: 1;

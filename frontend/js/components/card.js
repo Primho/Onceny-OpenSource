@@ -40,16 +40,15 @@ const escapeHtml = (value) =>
 
 // Mete la tarjet a el grid
 const makeCard = (card, container, isNew = false) => {
-    const displayTitle = card.title?.trim() || 'Sin título';
-    const temporalClass = card.type === 'temporal' ? ' note-card--temporal' : '';
-    const tag = card.tag ? escapeHtml(card.tag) : '';
-    const tagMarkup = tag ? `<span class="note-card__tag">${tag}</span>` : '';
-
     const colors = COLOR_MAP[card.color] ?? {
         bg: card.color,
         text: 'inherit',
     };
-    
+
+    const displayTitle = card.title?.trim() || 'Sin título';
+    const temporalClass = card.type === 'temporal' ? ' note-card--temporal' : '';
+    const tag = card.tag ? escapeHtml(card.tag) : '';
+    const tagMarkup = tag ? `<span class="note-card__tag" style="color: color-mix(in srgb, ${colors.text} 80%, white)">${tag}</span>` : '';
 
     container.insertAdjacentHTML(
         'afterbegin',
@@ -86,8 +85,8 @@ const makeCard = (card, container, isNew = false) => {
                     </div>
                 </div>
             </header>
-            <div class="note-card__preview">
-                <p class="note-card__preview-text">Añade contenido abriendo este espacio.</p>
+            <div class="note-card__preview" >
+                <p class="note-card__preview-text" style="color: color-mix(in srgb, ${colors.text} 70%, white)">Añade contenido abriendo este espacio.</p>
             </div>
         </article>
         `,

@@ -292,10 +292,15 @@
             </div>
         </div>
     
-        <div id="card-dialog-block-menu" popover="auto" class="card-dialog__block-menu" role="menu" aria-label="Tipos de contenido">
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="text">✏️ Text</button>
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="heading">🛑 Títle</button>
-            <button type="button" class="card-dialog__block-menu-item" role="menuitem" data-block="task">☑️ Task</button>
+        <div id="card-dialog-block-menu" popover="auto" class="card-dialog__block-menu">
+            <button type="button" class="card-dialog__block-menu-item" data-block="text">✏️ Normal Text</button>
+            <button type="button" class="card-dialog__block-menu-item" data-block="heading">🔴 Title</button>
+            <button type="button" class="card-dialog__block-menu-item" data-block="task">☑️ Task</button>
+        </div>
+
+        <div id="card-page-menu" popover="auto" class="note-card__menu-panel" role="menu" aria-label="Acciones de la página">
+            <button type="button" class="note-card__menu-item" role="menuitem" data-action="rename">Rename</button>
+            <button type="button" class="note-card__menu-item note-card__delete" role="menuitem" data-action="delete">Delete</button>
         </div>
     </dialog>
 
@@ -324,9 +329,9 @@
             <p class="card-dialog__config-desc">Chosse your favorite theme.</p>
             <div class="card-dialog__field">
                 <div class="color-theme-picker" role="radiogroup" aria-labelledby="card-dialog-bg-label">
-                    <button type="button" class="color-picker__option color-picker__option--selected" data-color="#fff" data-theme="white" style="background-color: #ddd" role="radio" aria-checked="true" aria-label="white"></button>
+                    <button type="button" class="color-picker__option color-picker__option--selected" data-color="#fff" data-theme="light" style="background-color: #ddd" role="radio" aria-checked="true" aria-label="Light Mode"></button>
 
-                    <button type="button" class="color-picker__option" data-color="#222" data-theme="black" style="background-color: #222" role="radio" aria-checked="false" aria-label="Black"></button>
+                    <button type="button" class="color-picker__option" data-color="#222" data-theme="dark" style="background-color: #222" role="radio" aria-checked="false" aria-label="Dark Mode"></button>
                 </div>
             </div> 
         </fieldset>

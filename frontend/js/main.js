@@ -185,15 +185,24 @@ window.addEventListener(
 );
 
 const colorThemePicker = document.querySelector('.color-theme-picker');
-const colorTheme = colorThemePicker.querySelectorAll('.color-picker__option');
-colorTheme.forEach(btn => {
+const colorThemeBtn = colorThemePicker.querySelectorAll('.color-picker__option');
+const userTheme = localStorage.getItem('theme');
+
+if (userTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+}
+
+colorThemeBtn.forEach(btn => {
     btn.addEventListener('click', () => {
         const btnThemeColor = btn.dataset.theme;
-        if(btnThemeColor === 'black') {
+        if(btnThemeColor === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
-            return;
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.removeItem('theme');
         }
-        document.documentElement.removeAttribute('data-theme');
+        
     })
 });
 
