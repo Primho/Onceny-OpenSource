@@ -79,14 +79,14 @@ const makeCard = (card, container, isNew = false) => {
                         role="menu"
                         aria-label="Acciones de la nota">
                         <button type="button" class="note-card__menu-item" role="menuitem"
-                            data-action="edit">Editar</button>
+                            data-action="edit">Edit</button>
                         <button type="button" class="note-card__menu-item note-card__delete"
-                            role="menuitem" data-action="delete">Eliminar</button>
+                            role="menuitem" data-action="delete">Delete</button>
                     </div>
                 </div>
             </header>
             <div class="note-card__preview" >
-                <p class="note-card__preview-text" style="color: color-mix(in srgb, ${colors.text} 70%, white)">Añade contenido abriendo este espacio.</p>
+                <p class="note-card__preview-text" style="color: color-mix(in srgb, ${colors.text} 70%, white)">Add content by opening this space.</p>
             </div>
         </article>
         `,
