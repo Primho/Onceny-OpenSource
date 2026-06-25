@@ -187,48 +187,6 @@ window.addEventListener(
 const themePicker = document.querySelector('.color-theme-picker');
 const userTheme = localStorage.getItem('theme');
 
-if (userTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-}
-
-if (themePicker) {
-    themePicker.addEventListener('click', (e) => {
-        const colorOption = e.target.closest('.color-picker__option');
-        if (!colorOption) return;
-
-        const colorTheme = colorOption.dataset.theme;
-        colorPickerTheme(colorTheme);
-    })
-}
-
-const colorPickerTheme = (theme) => {
-    if (!themePicker) return;
-    const colorThemeBtn = themePicker.querySelectorAll('.color-picker__option');
-
-    colorThemeBtn.forEach(colorBtn => {
-        console.log(colorBtn, theme);
-        const selectedTheme = colorBtn.dataset.theme === theme;
-        colorBtn.classList.toggle('color-picker__option--selected', selectedTheme);
-        colorBtn.setAttribute('aria-checked', String(selectedTheme));
-    });
-    localStorage.setItem('theme', theme);
-    
-};
-
-
-
-
-saveConfigBtn.addEventListener('click', () => {
-    userSettingsDialog.close();
-})
-
-
-
-loadCards();
-
-const themePicker = document.querySelector('.color-theme-picker');
-const userTheme = localStorage.getItem('theme');
-
 // 1. CONTROL INICIAL: Solo aplicamos si el tema guardado es 'dark'
 if (userTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
@@ -268,4 +226,17 @@ function colorPickerTheme(theme) {
     // Guardamos la elección exacta ('dark' o 'light')
     localStorage.setItem('theme', theme);
 }
+
+
+
+
+saveConfigBtn.addEventListener('click', () => {
+    userSettingsDialog.close();
+})
+
+
+
+loadCards();
+
+
 
