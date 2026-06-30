@@ -1,6 +1,4 @@
-/* ==========================================================================
-   SIDEBAR (ESTILOS BASE: MÓVIL FIRST)
-   ========================================================================== */
+/* SIDEBAR MOBILE FIRST */
 .sidebar {
     display: flex;
     flex-direction: column;

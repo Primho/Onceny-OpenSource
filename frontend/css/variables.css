@@ -1,5 +1,9 @@
 :root {
-    /* Tipografía */
+
+    /* =======================================================
+       TYPOGRAPHY
+       ======================================================= */
+
     --font-xs: 0.75rem;
     --font-sm: 0.875rem;
     --font-md: 1rem;
@@ -11,138 +15,178 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
 
-    /* Radio */
+    /* =======================================================
+       RADIUS
+       ======================================================= */
+
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 22px;
 
-    /* Espaciado */
+    /* =======================================================
+       SPACING
+       ======================================================= */
+
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
 
-    /* Layout */
+    /* =======================================================
+       LAYOUT
+       ======================================================= */
+
     --content-max-width: 72rem;
     --sidebar-width: 250px;
     --icon-size: 1.5rem;
 
-    /* Transiciones */
-    --transition-fast: 0.15s ease;
-    --transition-base: 0.3s ease;
+    /* =======================================================
+       TRANSITIONS
+       ======================================================= */
 
-    /* Sombras */
-    --shadow-sm: 0 2px 8px oklch(0 0 0 / 0.08);
-    --shadow-md: 0 4px 12px oklch(0 0 0 / 0.1);
-    --shadow-island: 0 4px 24px rgba(15, 23, 42, 0.06);
+    --transition-fast: .15s ease;
+    --transition-base: .3s ease;
 
-    /* Fondo */
-    --color-bg-base: #fbfcfe;
+    /* =======================================================
+       SHADOWS
+       ======================================================= */
 
-    /* Acento verde Android (degradado visible: verde → más claro arriba) */
-    --color-accent: #00E676;
-    --accent-solid: #00B871;
-    --accent-gradient: linear-gradient(
-        135deg, 
-        #05FF95 0%, 
-        #00FF87 100%
-    );
-    --accent-on: var(--color-text);
-    --accent-glow: rgba(61, 220, 132, 0.22);
-    --color-focus: var(--accent-solid);
-    --focus-shadow: 0 0 0 3px rgba(61, 220, 132, 0.22), 0 4px 14px rgba(61, 220, 132, 0.18);
+    --shadow-sm: 0 2px 10px rgba(30, 35, 45, .05);
 
-    /* Color interfaz */
-    --color-bg: #ffffff;
-    --sidebar: oklch(0.985 0 0);
-    --color-surface: oklch(0.9824 0.0013 286.38);
-    --color-surface-hover: oklch(0.92 0 0);
-    --color-border: oklch(0.89 0 0);
-    --color-border-light: oklch(0.94 0 0);
-    --color-muted: oklch(0.94 0.005 286);
+    --shadow-md: 0 8px 28px rgba(30, 35, 45, .08);
 
-    --color-text: oklch(0.1074 0.0447 280.7);
-    --color-text-muted: oklch(0.55 0.015 285);
+    --shadow-island: 0 14px 42px rgba(30, 35, 45, .07);
 
-    /* Paleta de tarjetas */
-    --card-gray: oklch(0.96 0 0);
-    --card-gray-text: oklch(0.57 0 0);
+    /* =======================================================
+       BACKGROUND
+       Blanco cálido
+       ======================================================= */
 
-    --card-red: oklch(0.95 0.02 20);
-    --card-red-text: oklch(0.62 0.18 24);
+    --color-bg-base: oklch(0.985 0.006 85);
 
-    --card-blue: oklch(0.95 0.03 240);
-    --card-blue-text: oklch(0.61 0.21 243);
+    --color-bg: oklch(0.992 0.004 85);
 
-    --card-green: oklch(0.97 0.04 145);
-    --card-green-text: oklch(0.72 0.19 148);
+    --sidebar: oklch(0.985 0.005 85);
 
-    --card-yellow: oklch(0.97 0.04 85);
-    --card-yellow-text: oklch(0.71 0.16 76);
+    --color-surface: oklch(0.975 0.006 85);
 
-    --card-purple: oklch(0.94 0.03 285);
-    --card-purple-text: oklch(0.48 0.25 285);
-}
+    --color-surface-hover: oklch(0.955 0.008 85);
 
-/* ==========================================================================
-   MODO OSCURO
-   Activar añadiendo el atributo data-theme="dark" en <html> o <body>.
-   Tipografía, radios, espaciado, layout y transiciones no cambian:
-   solo se redefinen color, fondo y sombra.
-   ========================================================================== */
-:root[data-theme="dark"] {
-    /* Sombras (más opacas; en fondo oscuro un shadow tenue no se nota) */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.55);
-    --shadow-island: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --color-border: oklch(0.90 0.006 85);
 
-    /* Fondo */
-    --color-bg-base: oklch(0.15 0.012 280);
+    --color-border-light: oklch(0.94 0.005 85);
 
-    /* Acento verde Android (se mantiene la identidad de marca, ajustado para contraste) */
-    --color-accent: #00E676;
-    --accent-solid: #00CC78;
+    --color-muted: oklch(0.955 0.006 85);
+
+    /* =======================================================
+       TEXT
+       Gris oscuro cálido
+       ======================================================= */
+
+    --color-text: oklch(0.26 0.020 70);
+
+    --color-text-muted: oklch(0.54 0.012 75);
+
+    /* =======================================================
+       ACCENT
+       Verde natural
+       ======================================================= */
+
+    --color-accent: oklch(0.76 0.13 150);
+
+    --accent-solid: oklch(0.72 0.12 150);
+
     --accent-gradient: linear-gradient(
         135deg,
-        #05FF95 0%,
-        #00FF87 100%
+        oklch(0.79 0.13 150),
+        oklch(0.72 0.12 150)
     );
-    /* Importante: NO heredar de --color-text (ahora casi blanco).
-       El texto sobre el verde debe seguir siendo oscuro para mantener contraste. */
-    --accent-on: oklch(0.14 0.03 150);
-    --accent-glow: rgba(0, 230, 118, 0.35);
+
+    --accent-on: white;
+
+    --accent-glow: rgba(95, 196, 132, .22);
+
     --color-focus: var(--accent-solid);
-    --focus-shadow: 0 0 0 3px rgba(0, 230, 118, 0.35), 0 4px 14px rgba(0, 230, 118, 0.25);
 
-    /* Color interfaz */
-    --color-bg: oklch(0.19 0.013 280);
-    --sidebar: oklch(0.17 0.012 280);
-    --color-surface: oklch(0.22 0.013 280);
-    --color-surface-hover: oklch(0.27 0.013 280);
-    --color-border: oklch(0.30 0.012 280);
-    --color-border-light: oklch(0.25 0.012 280);
-    --color-muted: oklch(0.24 0.012 280);
+    --focus-shadow:
+        0 0 0 3px rgba(95,196,132,.18),
+        0 6px 18px rgba(95,196,132,.12);
 
-    --color-text: oklch(0.95 0.006 280);
-    --color-text-muted: oklch(0.68 0.014 285);
+    /* =======================================================
+       CARDS
+       ======================================================= */
 
-    /* Paleta de tarjetas (fondo oscuro saturado + texto claro del mismo matiz) */
-    --card-gray: oklch(0.26 0.005 286);
-    --card-gray-text: oklch(0.78 0.005 286);
+    --card-gray: oklch(0.96 0.004 85);
+    --card-gray-text: oklch(0.46 0.008 75);
 
-    --card-red: oklch(0.27 0.06 20);
-    --card-red-text: oklch(0.80 0.16 25);
+    --card-red: oklch(0.95 0.020 25);
+    --card-red-text: oklch(0.58 0.12 25);
 
-    --card-blue: oklch(0.27 0.07 240);
-    --card-blue-text: oklch(0.80 0.15 235);
+    --card-blue: oklch(0.95 0.020 240);
+    --card-blue-text: oklch(0.56 0.14 240);
 
-    --card-green: oklch(0.27 0.08 145);
-    --card-green-text: oklch(0.82 0.16 148);
+    --card-green: oklch(0.96 0.022 150);
+    --card-green-text: oklch(0.60 0.11 150);
 
-    --card-yellow: oklch(0.27 0.07 85);
-    --card-yellow-text: oklch(0.82 0.14 80);
+    --card-yellow: oklch(0.965 0.022 90);
+    --card-yellow-text: oklch(0.60 0.10 90);
 
-    --card-purple: oklch(0.26 0.08 285);
-    --card-purple-text: oklch(0.80 0.18 285);
+    --card-purple: oklch(0.95 0.020 300);
+    --card-purple-text: oklch(0.52 0.14 300);
+}
+
+/* DARK MODE THEME */
+:root[data-theme="dark"] {
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.18);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.22);
+    --shadow-island: 0 12px 36px rgba(0, 0, 0, 0.20);
+    --color-bg-base: oklch(0.225 0.008 75);
+    --color-bg: oklch(0.245 0.008 75);
+
+    --sidebar: oklch(0.235 0.008 75);
+    --color-surface: oklch(0.275 0.009 75);
+    --color-surface-hover: oklch(0.305 0.010 75);
+    --color-border: oklch(0.355 0.008 75);
+    --color-border-light: oklch(0.315 0.008 75);
+    --color-muted: oklch(0.285 0.008 75);
+
+    --color-text: oklch(0.91 0.010 90);
+
+    --color-text-muted: oklch(0.73 0.010 90);
+
+    --color-accent: oklch(0.76 0.13 150);
+
+    --accent-solid: oklch(0.72 0.12 150);
+
+    --accent-gradient: linear-gradient(
+        135deg,
+        oklch(0.78 0.13 150),
+        oklch(0.72 0.12 150)
+    );
+
+    --accent-on: oklch(0.20 0.02 150);
+    --accent-glow: rgba(96, 196, 132, .18);
+    --color-focus: var(--accent-solid);
+
+    --focus-shadow:
+        0 0 0 3px rgba(96,196,132,.18);
+
+    --card-gray: oklch(0.315 0.006 75);
+    --card-gray-text: oklch(0.80 0.004 90);
+
+    --card-red: oklch(0.34 0.045 25);
+    --card-red-text: oklch(0.81 0.055 25);
+
+    --card-blue: oklch(0.335 0.045 240);
+    --card-blue-text: oklch(0.81 0.055 240);
+
+    --card-green: oklch(0.335 0.045 150);
+    --card-green-text: oklch(0.82 0.055 150);
+
+    --card-yellow: oklch(0.35 0.045 90);
+    --card-yellow-text: oklch(0.82 0.050 90);
+
+    --card-purple: oklch(0.33 0.045 300);
+    --card-purple-text: oklch(0.81 0.055 300);
 }
