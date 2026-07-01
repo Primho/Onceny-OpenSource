@@ -245,8 +245,25 @@
                                     <input type="text" id="card-dialog-tags" class="card-dialog__input" placeholder="Personal" name="tag" />
                                 </div>
                             </div>
+
+                            <p class="card-dialog__config-desc">Layout.</p>
+
+                            <ul class="card-dialog__shared-list" aria-label="Contributors">
+                                <li class="card-dialog__shared-item">
+                                    <div class="card-dialog__shared-body">
+                                        <svg class="icon" aria-hidden="true" focusable="false">
+                                            <use href="../assets/icons/sprite.svg#icon-fullscreen"></use>
+                                        </svg>
+                                        <div class="card-dialog__shared-meta">
+                                            <strong class="card-dialog__shared-name">Compact Mode</strong>
+                                            <span class="card-dialog__shared-role">The space occupies the entire screen and is no longer displayed as a window.</span>
+                                        </div>
+                                    </div>
+                                    <input type="checkbox" switch>
+                                </li>
+                            </ul>
                         </fieldset>
-    
+
                         <fieldset class="card-dialog__config-section">
                             <legend>👥 Shared with</legend>
                             <p class="card-dialog__config-desc">People with access to this space.</p>
