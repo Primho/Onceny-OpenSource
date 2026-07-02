@@ -227,16 +227,10 @@ function colorPickerTheme(theme) {
     localStorage.setItem('theme', theme);
 }
 
-
-
-
 saveConfigBtn.addEventListener('click', () => {
     userSettingsDialog.close();
-})
-
-
+});
 
 loadCards();
-
 
 

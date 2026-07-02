@@ -31,7 +31,7 @@
     --shadow-md: 0 8px 28px rgba(30, 35, 45, .08);
     --shadow-island: 0 14px 42px rgba(30, 35, 45, .07);
 
-
+    --color-error: #dc143c;
     --color-bg-base: oklch(0.985 0.006 85);
     --color-bg: oklch(0.992 0.004 85);
     --sidebar: oklch(0.985 0.005 85);
@@ -45,20 +45,20 @@
     --color-text: oklch(0.26 0.020 70);
     --color-text-muted: oklch(0.54 0.012 75);
 
-    --color-accent: oklch(0.76 0.13 150);
-    --accent-solid: oklch(0.72 0.12 150);
+    --color-accent: oklch(0.82 0.16 145);
+    --accent-solid: oklch(0.82 0.16 145);
     --accent-gradient: linear-gradient(
         135deg,
-        oklch(0.79 0.13 150),
-        oklch(0.72 0.12 150)
+        oklch(0.86 0.16 143),
+        oklch(0.82 0.16 145)
     );
 
-    --accent-on: white;
-    --accent-glow: rgba(95, 196, 132, .22);
+    --accent-on: #000;
+    --accent-glow: oklch(0.82 0.16 145 / 0.22);
     --color-focus: var(--accent-solid);
     --focus-shadow:
-        0 0 0 3px rgba(95,196,132,.18),
-        0 6px 18px rgba(95,196,132,.12);
+        0 0 0 3px oklch(0.82 0.16 145 / 0.25),
+        0 6px 18px oklch(0.82 0.16 145 / 0.15);
 
 
     --card-gray: oklch(0.96 0.004 85);
@@ -99,22 +99,19 @@
 
     --color-text-muted: oklch(0.73 0.010 90);
 
-    --color-accent: oklch(0.76 0.13 150);
-
-    --accent-solid: oklch(0.72 0.12 150);
-
+    --color-accent: oklch(0.82 0.16 145);
+    --accent-solid: oklch(0.82 0.16 145);
     --accent-gradient: linear-gradient(
         135deg,
-        oklch(0.78 0.13 150),
-        oklch(0.72 0.12 150)
+        oklch(0.86 0.16 143),
+        oklch(0.82 0.16 145)
     );
 
-    --accent-on: oklch(0.20 0.02 150);
-    --accent-glow: rgba(96, 196, 132, .18);
+    --accent-glow: oklch(0.82 0.16 145 / 0.22);
     --color-focus: var(--accent-solid);
-
     --focus-shadow:
-        0 0 0 3px rgba(96,196,132,.18);
+        0 0 0 3px oklch(0.82 0.16 145 / 0.25),
+        0 6px 18px oklch(0.82 0.16 145 / 0.15);
 
     --card-gray: oklch(0.315 0.006 75);
     --card-gray-text: oklch(0.80 0.004 90);

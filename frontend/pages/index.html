@@ -168,9 +168,7 @@
                         <button type="button" class="card-dialog__page-tab card-dialog__page-tab--active"
                             role="tab" id="card-dialog-tab-content" aria-selected="true"
                             aria-controls="card-dialog-panel-content" data-panel="content">
-                            <svg class="icon" aria-hidden="true" focusable="false">
-                                <use href="../assets/icons/sprite.svg#icon-document"></use>
-                            </svg>
+                            <span class="card-dialog__page-emoji">📄</span>
                             <span class="card-dialog__page-label">Page 1</span>
                         </button>
                         <button type="button" class="card-dialog__page-menu" aria-label="Page Actions" aria-disabled="true" title="Coming soon">
@@ -323,8 +321,30 @@
         </div>
 
         <div id="card-page-menu" popover="auto" class="note-card__menu-panel" role="menu" aria-label="Acciones de la página">
-            <button type="button" class="note-card__menu-item" role="menuitem" data-action="rename">Rename</button>
-            <button type="button" class="note-card__menu-item note-card__delete" role="menuitem" data-action="delete">Delete</button>
+            <button type="button" class="note-card__menu-item page" role="menuitem" data-action="rename">
+                <svg class="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-edit"></use>
+                </svg>
+                Rename
+            </button>
+            <button type="button" class="note-card__menu-item page" role="menuitem" data-action="duplicate">
+                <svg class="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-copy"></use>
+                </svg>
+                Duplicate
+            </button>
+            <button type="button" class="note-card__menu-item page" role="menuitem" data-action="change-emoji">
+                <svg class="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-add-reaction"></use>
+                </svg>
+                Change Emoji
+            </button>
+            <button type="button" class="note-card__menu-item note-card__delete page" role="menuitem" data-action="delete">
+                <svg class="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-trash-can"></use>
+                </svg>
+                Delete
+            </button>
         </div>
     </dialog>
 

@@ -112,7 +112,7 @@
         overlay 0.2s ease allow-discrete;
 
     &:last-child {
-        color: crimson;
+        color: var(--color-error);
     }
 }
 
@@ -135,6 +135,7 @@
     border: none;
     background: none;
     font-size: var(--font-sm);
+    font-weight: var(--font-weight-medium);
     text-align: left;
     color: var(--color-text);
     cursor: pointer;
@@ -143,7 +144,7 @@
 }
 
 .note-card__delete {
-    color: var(--color-error); /* Asegúrate de tener esta variable o usa el color de error */
+    color: var(--color-error);
     border-top: 1px solid var(--color-border-light);
 }
 

@@ -4,6 +4,10 @@ import { getCardColors } from './card.js';
 import { createNewBlock } from './dialogblock.js';
 import { addPage } from './page.js';
 
+// Constantes globales de configuración
+const DEFAULT_COLOR = '#f1f1f1';
+
+// Selectores del DOM
 const cardDialog = document.querySelector('#card-dialog');
 const closeBtn = document.querySelector('#card-dialog-close');
 const titleInput = document.querySelector('#card-dialog-title-input');
@@ -11,25 +15,23 @@ const settingsTitle = document.querySelector('#card-dialog-settings-title');
 const markerInput = document.querySelector('#card-dialog-marker');
 const tagsInput = document.querySelector('#card-dialog-tags');
 const colorPicker = document.querySelector('.color-picker');
-
-const pageTabs = document.querySelectorAll('.card-dialog__page-tab[data-panel]');
 const pageAddBtn = document.querySelector('#card-dialog-page-add');
 const pagesContainer = document.querySelector('#card-dialog-pages');
-
-const panels = document.querySelectorAll('.card-dialog__panel');
 const mobileMenu = document.querySelector('#card-dialog-mobile-menu');
 const dialogMenuBtn = document.querySelector('.card-dialog__menu');
-
-//  SELECTORES CORREGIDOS SEGÚN TU HTML
-const spaceBlocksContainer = document.querySelector('#space-blocks-container'); // Sincronizado con tu HTML
 const dialogBlockMenu = document.querySelector('#card-dialog-block-menu');
 
+// CORRECCIÓN: Contenedor global de todos los paneles
+const panelsParentContainer = document.querySelector('.card-dialog__panels-container') || document.querySelector('.card-dialog__main'); 
+
+// REFERENCIA: Rastrea qué bloque abrió el menú de comandos
 let currentCommandBlock = null;
 
 const getCardElement = (id) => document.querySelector(`.note-card[data-id="${id}"]`);
 
 const setPanel = (panelName) => {
     const currentTabs = document.querySelectorAll('.card-dialog__page-tab[data-panel]');
+    const currentPanels = document.querySelectorAll('.card-dialog__panel');
 
     currentTabs.forEach((tab) => {
         const isActive = tab.dataset.panel === panelName;
@@ -37,23 +39,24 @@ const setPanel = (panelName) => {
         tab.setAttribute('aria-selected', String(isActive));
     });
 
-    panels.forEach((panel) => {
+    currentPanels.forEach((panel) => {
         const isActive = panel.id === `card-dialog-panel-${panelName}`;
         panel.hidden = !isActive;
         panel.classList.toggle('card-dialog__panel--active', isActive);
+        panel.setAttribute('aria-expanded', String(isActive));
     });
 
-    if(mobileMenu && mobileMenu.matches(':popover-open')) {
+    if (mobileMenu && mobileMenu.matches(':popover-open')) {
         mobileMenu.hidePopover();
     }
 
-    if(panelName === 'config') {
+    if (panelName === 'config') {
         titleInput.hidden = true;
         closeBtn.hidden = true;
         settingsTitle.hidden = false;
-        dialogMenuBtn.classList.add('hidden');
+        dialogMenuBtn?.classList.add('hidden');
     } else {
-        dialogMenuBtn.classList.remove('hidden');
+        dialogMenuBtn?.classList.remove('hidden');
         titleInput.hidden = false;
         closeBtn.hidden = false;
         settingsTitle.hidden = true;
@@ -90,15 +93,17 @@ const applyCardColorToDom = (cardEl, hexColor, theme) => {
 const syncDialogFromCard = (card) => {
     if (!card) return;
 
+    const fallbackColor = card.color ?? DEFAULT_COLOR;
     titleInput.value = card.title ?? '';
     markerInput.value = card.marker ?? '';
     tagsInput.value = card.tag ?? '';
-    syncColorPicker(card.color ?? '#f1f1f1');
-    setColor(card.color ?? '#f1f1f1');
+    
+    syncColorPicker(fallbackColor);
+    setColor(fallbackColor);
     setPanel('content');
 };
 
-// --- MÉTODOS DE PERSISTENCIA MANUAL ORIGINALES ---
+// --- MÉTODOS DE PERSISTENCIA ---
 
 const persistCard = async () => {
     const card = getActiveCard();
@@ -124,15 +129,16 @@ const persistConfig = async () => {
 
     const cardEl = getCardElement(card.id);
     const tagEl = cardEl?.querySelector('.note-card__tag');
+    const currentGlobalColor = getColor();
 
     const payload = {
-        color: getColor(),
+        color: currentGlobalColor,
         marker: markerInput.value.trim(),
         tag: tagsInput.value.trim(),
     };
 
     const changed =
-        payload.color !== (card.color ?? '#f1f1f1') ||
+        payload.color !== (card.color ?? DEFAULT_COLOR) ||
         payload.marker !== (card.marker ?? '') ||
         payload.tag !== (card.tag ?? '');
 
@@ -160,10 +166,11 @@ const persistConfig = async () => {
 
 // --- LISTENERS DE INTERFAZ Y EVENTOS ---
 
-pageTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+    const tab = e.target.closest('.card-dialog__page-tab[data-panel]');
+    if (tab) {
         setPanel(tab.dataset.panel);
-    });
+    }
 });
 
 if (colorPicker) {
@@ -186,27 +193,33 @@ if (colorPicker) {
 }
 
 closeBtn?.addEventListener('click', () => {
-    cardDialog.close();
+    cardDialog.close(); 
 });
 
-cardDialog?.addEventListener('close', () => {
-    persistCard();
-});
-
-document.querySelector('[data-action="content-save"]')?.addEventListener('click', async () => {
+cardDialog?.addEventListener('close', async () => {
     await persistCard();
-});
-
-document.querySelector('[data-action="config-save"]')?.addEventListener('click', async () => {
     await persistConfig();
-    setPanel('content');
+    
+    currentCommandBlock = null; 
+    if (dialogBlockMenu?.matches(':popover-open')) {
+        dialogBlockMenu.hidePopover();
+    }
 });
 
-// --- GESTIÓN INTERNA DE BLOQUES Y COMANDOS DE TECLADO ---
+document.querySelector('[data-action="content-save"]')?.addEventListener('click', () => {
+    cardDialog.close(); 
+});
 
-spaceBlocksContainer?.addEventListener('keydown', (e) => {
+document.querySelector('[data-action="config-save"]')?.addEventListener('click', () => {
+    cardDialog.close(); 
+});
+
+// --- GESTIÓN INTERNA DE BLOQUES (CORREGIDO: Escucha en todo el lienzo) ---
+
+panelsParentContainer?.addEventListener('keydown', (e) => {
     if (!e.target.classList.contains('editor-block')) return;
     const currentWrapper = e.target.closest('.editor-block-wrapper');
+    const currentPanelContainer = e.target.closest('.card-dialog__panel');
 
     if (e.key === 'Enter') {
         if (e.shiftKey) return; 
@@ -216,15 +229,17 @@ spaceBlocksContainer?.addEventListener('keydown', (e) => {
         }
     }
 
-    if(e.key === 'Backspace') {
-        if(e.target.textContent === '' && spaceBlocksContainer.children.length > 1) {
+    if (e.key === 'Backspace') {
+        // CORRECCIÓN: Verifica el conteo de bloques relativo a la página donde se encuentra actualmente
+        const totalBlocksInPage = currentPanelContainer.querySelectorAll('.editor-block-wrapper').length;
+
+        if (e.target.textContent === '' && totalBlocksInPage > 1) {
             e.preventDefault();
 
             const prevWrapper = currentWrapper.previousElementSibling;
-            if (prevWrapper) {
+            if (prevWrapper && prevWrapper.classList.contains('editor-block-wrapper')) {
                 const prevBlock = prevWrapper.querySelector('.editor-block');
                 currentWrapper.remove();
-
                 prevBlock.focus();
 
                 const selection = window.getSelection();
@@ -238,18 +253,18 @@ spaceBlocksContainer?.addEventListener('keydown', (e) => {
     }
 });
 
-spaceBlocksContainer?.addEventListener('input', (e) => {
+panelsParentContainer?.addEventListener('input', (e) => {
     const activeBlock = e.target;
     if (!activeBlock.classList.contains('editor-block')) return;
 
     const text = activeBlock.textContent;
-    // Esta expresión regular busca si hay un ":" al final o seguido de letras
     const isValidCommand = text.match(/(?:^|\s):([a-zA-Z]*)$/);
 
-    if (isValidCommand && dialogBlockMenu) { // <-- Validamos que exista el menú primero
+    if (isValidCommand && dialogBlockMenu) { 
+        currentCommandBlock = activeBlock;
+
         const rect = activeBlock.getBoundingClientRect();
 
-        // Forzar la posición del Popover nativo justo debajo
         dialogBlockMenu.style.position = 'fixed';
         dialogBlockMenu.style.margin = '0'; 
         dialogBlockMenu.style.top = `${rect.bottom + 8}px`; 
@@ -259,20 +274,19 @@ spaceBlocksContainer?.addEventListener('input', (e) => {
             dialogBlockMenu.showPopover();
         }
     } else {
-        // Usamos ?. para que si dialogBlockMenu es null, no lance un error en la consola
         if (dialogBlockMenu?.matches(':popover-open')) {
             dialogBlockMenu.hidePopover();
+            currentCommandBlock = null;
         }
     }
 });
 
 window.addEventListener('resize', () => {
-    if(dialogBlockMenu && dialogBlockMenu.matches(':popover-open')) {
+    if (dialogBlockMenu && dialogBlockMenu.matches(':popover-open')) {
         dialogBlockMenu.hidePopover();
     }
 });
 
-// Inicialización modular segura del componente de páginas
-addPage(pageAddBtn, pagesContainer, setPanel);
+addPage(pageAddBtn, pagesContainer, panelsParentContainer, setPanel);
 
 export { syncDialogFromCard, syncColorPicker };
