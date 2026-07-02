@@ -5,20 +5,20 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
     let pageCount = 1;
     let selectedEmoji = '📄';
     const pageMenuPopover = document.querySelector('#card-page-menu');
-    let activeTargetPageWrapper = null; 
+    let activeTargetPageWrapper = null;
 
     const setupPageMenuEvent = (pageWrapper) => {
         const menuBtn = pageWrapper.querySelector('.card-dialog__page-menu');
 
         menuBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
-            activeTargetPageWrapper = pageWrapper; 
+            activeTargetPageWrapper = pageWrapper;
 
             const rect = menuBtn.getBoundingClientRect();
             pageMenuPopover.style.position = 'fixed';
             pageMenuPopover.style.margin = '0';
             pageMenuPopover.style.top = `${rect.bottom + 4}px`;
-            pageMenuPopover.style.left = `${rect.left - 80}px`; 
+            pageMenuPopover.style.left = `${rect.left - 80}px`;
 
             if (!pageMenuPopover.matches(':popover-open')) {
                 pageMenuPopover.showPopover();
@@ -34,7 +34,7 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
         const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
         const newPageId = `page-${uniqueId}`;
         const panelId = `card-dialog-panel-${newPageId}`;
-    
+
         const newPageHTML = `
             <div class="card-dialog__page" role="presentation">
                 <button type="button" class="card-dialog__page-tab"
@@ -50,27 +50,38 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
                 </button>
             </div>
         `;
-    
-        const newPanel = document.createElement('div');
+
+        const newPanel = document.createElement('main');
         newPanel.id = panelId;
         newPanel.className = 'card-dialog__panel';
         newPanel.role = 'tabpanel';
         newPanel.tabIndex = 0;
-        newPanel.hidden = true; 
+        newPanel.hidden = true;
 
-        // CORRECCIÓN: Contenedor interior para estandarizar comportamiento y CSS
-        const editorContainer = document.createElement('div');
-        editorContainer.className = 'card-dialog__editor';
+        // CONTENIDO INTERIOR
+        const blocksContainer = document.createElement('div');
+        blocksContainer.className = 'card-dialog__editor';
 
         const initialBlockWrapper = document.createElement('div');
         initialBlockWrapper.className = 'editor-block-wrapper';
-        
-        editorContainer.appendChild(initialBlockWrapper);
-        newPanel.appendChild(editorContainer);
+
+        const initialBlock = document.createElement('div');
+        initialBlock.className = 'editor-block editor-block--text';
+        initialBlock.contentEditable = "true";
+        const placeholderText = "Type your content here or use ':' for commands...";
+
+        initialBlock.setAttribute('placeholder', placeholderText);
+        initialBlock.setAttribute('aria-placeholder', placeholderText);
+        initialBlock.setAttribute('role', 'textbox');
+
+        initialBlockWrapper.appendChild(initialBlock);
+        blocksContainer.appendChild(initialBlockWrapper);
+        newPanel.appendChild(blocksContainer);
 
         pagesContainer.insertAdjacentHTML('beforeend', newPageHTML);
         panelsParentContainer.appendChild(newPanel);
-    
+
+        console.log(blocksContainer);
         createNewBlock(initialBlockWrapper);
 
         const allPages = pagesContainer.querySelectorAll('.card-dialog__page');

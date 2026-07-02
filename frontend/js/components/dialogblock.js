@@ -7,7 +7,7 @@ const createNewBlock = (currentWrapper) => {
         console.error("createNewBlock: No se proporcionó un wrapper de origen válido.");
         return;
     }
-
+    console.log(currentWrapper);
     const newWrapper = document.createElement('div');
     newWrapper.classList.add('editor-block-wrapper');
     

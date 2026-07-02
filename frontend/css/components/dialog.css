@@ -338,6 +338,7 @@ dialog[open]::backdrop {
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    padding: var(--space-xl);
 }
 
 .card-dialog__panel--active {
@@ -353,7 +354,6 @@ dialog[open]::backdrop {
 .card-dialog__canvas {
     flex-grow: 1;
     overflow-y: auto;
-    padding: var(--space-xl);
 }
 
 .card-dialog__editor {
