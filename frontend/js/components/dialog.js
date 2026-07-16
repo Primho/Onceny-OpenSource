@@ -15,6 +15,7 @@ const settingsTitle = document.querySelector('#card-dialog-settings-title');
 const markerInput = document.querySelector('#card-dialog-marker');
 const tagsInput = document.querySelector('#card-dialog-tags');
 const colorPicker = document.querySelector('.color-picker');
+const toggleCompactMode = document.querySelector('.compact-toggle');
 const pageAddBtn = document.querySelector('#card-dialog-page-add');
 const pagesContainer = document.querySelector('#card-dialog-pages');
 const mobileMenu = document.querySelector('#card-dialog-mobile-menu');
@@ -224,7 +225,7 @@ panelsParentContainer?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         if (e.shiftKey) return; 
         else {
-            e.preventDefault();            
+            e.preventDefault();
             createNewBlock(currentWrapper);
         }
     }
@@ -280,6 +281,28 @@ panelsParentContainer?.addEventListener('input', (e) => {
         }
     }
 });
+
+// DIALOG SETTINGS COMPACT MODE
+const userMode = localStorage.getItem('compact');
+
+// 1. CONTROL INICIAL: Solo aplicamos si el tema guardado es 'compact'
+if (userMode === 'true') {
+    cardDialog.classList.add('compact-mode');
+    if (toggleCompactMode) toggleCompactMode.checked = true;
+}
+
+// 2. EVENTO CLICK
+if (toggleCompactMode) {
+    toggleCompactMode.addEventListener('change', () => {
+        if (toggleCompactMode.checked) {
+            cardDialog.classList.add('compact-mode');
+            localStorage.setItem('compact', true);
+            return;
+        }
+        cardDialog.classList.remove('compact-mode');
+        localStorage.setItem('compact', false);
+    })
+}
 
 window.addEventListener('resize', () => {
     if (dialogBlockMenu && dialogBlockMenu.matches(':popover-open')) {

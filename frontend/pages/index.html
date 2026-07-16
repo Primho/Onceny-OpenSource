@@ -157,7 +157,7 @@
                 <div class="card-dialog__nav-top">
                     <button type="button" id="card-dialog-page-add" class="card-dialog__page-add">
                         <svg class="icon icon-add-page" aria-hidden="true" focusable="false">
-                            <use href="../assets/icons/sprite.svg#icon-add-page"></use>
+                            <use href="../assets/icons/sprite.svg#icon-add"></use>
                         </svg>
                         <span>Add page</span>
                     </button>
@@ -244,9 +244,8 @@
                                 </div>
                             </div>
 
-                            <p class="card-dialog__config-desc">Layout.</p>
-
-                            <ul class="card-dialog__shared-list" aria-label="Contributors">
+                            <ul class="card-dialog__field-mode" aria-label="compact mode">
+                                <p class="card-dialog__config-desc">Layout.</p>
                                 <li class="card-dialog__shared-item">
                                     <div class="card-dialog__shared-body">
                                         <svg class="icon" aria-hidden="true" focusable="false">
@@ -257,7 +256,10 @@
                                             <span class="card-dialog__shared-role">The space occupies the entire screen and is no longer displayed as a window.</span>
                                         </div>
                                     </div>
-                                    <input type="checkbox" switch>
+                                    <label class="switch">
+                                        <input type="checkbox" class="compact-toggle">
+                                        <span class="slider"></span>
+                                    </label>
                                 </li>
                             </ul>
                         </fieldset>

@@ -34,7 +34,6 @@ const openCardDialog = (card) => {
     titleInput.value = card.title ?? '';
 
     if (dialogMenuBtn) {
-        console.log("color: ", getColor());
         dialogMenuBtn.style.backgroundColor = getColor();
         const colors = getCardColors(card.color);
         dialogMenuBtnIcon.style.color = colors.text;

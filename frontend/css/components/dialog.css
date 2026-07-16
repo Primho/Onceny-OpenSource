@@ -25,13 +25,18 @@ dialog::backdrop {
 
 dialog[open]::backdrop {
     opacity: 1;
-    @starting-style { opacity: 0; }
+
+    @starting-style {
+        opacity: 0;
+    }
 }
 
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
 
 /* -- DIALOGO DE AJUSTES -- */
-#settings-dialog > h2 {
+#settings-dialog>h2 {
     text-align: center;
     color: var(--color-text);
     padding-bottom: var(--space-lg);
@@ -43,7 +48,6 @@ dialog[open]::backdrop {
     bottom: 0;
     left: 0;
 }
-
 
 /* -- DIALOGO DE LOS SPACES -- */
 
@@ -61,7 +65,7 @@ dialog[open]::backdrop {
     border-radius: 0;
     background-color: var(--color-bg);
     overflow: hidden;
-    
+
     opacity: 0;
     scale: 0.96;
     transition:
@@ -77,11 +81,17 @@ dialog[open]::backdrop {
         display: block;
         opacity: 1;
         scale: 1;
-        @starting-style { opacity: 0; scale: 0.96; }
+
+        @starting-style {
+            opacity: 0;
+            scale: 0.96;
+        }
     }
 }
 
-#settings-dialog { padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem); }
+#settings-dialog {
+    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+}
 
 .card-dialog__layout {
     display: flex;
@@ -104,22 +114,32 @@ dialog[open]::backdrop {
     cursor: pointer;
     z-index: 10;
     box-shadow: var(--shadow-md);
-    
-    &:focus-visible { outline: none; }
-    &:active { transform: scale(0.95); }
-    & svg { color: var(--color-text); }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    & svg {
+        color: var(--color-text);
+    }
 }
 
 /* ==========================================================================
    3. NAVEGACIÓN LATERAL (Popover en Mobile)
    ========================================================================== */
 .card-dialog__nav[popover] {
-    display: none; 
+    display: none;
     position: fixed;
     margin: 0;
     inset: auto;
-    bottom: calc(var(--space-md) + 60px); /* Arriba del botón flotante */
-    right: var(--space-md); /* Alineado a la derecha */
+    bottom: calc(var(--space-md) + 60px);
+    /* Arriba del botón flotante */
+    right: var(--space-md);
+    /* Alineado a la derecha */
     width: min(280px, 50dvw);
     max-height: 50dvh;
     flex-shrink: 0;
@@ -135,9 +155,9 @@ dialog[open]::backdrop {
     /* Animación de entrada suave */
     opacity: 0;
     transform: translateY(10px);
-    transition: 
-        opacity var(--transition-fast), 
-        transform var(--transition-fast), 
+    transition:
+        opacity var(--transition-fast),
+        transform var(--transition-fast),
         display var(--transition-fast) allow-discrete,
         overlay var(--transition-fast) allow-discrete;
 }
@@ -147,7 +167,11 @@ dialog[open]::backdrop {
     display: flex;
     opacity: 1;
     transform: translateY(0);
-    @starting-style { opacity: 0; transform: translateY(10px); }
+
+    @starting-style {
+        opacity: 0;
+        transform: translateY(10px);
+    }
 }
 
 .card-dialog__nav-top,
@@ -160,10 +184,18 @@ dialog[open]::backdrop {
     flex-shrink: 0;
 }
 
-.card-dialog__nav-top { border-bottom: 1px solid var(--color-border); }
-.card-dialog__nav-bottom { border-top: 1px solid var(--color-border); margin-top: auto; }
+.card-dialog__nav-top {
+    border-bottom: 1px solid var(--color-border);
+}
 
-.icon-add-page { display: none; }
+.card-dialog__nav-bottom {
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+}
+
+.icon-add-page {
+    display: none;
+}
 
 .card-dialog__pages {
     flex: 1;
@@ -185,7 +217,8 @@ dialog[open]::backdrop {
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-fast);
 
-    &:hover, &:has(.card-dialog__page-tab--active) {
+    &:hover,
+    &:has(.card-dialog__page-tab--active) {
         background-color: var(--color-muted);
     }
 }
@@ -206,8 +239,17 @@ dialog[open]::backdrop {
     scale: 0.85;
     transition: all var(--transition-fast);
 
-    &:hover { background-color: var(--color-surface-hover); color: var(--color-text); }
-    &:focus-visible { opacity: 1; scale: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    &:hover {
+        background-color: var(--color-surface-hover);
+        color: var(--color-text);
+    }
+
+    &:focus-visible {
+        opacity: 1;
+        scale: 1;
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+    }
 }
 
 .card-dialog__page:hover .card-dialog__page-menu,
@@ -218,7 +260,7 @@ dialog[open]::backdrop {
 
 .card-dialog__page:hover,
 .card-dialog__page-tab:hover {
-    background-color: var(--color-muted); 
+    background-color: var(--color-muted);
 }
 
 .card-dialog__page-tab,
@@ -238,16 +280,21 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: background-color var(--transition-fast), color var(--transition-fast);
 
-    &:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-shadow);
+    }
 }
 
 .card-dialog__page-add {
     justify-content: center;
     color: var(--color-text-muted);
     border: 2px dashed var(--color-border-light);
-    
-    & svg { fill: currentColor; }
-    
+
+    & svg {
+        fill: currentColor;
+    }
+
     &:hover {
         background-color: var(--color-muted);
         color: var(--color-text);
@@ -261,11 +308,11 @@ dialog[open]::backdrop {
 }
 
 .card-dialog__page-tab:hover,
-.card-dialog__page-tab--active { 
-    color: var(--color-text); 
+.card-dialog__page-tab--active {
+    color: var(--color-text);
 }
 
-.card-dialog__nav-bottom .card-dialog__page-tab--active { 
+.card-dialog__nav-bottom .card-dialog__page-tab--active {
     background-color: var(--color-muted);
 }
 
@@ -312,7 +359,9 @@ dialog[open]::backdrop {
     background: transparent;
     outline: none;
 
-    &::placeholder { color: var(--color-text-muted); }
+    &::placeholder {
+        color: var(--color-text-muted);
+    }
 }
 
 .card-dialog__save {
@@ -327,8 +376,15 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: background var(--transition-fast), color var(--transition-fast);
 
-    &:hover { background: var(--accent-gradient); color: var(--accent-on); }
-    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    &:hover {
+        background: var(--accent-gradient);
+        color: var(--accent-on);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+    }
 }
 
 /* Pestañas / Paneles */
@@ -338,7 +394,6 @@ dialog[open]::backdrop {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding: var(--space-xl);
 }
 
 .card-dialog__panel--active {
@@ -347,18 +402,29 @@ dialog[open]::backdrop {
 }
 
 @keyframes card-dialog-panel-in {
-    from { opacity: 0; translate: 0 4px; }
-    to { opacity: 1; translate: 0 0; }
+    from {
+        opacity: 0;
+        translate: 0 4px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
 }
 
 .card-dialog__canvas {
     flex-grow: 1;
     overflow-y: auto;
+    padding: var(--space-xl);
 }
 
 .card-dialog__editor {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 794px;
+    place-self: center;
     gap: var(--space-sm);
 }
 
@@ -369,7 +435,9 @@ dialog[open]::backdrop {
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-base);
 
-    &:hover { background-color: var(--color-surface); }
+    &:hover {
+        background-color: var(--color-surface);
+    }
 }
 
 .editor-block {
@@ -394,10 +462,14 @@ dialog[open]::backdrop {
    ========================================================================== */
 
 .card-dialog__config {
-    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+    margin: 0 auto;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    padding: var(--space-lg) clamp(var(--space-md), 5vw, 3rem);
+    width: 100%;
+    max-width: 900px;
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -407,7 +479,7 @@ dialog[open]::backdrop {
     border-radius: var(--radius-md);
     padding: 0 var(--space-lg);
     padding-bottom: var(--space-md);
-    
+
     & legend {
         font-size: var(--font-lg);
         font-weight: var(--font-weight-semibold);
@@ -438,8 +510,11 @@ dialog[open]::backdrop {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-lg);
-    
-    & .card-dialog__field { flex: 1; min-width: 8rem; }
+
+    & .card-dialog__field {
+        flex: 1;
+        min-width: 8rem;
+    }
 }
 
 .card-dialog__input {
@@ -455,7 +530,8 @@ dialog[open]::backdrop {
     transition: all var(--transition-fast);
     color: var(--color-text);
 
-    &:focus, &:focus-visible {
+    &:focus,
+    &:focus-visible {
         outline: none;
         border-color: var(--color-focus);
         box-shadow: var(--focus-shadow);
@@ -479,22 +555,35 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: scale var(--transition-fast), border-radius var(--transition-base);
 
-    &:hover { border-radius: var(--radius-sm); scale: 1.08; }
-    &:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
+    &:hover {
+        border-radius: var(--radius-sm);
+        scale: 1.08;
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-shadow);
+    }
 }
 
 .color-picker__option--selected {
-    border-radius: var(--radius-sm); scale: 1.08;
+    border-radius: var(--radius-sm);
+    scale: 1.08;
     box-shadow: var(--shadow-md);
 }
 
 /* Listas y Botones Secundarios */
-.card-dialog__shared-list {
+.card-dialog__shared-list,
+.card-dialog__field-mode {
     list-style: none;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
+}
+
+.card-dialog__field-mode {
+    display: none;
 }
 
 .card-dialog__shared-item {
@@ -505,7 +594,9 @@ dialog[open]::backdrop {
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-fast);
 
-    &:hover { background-color: var(--color-muted); }
+    &:hover {
+        background-color: var(--color-muted);
+    }
 }
 
 .card-dialog__shared-body {
@@ -527,8 +618,16 @@ dialog[open]::backdrop {
     gap: 2px;
 }
 
-.card-dialog__shared-name { color: var(--color-text); font-size: var(--font-md); font-weight: var(--font-weight-medium); }
-.card-dialog__shared-role { font-size: var(--font-xs); color: var(--color-text-muted); }
+.card-dialog__shared-name {
+    color: var(--color-text);
+    font-size: var(--font-md);
+    font-weight: var(--font-weight-medium);
+}
+
+.card-dialog__shared-role {
+    font-size: var(--font-xs);
+    color: var(--color-text-muted);
+}
 
 .card-dialog__shared-remove {
     display: inline-flex;
@@ -542,7 +641,10 @@ dialog[open]::backdrop {
     color: var(--color-text-muted);
     cursor: pointer;
 
-    &:hover { color: var(--color-text); background-color: var(--color-surface-hover); }
+    &:hover {
+        color: var(--color-text);
+        background-color: var(--color-surface-hover);
+    }
 }
 
 .card-dialog__invite {
@@ -561,7 +663,10 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: background-color .3s;
 
-    &:hover { background-color: var(--color-muted); color: var(--color-text); }
+    &:hover {
+        background-color: var(--color-muted);
+        color: var(--color-text);
+    }
 }
 
 .card-dialog__soon {
@@ -574,16 +679,18 @@ dialog[open]::backdrop {
 .card-dialog__shortcuts {
     width: 100%;
     border-collapse: collapse;
-    
+
     & td {
         padding: var(--space-sm);
         border-bottom: 1px solid var(--color-border-light);
         font-size: var(--font-sm);
         color: var(--color-text);
     }
-    
-    & tr:last-child td { border-bottom: none; }
-    
+
+    & tr:last-child td {
+        border-bottom: none;
+    }
+
     & kbd {
         padding: 2px 8px;
         border: 1px solid var(--color-border);
@@ -621,7 +728,10 @@ dialog[open]::backdrop {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
     transition: filter var(--transition-fast), box-shadow var(--transition-fast);
 
-    &:hover { filter: brightness(0.97); box-shadow: 0 6px 18px var(--accent-glow); }
+    &:hover {
+        filter: brightness(0.97);
+        box-shadow: 0 6px 18px var(--accent-glow);
+    }
 }
 
 .card-dialog__config-btn--primary,
@@ -636,7 +746,7 @@ dialog[open]::backdrop {
    ========================================================================== */
 
 .card-dialog__block-menu[popover] {
-    margin: 0; 
+    margin: 0;
     position-area: bottom span-right;
     position-try-fallbacks: flip-block, flip-inline;
     width: 9.5rem;
@@ -645,7 +755,7 @@ dialog[open]::backdrop {
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
     box-shadow: var(--shadow-md);
-    
+
     opacity: 0;
     translate: 0 var(--_popover-offset);
     transition:
@@ -657,7 +767,11 @@ dialog[open]::backdrop {
     &:popover-open {
         opacity: 1;
         translate: 0 0;
-        @starting-style { opacity: 0; translate: 0 var(--_popover-offset); }
+
+        @starting-style {
+            opacity: 0;
+            translate: 0 var(--_popover-offset);
+        }
     }
 }
 
@@ -673,8 +787,14 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: background-color var(--transition-fast);
 
-    &:hover { background-color: var(--color-muted); }
-    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+    &:hover {
+        background-color: var(--color-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: -2px;
+    }
 }
 
 .note-card__menu-panel .note-card__menu-item.page {
@@ -710,7 +830,7 @@ dialog[open]::backdrop {
     border: 2px solid var(--color-border);
     background-color: var(--color-bg);
     text-align: center;
-    
+
     opacity: 0;
     scale: 0.96;
     transition:
@@ -723,7 +843,11 @@ dialog[open]::backdrop {
         display: flex;
         opacity: 1;
         scale: 1;
-        @starting-style { opacity: 0; scale: 0.96; }
+
+        @starting-style {
+            opacity: 0;
+            scale: 0.96;
+        }
     }
 }
 
@@ -759,15 +883,19 @@ dialog[open]::backdrop {
     cursor: pointer;
     transition: all var(--transition-fast);
 
-    &:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+    }
 }
 
 .confirm-dialog__btn--ghost {
     background-color: var(--color-surface);
     color: var(--color-text);
 }
-.confirm-dialog__btn--ghost:hover { 
-    background-color: var(--color-surface-hover); 
+
+.confirm-dialog__btn--ghost:hover {
+    background-color: var(--color-surface-hover);
 }
 
 .confirm-dialog__btn--danger {
@@ -775,9 +903,10 @@ dialog[open]::backdrop {
     color: var(--accent-on);
     box-shadow: 0 4px 14px var(--accent-glow);
 }
-.confirm-dialog__btn--danger:hover { 
-    filter: brightness(0.96); 
-    box-shadow: 0 6px 18px var(--accent-glow); 
+
+.confirm-dialog__btn--danger:hover {
+    filter: brightness(0.96);
+    box-shadow: 0 6px 18px var(--accent-glow);
 }
 
 /* ==========================================================================
@@ -802,6 +931,16 @@ dialog[open]::backdrop {
         height: min(53rem, 92dvh);
         border-radius: var(--radius-lg);
         border: 2px solid var(--color-border);
+
+        transition: width var(--transition-base), height var(--transition-base);
+    }
+
+    #card-dialog.compact-mode {
+        width: 100dvw !important;
+        height: 100dvh !important;
+        max-width: 100dvw !important;
+        max-height: 100dvh !important;
+        border-radius: 0px;
     }
 
     /* ARREGLO: Desactivar el popover y restaurar el Aside original en Desktop */
@@ -826,14 +965,92 @@ dialog[open]::backdrop {
     .card-dialog__menu.hidden {
         display: none;
     }
+
+    .card-dialog__field-mode {
+        display: flex;
+    }
+
+    .icon-add-page {
+        display: block;
+    }
 }
 
 /* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
-    #card-dialog, #delete-dialog, dialog::backdrop, .card-dialog__block-menu[popover] {
+
+    #card-dialog,
+    #delete-dialog,
+    dialog::backdrop,
+    .card-dialog__block-menu[popover] {
         scale: 1;
         transition: opacity 0.1s ease, display 0.1s ease allow-discrete, overlay 0.1s ease allow-discrete;
     }
-    .card-dialog__panel--active { animation: none; }
-    .card-dialog__page-menu { opacity: 1; scale: 1; }
+
+    .card-dialog__panel--active {
+        animation: none;
+    }
+
+    .card-dialog__page-menu {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+/* slider compact mode */
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 23px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--radius-md);
+    background-color: #ccc;
+    border-radius: 34px;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--color-accent);
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px var(--accent-glow);
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
 }
