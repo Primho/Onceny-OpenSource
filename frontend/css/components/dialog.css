@@ -219,7 +219,7 @@ dialog[open]::backdrop {
 
     &:hover,
     &:has(.card-dialog__page-tab--active) {
-        background-color: var(--color-muted);
+        background-color: var(--color-surface-hover);
     }
 }
 
@@ -260,7 +260,7 @@ dialog[open]::backdrop {
 
 .card-dialog__page:hover,
 .card-dialog__page-tab:hover {
-    background-color: var(--color-muted);
+    background-color: var(--color-surface-hover);
 }
 
 .card-dialog__page-tab,
@@ -313,7 +313,7 @@ dialog[open]::backdrop {
 }
 
 .card-dialog__nav-bottom .card-dialog__page-tab--active {
-    background-color: var(--color-muted);
+    background-color: var(--color-surface-hover);
 }
 
 .card-dialog__page-label {
@@ -377,7 +377,7 @@ dialog[open]::backdrop {
     transition: background var(--transition-fast), color var(--transition-fast);
 
     &:hover {
-        background: var(--accent-gradient);
+        background: var(--color-accent);
         color: var(--accent-on);
     }
 
@@ -431,23 +431,28 @@ dialog[open]::backdrop {
 .editor-block-wrapper {
     position: relative;
     cursor: pointer;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-sm);
-    transition: background-color var(--transition-base);
-
-    &:hover {
-        background-color: var(--color-surface);
-    }
 }
 
 .editor-block {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-base);
     width: 100%;
     min-height: 1.5rem;
-    outline: none;
     font-size: var(--font-md);
     line-height: 1.6;
     color: var(--color-text);
     word-break: break-word;
+    outline: none;
+
+    &:focus-within {
+        background-color: var(--color-surface);
+    }
+    
+    &:hover {
+        background-color: var(--color-surface);
+    }
+
 }
 
 .editor-block:empty::before {
@@ -533,8 +538,8 @@ dialog[open]::backdrop {
     &:focus,
     &:focus-visible {
         outline: none;
-        border-color: var(--color-focus);
-        box-shadow: var(--focus-shadow);
+        border-color: var(--color-text-muted);
+        
     }
 }
 
@@ -1022,10 +1027,10 @@ dialog[open]::backdrop {
     right: 0;
     bottom: 0;
     border-radius: var(--radius-md);
-    background-color: #ccc;
+    background-color: var(--color-muted);
     border-radius: 34px;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--transition-fast);
+    transition: var(--transition-fast);
 }
 
 .slider:before {
@@ -1037,8 +1042,8 @@ dialog[open]::backdrop {
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--transition-fast);
+    transition: var(--transition-fast);
 }
 
 input:checked+.slider {

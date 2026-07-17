@@ -1,6 +1,4 @@
-/* ==========================================================================
-   WORKSPACE (ESTILOS BASE: MÓVIL FIRST)
-   ========================================================================== */
+/* WORKSPACE COMPLETO */
 
 /* --- Skip Link --- */
 .skip-link {
@@ -105,7 +103,7 @@
 }
 
 .workspace__btn--primary {
-    background: var(--accent-gradient);
+    background: var(--color-accent);
     color: var(--accent-on);
     font-weight: var(--font-weight-medium);
     box-shadow: 0 4px 14px var(--accent-glow);
@@ -265,9 +263,7 @@
 }
 
 
-/* ==========================================================================
-   ACCESIBILIDAD (Reducción de movimiento)
-   ========================================================================== */
+/* REDUCCION DE MOVIMIENTO */
 @media (prefers-reduced-motion: reduce) {
     .workspace__menu[popover] {
         transition:

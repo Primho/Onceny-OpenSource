@@ -105,7 +105,6 @@ const syncDialogFromCard = (card) => {
 };
 
 // --- MÉTODOS DE PERSISTENCIA ---
-
 const persistCard = async () => {
     const card = getActiveCard();
     if (!card) return;
@@ -174,6 +173,8 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// maneja los cambios sin que lo vea directo
+
 if (colorPicker) {
     colorPicker.addEventListener('click', (event) => {
         const option = event.target.closest('.color-picker__option');
@@ -187,11 +188,10 @@ if (colorPicker) {
 
         setColor(hex);
         syncColorPicker(hex);
-
-        const cardEl = getCardElement(card.id);
-        applyCardColorToDom(cardEl, hex, theme);
     });
 }
+
+// manejamiento del color y como se guarda sin que le alla dado en el backdrop 
 
 closeBtn?.addEventListener('click', () => {
     cardDialog.close(); 
@@ -199,20 +199,16 @@ closeBtn?.addEventListener('click', () => {
 
 cardDialog?.addEventListener('close', async () => {
     await persistCard();
-    await persistConfig();
-    
-    currentCommandBlock = null; 
+
+    currentCommandBlock = null;
     if (dialogBlockMenu?.matches(':popover-open')) {
         dialogBlockMenu.hidePopover();
     }
 });
 
-document.querySelector('[data-action="content-save"]')?.addEventListener('click', () => {
-    cardDialog.close(); 
-});
-
-document.querySelector('[data-action="config-save"]')?.addEventListener('click', () => {
-    cardDialog.close(); 
+document.querySelector('#card-dialog [data-action="config-save"]')?.addEventListener('click', async () => {
+    await persistConfig();
+    cardDialog.close();
 });
 
 // --- GESTIÓN INTERNA DE BLOQUES (CORREGIDO: Escucha en todo el lienzo) ---

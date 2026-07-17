@@ -45,13 +45,8 @@
     --color-text: oklch(0.26 0.020 70);
     --color-text-muted: oklch(0.54 0.012 75);
 
-    --color-accent: oklch(0.82 0.16 145);
+    --color-accent: oklch(89.54% 0.2119 130.25);;
     --accent-solid: oklch(0.82 0.16 145);
-    --accent-gradient: linear-gradient(
-        135deg,
-        oklch(0.86 0.16 143),
-        oklch(0.82 0.16 145)
-    );
 
     --accent-on: #000;
     --accent-glow: oklch(0.82 0.16 145 / 0.22);
@@ -99,13 +94,8 @@
 
     --color-text-muted: oklch(0.73 0.010 90);
 
-    --color-accent: oklch(0.82 0.16 145);
+    --color-accent: oklch(89.54% 0.2119 130.25);
     --accent-solid: oklch(0.82 0.16 145);
-    --accent-gradient: linear-gradient(
-        135deg,
-        oklch(0.86 0.16 143),
-        oklch(0.82 0.16 145)
-    );
 
     --accent-glow: oklch(0.82 0.16 145 / 0.22);
     --color-focus: var(--accent-solid);

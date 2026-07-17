@@ -72,7 +72,7 @@
 
     &:hover {
         color: var(--color-text);
-        background-color: var(--color-muted);
+        background-color: var(--color-surface-hover);
     }
 }
 
@@ -83,7 +83,7 @@
 
 /* --- Estado Activo (Mejora: Indicador visual en móvil) --- */
 .sidebar__nav-item--active .sidebar__nav-link {
-    background-color: var(--color-muted);
+    background-color: var(--color-surface-hover);
     color: var(--color-text);
     position: relative;
 }
@@ -95,9 +95,9 @@
     left: 0;
     top: 25%;
     bottom: 25%;
-    width: 3px;
+    width: 4px;
     background: var(--color-accent);
-    border-radius: 0 2px 2px 0;
+    border-radius:999px;
 }
 
 /* ==========================================================================

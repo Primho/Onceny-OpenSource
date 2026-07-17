@@ -1,6 +1,6 @@
-/* ==========================================================================
-   NOTE CARD (MÓVIL FIRST)
-   ========================================================================== */
+@import '../utils.css';
+
+/* SPACE CARD MOBILE FIRST */
 .note-card {
     cursor: pointer;
     width: 100%;
@@ -13,6 +13,10 @@
     border-radius: var(--radius-lg);
 
     transition: transform var(--transition-base), box-shadow var(--transition-fast);
+
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 15% cover 20%;
 }
 
 /* Solo aplicar efecto hover en dispositivos que soporten puntero (Ratón) */
