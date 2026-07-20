@@ -53,7 +53,7 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
 
         const newPanel = document.createElement('main');
         newPanel.id = panelId;
-        newPanel.className = 'card-dialog__panel';
+        newPanel.className = 'card-dialog__panel card-dialog__canvas';
         newPanel.role = 'tabpanel';
         newPanel.tabIndex = 0;
         newPanel.hidden = true;
@@ -82,13 +82,13 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
         panelsParentContainer.appendChild(newPanel);
 
         console.log(blocksContainer);
-        createNewBlock(initialBlockWrapper);
 
         const allPages = pagesContainer.querySelectorAll('.card-dialog__page');
         const newlyAddedPage = allPages[allPages.length - 1];
         setupPageMenuEvent(newlyAddedPage);
 
         setPanel(newPageId);
+        initialBlock.focus();
     });
 
     pageMenuPopover?.addEventListener('click', (e) => {

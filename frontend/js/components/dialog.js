@@ -276,6 +276,14 @@ panelsParentContainer?.addEventListener('input', (e) => {
             currentCommandBlock = null;
         }
     }
+
+    dialogBlockMenu?.addEventListener('click', (event) => {
+        let selection = event.target;
+        
+        if (selection.value == 'heading') {
+            activeBlock.style.fontSize = '2rem';
+        }
+    })
 });
 
 // DIALOG SETTINGS COMPACT MODE

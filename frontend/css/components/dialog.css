@@ -904,7 +904,7 @@ dialog[open]::backdrop {
 }
 
 .confirm-dialog__btn--danger {
-    background: var(--accent-gradient);
+    background-color: var(--color-accent);
     color: var(--accent-on);
     box-shadow: 0 4px 14px var(--accent-glow);
 }
@@ -914,9 +914,7 @@ dialog[open]::backdrop {
     box-shadow: 0 6px 18px var(--accent-glow);
 }
 
-/* ==========================================================================
-   8. MEDIA QUERIES
-   ========================================================================== */
+/* Media query */
 
 /* Desktop */
 @media (min-width: 768px) {
