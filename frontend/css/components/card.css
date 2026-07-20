@@ -19,6 +19,10 @@
     animation-range: entry 15% cover 20%;
 }
 
+.note-card--temporal {
+    background-color: transparent !important;
+}
+
 /* Solo aplicar efecto hover en dispositivos que soporten puntero (Ratón) */
 @media (hover: hover) {
     .note-card:hover {

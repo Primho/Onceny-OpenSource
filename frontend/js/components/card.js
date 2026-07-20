@@ -53,10 +53,10 @@ const makeCard = (card, container, isNew = false) => {
     container.insertAdjacentHTML(
         'afterbegin',
         `
-        <article class="note-card${isNew ? ' note-card--new' : ''}${temporalClass}"
+        <article class="note-card${isNew ? ' note-card--new' : ''} ${temporalClass}"
             role="listitem"
             data-id="${card.id}"
-            style="background-color: ${colors.bg};">
+            style="background-color: ${colors.bg}; ${temporalClass ? (`border: 2px dashed ${colors.text}`) : ''}">
             <header class="note-card__header">
                 <div class="note-card__info">
                     <h2 class="note-card__title" style="color: ${colors.text};">${escapeHtml(displayTitle)}</h2>

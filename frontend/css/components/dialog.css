@@ -4,6 +4,25 @@
     initial-value: -6px;
 }
 
+.editor-block--heading {
+    font-weight: 700 !important;
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+}
+
+.editor-block--subheading {
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+}
+
+.editor-block--task,
+.editor-block--text {
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+}
+
 /* ==========================================================================
    1. BASE Y BACKDROP
    ========================================================================== */
