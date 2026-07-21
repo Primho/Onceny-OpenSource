@@ -23,9 +23,7 @@
     line-height: 1.6 !important;
 }
 
-/* ==========================================================================
-   1. BASE Y BACKDROP
-   ========================================================================== */
+/* BASE Y BACKDROP */
 
 body:has(dialog[open]) {
     overflow: hidden;
@@ -226,6 +224,7 @@ dialog[open]::backdrop {
     padding-block: var(--space-sm);
     overflow-y: auto;
     overscroll-behavior: contain;
+    width: 100%;
 }
 
 .card-dialog__page {
@@ -324,6 +323,7 @@ dialog[open]::backdrop {
 .card-dialog__page-tab {
     color: var(--color-text-muted);
     justify-content: flex-start;
+    max-width: 100%;
 }
 
 .card-dialog__page-tab:hover,

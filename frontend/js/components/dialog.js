@@ -368,4 +368,6 @@ window.addEventListener("resize", () => {
 
 addPage(pageAddBtn, pagesContainer, panelsParentContainer, setPanel);
 
+
+
 export { syncDialogFromCard, syncColorPicker };

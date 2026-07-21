@@ -98,23 +98,15 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
         const action = item.dataset.action;
 
         if (action === 'delete') {
-            const totalPages = pagesContainer.querySelectorAll('.card-dialog__page').length;
-            if (totalPages <= 1) {
-                alert("¡No puedes eliminar todas las páginas! Al menos debe quedar una activa.");
-                pageMenuPopover.hidePopover();
-                return;
-            }
-
             const tabBtn = activeTargetPageWrapper.querySelector('.card-dialog__page-tab');
-            const targetPanelId = `card-dialog-panel-${tabBtn.dataset.panel}`;
-            const targetPanel = document.getElementById(targetPanelId);
+            const targetPanel = document.getElementById(`card-dialog-panel-${tabBtn.dataset.panel}`);
 
             if (tabBtn.classList.contains('card-dialog__page-tab--active')) {
-                const allPages = [...pagesContainer.querySelectorAll('.card-dialog__page')];
-                const currentIndex = allPages.indexOf(activeTargetPageWrapper);
-                const fallbackPage = allPages[currentIndex === 0 ? 1 : currentIndex - 1];
-                const fallbackTab = fallbackPage.querySelector('.card-dialog__page-tab');
-                setPanel(fallbackTab.dataset.panel);
+                const pages = [...pagesContainer.querySelectorAll('.card-dialog__page')];
+                const index = pages.indexOf(activeTargetPageWrapper);
+                const nextPage = pages[index === 0 ? 1 : index - 1];
+
+                setPanel(nextPage.querySelector('.card-dialog__page-tab').dataset.panel);
             }
 
             activeTargetPageWrapper.remove();
@@ -122,10 +114,28 @@ const addPage = (pageAddBtn, pagesContainer, panelsParentContainer, setPanel) =>
 
             activeTargetPageWrapper = null;
             pageMenuPopover.hidePopover();
-
         } else if (action === 'rename') {
+            const tabBtn = activeTargetPageWrapper.querySelector('.card-dialog__page-tab');
+            const targetPanel = document.getElementById(`card-dialog-panel-${tabBtn.dataset.panel}`);
+
+            if (tabBtn.classList.contains('card-dialog__page-tab--active')) {
+                const currentEmoji = tabBtn.querySelector('.card-dialog__page-label');
+                const anss = prompt('Rename the tab');
+                currentEmoji.innerText = anss || `Page ${1 + 1}`;
+            }
+
             pageMenuPopover.hidePopover();
-            console.log("Pronto implementaremos el cambio de nombre aquí");
+        } else if (action === 'change-emoji') {
+            const tabBtn = activeTargetPageWrapper.querySelector('.card-dialog__page-tab');
+            const targetPanel = document.getElementById(`card-dialog-panel-${tabBtn.dataset.panel}`);
+
+            if (tabBtn.classList.contains('card-dialog__page-tab--active')) {
+                const currentEmoji = tabBtn.querySelector('.card-dialog__page-emoji');
+                const anss = prompt('type an emoji');
+                currentEmoji.innerText = anss;
+            }
+
+            pageMenuPopover.hidePopover();
         }
     });
 };
