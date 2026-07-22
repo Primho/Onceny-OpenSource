@@ -289,6 +289,8 @@ const applyBlockType = (block, blockType) => {
       block.style.fontWeight = "500";
       block.style.fontSize = "1rem";
       block.style.lineHeight = "1.6";
+
+      block.innerHTML = `<input type="checkbox">`;
       break;
 
     case "text":
