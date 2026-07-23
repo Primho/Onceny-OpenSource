@@ -1,86 +1,130 @@
 from flask import Blueprint, jsonify, request
-from models import get_db
+from models import get_db, serialize_card
 import time
 
 cards_bp = Blueprint('cards', __name__)
 
-@cards_bp.route('/api/cards', methods=['GET'])
-def get_notes():
-    conn = get_db()
+TEMPORAL_TTL_MS = 120_000
 
-    # Obtener timestamp actual en milisegundos idéntico a Date.now()
+
+def _purge_expired_temporal(conn):
     current_time = int(time.time() * 1000)
-    # Límite máximo de vida de la tarjeta (2 minutos = 120,000 ms)
-    top_allowed_time = 120000
-
-    # Limpieza atómica proactiva antes de enviar los datos
-    conn.execute('''
+    conn.execute(
+        '''
         DELETE FROM cards
-        WHERE type = 'temporal' AND (? - createdAt) >= ?
-    ''', (current_time, top_allowed_time))
+        WHERE type = 'temporal'
+          AND created_at IS NOT NULL
+          AND (? - created_at) >= ?
+        ''',
+        (current_time, TEMPORAL_TTL_MS),
+    )
     conn.commit()
 
-    # Recuperamos el set de datos limpio resultante de la purga
-    cards = conn.execute('SELECT * FROM cards').fetchall()
+
+@cards_bp.route('/api/cards', methods=['GET'])
+def get_cards():
+    conn = get_db()
+    _purge_expired_temporal(conn)
+
+    # Listado "ligero" para el grid: sin pages/blocks, igual que antes.
+    rows = conn.execute('SELECT * FROM cards ORDER BY id DESC').fetchall()
+    cards = [serialize_card(row) for row in rows]
     conn.close()
-    return jsonify([dict(card) for card in cards])
+    return jsonify(cards)
+
+
+@cards_bp.route('/api/cards/<int:id>', methods=['GET'])
+def get_card(id):
+    conn = get_db()
+    row = conn.execute('SELECT * FROM cards WHERE id = ?', (id,)).fetchone()
+
+    if row is None:
+        conn.close()
+        return jsonify({'message': 'Card not found'}), 404
+
+    # Detalle completo: incluye pages -> blocks, para abrir el dialog.
+    card = serialize_card(row, with_pages=True, conn=conn)
+    conn.close()
+    return jsonify(card)
+
 
 @cards_bp.route('/api/cards', methods=['POST'])
 def create_card():
     data = request.get_json()
+    now = int(time.time() * 1000)
     conn = get_db()
+
     cursor = conn.execute(
-        'INSERT INTO cards (title, color, tag, marker, type, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+        '''
+        INSERT INTO cards (title, color, tag, marker, type, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''',
         (
             data.get('title', ''),
             data.get('color', '#f1f1f1'),
             data.get('tag', ''),
             data.get('marker', '📌'),
             data.get('type', 'normal'),
-            data.get('createdAt', None)
-        )
+            data.get('createdAt', now),
+            now,
+        ),
     )
-    new_id = cursor.lastrowid
+    card_id = cursor.lastrowid
+
+    # Toda card nace con una página por defecto y un bloque de texto vacío,
+    # que es exactamente lo que page.js monta "a mano" en el DOM hoy.
+    page_cursor = conn.execute(
+        'INSERT INTO pages (card_id, title, emoji, position) VALUES (?, ?, ?, ?)',
+        (card_id, 'Page 1', '📄', 0),
+    )
+    page_id = page_cursor.lastrowid
+
+    conn.execute(
+        'INSERT INTO blocks (page_id, type, content, position) VALUES (?, ?, ?, ?)',
+        (page_id, 'text', '', 0),
+    )
+
     conn.commit()
+    row = conn.execute('SELECT * FROM cards WHERE id = ?', (card_id,)).fetchone()
+    card = serialize_card(row, with_pages=True, conn=conn)
     conn.close()
 
-    return jsonify({
-        'id': new_id,
-        'title': data.get('title', ''),
-        'color': data.get('color', '#f1f1f1'),
-        'tag': data.get('tag', ''),
-        'marker': data.get('marker', '📌'),
-        'type': data.get('type', 'normal'),
-        'createdAt': data.get('createdAt', None)
-    }), 201
+    return jsonify(card), 201
+
 
 @cards_bp.route('/api/cards/<int:id>', methods=['PUT'])
 def update_card(id):
     data = request.get_json()
     conn = get_db()
 
-    # Whitelist de campos editables: solo se actualizan las columnas
-    # que realmente vienen en el body, así un guardado parcial
-    # (ej. solo color/marker/tag) no pisa el title con un valor vacío.
-    allowed_fields = ['title', 'color', 'tag', 'marker']
-    fields_to_update = {f: data[f] for f in allowed_fields if f in data}
+    allowed_fields = {
+        'title': 'title',
+        'color': 'color',
+        'tag': 'tag',
+        'marker': 'marker',
+    }
+    fields_to_update = {allowed_fields[f]: data[f] for f in allowed_fields if f in data}
 
     if not fields_to_update:
         conn.close()
         return jsonify({'message': 'Nothing to update'}), 400
 
+    fields_to_update['updated_at'] = int(time.time() * 1000)
+
     set_clause = ', '.join(f'{field} = ?' for field in fields_to_update)
     values = list(fields_to_update.values()) + [id]
 
     conn.execute(f'UPDATE cards SET {set_clause} WHERE id = ?', values)
-
     conn.commit()
     conn.close()
     return jsonify({'message': 'Note edited'})
 
+
 @cards_bp.route('/api/cards/<int:id>', methods=['DELETE'])
 def delete_card(id):
     conn = get_db()
+    # Gracias a ON DELETE CASCADE + PRAGMA foreign_keys=ON, esto también
+    # borra sus pages y los blocks de esas pages.
     conn.execute('DELETE FROM cards WHERE id = ?', (id,))
     conn.commit()
     conn.close()

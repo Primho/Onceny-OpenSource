@@ -1,12 +1,18 @@
+
 from flask import Flask
 from flask_cors import CORS
 from routes.cards import cards_bp
+from routes.pages import pages_bp
+from routes.blocks import blocks_bp
 from models import init_db
 
 app = Flask(__name__)
 CORS(app)
 
 app.register_blueprint(cards_bp)
+app.register_blueprint(pages_bp)
+app.register_blueprint(blocks_bp)
+
 
 with app.app_context():
     init_db()
