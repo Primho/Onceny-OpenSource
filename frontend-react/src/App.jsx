@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getCards, createCard, getCard } from './api';
+import Sidebar from "./components/Sidebar";
 import Card from './components/Card';
 import CardDialog from "./components/CardDialog";
 
@@ -45,6 +46,7 @@ function App() {
   return (
     <>
       {/* TODO: Sidebar */}
+      <Sidebar/>
       {/* main page */}
       <main id="main" className="workspace">
         {/* TODO: Header */}
