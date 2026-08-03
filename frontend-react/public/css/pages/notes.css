@@ -1,0 +1,274 @@
+/* WORKSPACE COMPLETO */
+
+/* --- Skip Link --- */
+.skip-link {
+    position: absolute;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    z-index: 10000;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    font-size: var(--font-sm);
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--transition-fast);
+
+    &:focus {
+        transform: translateY(0);
+    }
+}
+
+/* --- Contenedor Workspace --- */
+.workspace {
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding: var(--space-md);
+    padding-top: 0;
+}
+
+.workspace__header {
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-block: var(--space-lg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.workspace__heading {
+    min-width: 0;
+}
+
+.workspace__title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    margin: 0;
+    text-wrap: balance;
+}
+
+.workspace__subtitle {
+    margin: var(--space-xs) 0 0;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+}
+
+.workspace__actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* --- Botón "New Space" (Base: Estilo Flotante / FAB para Móvil) --- */
+.workspace__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    font-size: var(--font-base);
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-fast), color var(--transition-base), transform 0.2s;
+
+    /* Estilo flotante por defecto en móvil */
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    z-index: 100; /* Asegurar que flote sobre las tarjetas */
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+    }
+
+    &:active {
+        transform: scale(0.9);
+    }
+}
+
+/* Ocultar el texto del botón por defecto en móvil */
+.hidden-text-btn {
+    display: none;
+}
+
+.workspace__btn--primary {
+    background: var(--color-accent);
+    color: var(--accent-on);
+    font-weight: var(--font-weight-medium);
+    box-shadow: 0 4px 14px var(--accent-glow);
+
+    & svg {
+        fill: currentColor;
+    }
+
+    &:hover {
+        filter: brightness(0.97);
+        box-shadow: 0 6px 18px var(--accent-glow);
+    }
+}
+
+/* --- Popover Menú (Base: Móvil flota hacia arriba) --- */
+.workspace__menu[popover] {
+    position-area: top center; /* Aparece arriba del FAB en móvil */
+    position-try-fallbacks: flip-block, flip-inline;
+    width: 11rem;
+    max-width: 150px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-xs) 0;
+    margin: 0 var(--space-md) var(--space-sm) 0;
+    opacity: 0;
+    translate: 0 5px;
+    transition:
+        opacity 0.2s ease,
+        translate 0.2s ease,
+        display 0.2s ease allow-discrete,
+        overlay 0.2s ease allow-discrete;
+
+    &:popover-open {
+        opacity: 1;
+        translate: 0 0;
+
+        @starting-style {
+            opacity: 0;
+            translate: 0 5px;
+        }
+    }
+}
+
+.workspace__menu-item {
+    display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: none;
+    font-size: var(--font-sm);
+    font-family: inherit;
+    text-align: center; /* Centrado en móvil */
+    cursor: pointer;
+    color: var(--color-text);
+    transition: background-color var(--transition-fast);
+
+    &:hover {
+        background-color: var(--color-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: -2px;
+    }
+}
+
+/* --- Grid de Espacios (Base: 1 Columna) --- */
+.workspace__section {
+    margin-top: var(--space-md);
+}
+
+.workspace__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); 
+    gap: var(--space-md);
+    align-items: start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0; 
+}
+
+.workspace__grid > .note-card {
+    min-height: 12.5rem;
+}
+
+.workspace__empty {
+    margin: var(--space-xl) auto;
+    max-width: 28rem;
+    text-align: center;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+}
+
+
+/* ==========================================================================
+   MEDIA QUERY: TABLETAS (≥ 768px / 48rem)
+   ========================================================================== */
+@media (min-width: 48rem) {
+    .workspace {
+        padding: var(--space-lg);
+        padding-top: 0;
+    }
+
+    /* El botón vuelve a su posición original en el header */
+    .workspace__btn {
+        position: static;
+        width: auto;
+        height: auto;
+        border-radius: var(--radius-sm);
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    /* Volvemos a mostrar el texto del botón */
+    .hidden-text-btn {
+        display: inline;
+    }
+
+    /* El menú popover ahora cae abajo del botón */
+    .workspace__menu[popover] {
+        position-area: bottom center;
+        margin: var(--space-xs) 0 0;
+        max-width: none;
+        translate: 0 -5px;
+
+        &:popover-open {
+            translate: 0 0;
+
+            @starting-style {
+                translate: 0 -5px;
+            }
+        }
+    }
+
+    .workspace__menu-item {
+        text-align: left; /* Alineado tradicional a la izquierda */
+    }
+
+    /* Grid evoluciona a 2 columnas */
+    .workspace__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* ==========================================================================
+   MEDIA QUERY: ESCRITORIO GRANDE (≥ 1200px / 75rem)
+   ========================================================================== */
+@media (min-width: 75rem) {
+    /* Grid evoluciona a 3 columnas */
+    .workspace__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+/* REDUCCION DE MOVIMIENTO */
+@media (prefers-reduced-motion: reduce) {
+    .workspace__menu[popover] {
+        transition:
+            opacity 0.1s ease,
+            display 0.1s ease allow-discrete,
+            overlay 0.1s ease allow-discrete;
+    }
+}
