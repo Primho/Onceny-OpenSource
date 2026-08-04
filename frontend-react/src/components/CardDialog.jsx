@@ -80,6 +80,10 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
     setActiveTab("editor");
   };
 
+  const handleOpenDeleteDialog = (card) => {
+    
+  }
+
   return (
     <dialog
       ref={dialogRef}
