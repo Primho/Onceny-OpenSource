@@ -94,7 +94,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
         <button
           type="button"
           className="card-dialog__menu"
-          popovertarget="card-dialog-mobile-menu"
+          popoverTarget="card-dialog-mobile-menu"
           role="menuitem"
         >
           <svg className="icon" aria-hidden="true" focusable="false">
@@ -209,7 +209,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
                   aria-label="Save and close"
                   onClick={handleSaveAndClose}
                 >
-                  💾 <span className="hidden">Save and close</span>
+                  💾 <span className="hidden card-dialog__save--text">Save and close</span>
                 </button> 
               </>) : ( <h2>Settings</h2> ) }
           </header>

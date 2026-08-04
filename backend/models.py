@@ -13,6 +13,22 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def get_card_preview(card_id, conn):
+    row = conn.execute('''
+    SELECT blocks.content
+    FROM blocks
+    JOIN pages
+    ON pages.id = blocks.page_id
+    WHERE pages.card_id = ?
+    ORDER BY pages.position ASC, blocks.position ASC
+    LIMIT 1
+    ''', (card_id,)).fetchone()
+
+    if row:
+        return row['content']
+
+    return ''
+
 
 def init_db():
     conn = get_db()
@@ -23,7 +39,7 @@ def init_db():
         title TEXT NOT NULL DEFAULT '',
         color TEXT DEFAULT '#f1f1f1',
         tag TEXT DEFAULT '',
-        marker TEXT DEFAULT '📌',
+        marker TEXT DEFAULT '',
         type TEXT DEFAULT 'normal',
         created_at INTEGER,
         updated_at INTEGER
@@ -67,6 +83,7 @@ def init_db():
 def serialize_card(row, with_pages=False, conn=None):
     card = {
         'id': row['id'],
+        'preview': get_card_preview(row['id'], conn) if conn else '',
         'title': row['title'],
         'color': row['color'],
         'tag': row['tag'],

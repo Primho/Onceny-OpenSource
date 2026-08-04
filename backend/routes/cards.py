@@ -28,7 +28,7 @@ def get_cards():
 
     # Listado "ligero" para el grid: sin pages/blocks, igual que antes.
     rows = conn.execute('SELECT * FROM cards ORDER BY id DESC').fetchall()
-    cards = [serialize_card(row) for row in rows]
+    cards = [serialize_card(row, conn=conn) for row in rows]
     conn.close()
     return jsonify(cards)
 

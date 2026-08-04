@@ -49,7 +49,7 @@ dialog[open]::backdrop {
 }
 
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 /* -- DIALOGO DE AJUSTES -- */
@@ -992,9 +992,16 @@ dialog[open]::backdrop {
         display: flex;
     }
 
-    .icon-add-page {
-        display: block;
+    .card-dialog__save--text {
+        font-weight: var(--font-weight-medium);
     }
+
+    .icon-add-page,
+    .card-dialog__save--text {
+        display: inline !important;
+    }
+
+
 }
 
 /* Accesibilidad */

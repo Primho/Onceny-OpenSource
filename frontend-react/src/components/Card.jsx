@@ -7,7 +7,7 @@ const COLOR_MAP = {
     "#efeaff": { bg: "var(--card-purple)", text: "var(--card-purple-text)" },
 };
 
-function Card({ card, onOpen }) {
+function Card({ card, onOpen, onDelete }) {
     const colors = COLOR_MAP[card.color] ?? {
         bg: card.color || "var(--card-gray)",
         text: "inherit",
@@ -16,7 +16,7 @@ function Card({ card, onOpen }) {
     const displayTitle = card.title?.trim() || "Sin título";
     const temporalClass = card.type === "temporal" ? " note-card--temporal" : "";
 
-    const firstBlockContent = card.pages?.[0]?.blocks?.[0]?.content?.trim();
+    const firstBlockContent = card.preview;
     const previewContent = firstBlockContent || "Add content by opening this space.";
 
     return (
@@ -44,11 +44,13 @@ function Card({ card, onOpen }) {
                         </span>
                     )}
                 </div>
+
                 <div className="note-card__menu">
                     <button
                         type="button"
                         className="note-card__menu-trigger"
                         aria-label={`Opciones de ${displayTitle}`}
+                        popoverTarget={`note-menu-${card.id}`}
                         onClick={(e) => {
                             e.stopPropagation();
                         }}
@@ -68,7 +70,7 @@ function Card({ card, onOpen }) {
                         className="note-card__menu-panel"
                         style={{ positionAnchor: `--note-anchor-${card.id}` }}
                         role="menu"
-                        aria-label="Acciones de la nota"
+                        aria-label="Space Actions"
                     >
                         <button
                             type="button"
@@ -83,6 +85,10 @@ function Card({ card, onOpen }) {
                             className="note-card__menu-item note-card__delete"
                             role="menuitem"
                             data-action="delete"
+                            onClick={(event) => {
+                                event.stopPropagation()
+                                onDelete(card.id)
+                            }}
                         >
                             Delete
                         </button>

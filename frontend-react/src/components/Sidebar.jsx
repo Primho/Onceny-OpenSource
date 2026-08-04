@@ -28,7 +28,7 @@ function Sidebar() {
                         <span className="sidebar__nav-text">Spaces</span>
                     </a>
                 </li>
-                <li class="sidebar__nav-item">
+                <li className="sidebar__nav-item">
                     <a href="#" className="sidebar__nav-link">
                         <svg className="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-favorite"></use>
@@ -36,7 +36,7 @@ function Sidebar() {
                         <span className="sidebar__nav-text">Favorites</span>
                     </a>
                 </li>
-                <li class="sidebar__nav-item">
+                <li className="sidebar__nav-item">
                     <a href="#" className="sidebar__nav-link">
                         <svg className="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-folder"></use>
@@ -44,8 +44,8 @@ function Sidebar() {
                         <span className="sidebar__nav-text">Folders</span>
                     </a>
                 </li>
-                <li class="sidebar__nav-item">
-                    <a href="#" class="sidebar__nav-link">
+                <li className="sidebar__nav-item">
+                    <a href="#" className="sidebar__nav-link">
                         <svg className="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-share"></use>
                         </svg>
@@ -57,7 +57,7 @@ function Sidebar() {
 
         <div className="sidebar__settings">
             <ul className="sidebar__settings-list">
-                <li class="sidebar__settings-item">
+                <li className="sidebar__settings-item">
                     <a href="#" role="button" aria-haspopup="dialog" className="sidebar__settings-link" >
                         <svg className="icon sidebar__settings-icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-settings"></use>
