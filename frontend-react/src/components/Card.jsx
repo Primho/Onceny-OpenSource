@@ -1,3 +1,6 @@
+import { useState } from "react";
+import CardDialogDelete from "./CardDialogDelete";
+
 const COLOR_MAP = {
     "#f1f1f1": { bg: "var(--card-gray)", text: "var(--card-gray-text)" },
     "#fdefee": { bg: "var(--card-red)", text: "var(--card-red-text)" },
@@ -8,6 +11,8 @@ const COLOR_MAP = {
 };
 
 function Card({ card, onOpen, onDelete }) {
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const colors = COLOR_MAP[card.color] ?? {
         bg: card.color || "var(--card-gray)",
         text: "inherit",
@@ -19,92 +24,115 @@ function Card({ card, onOpen, onDelete }) {
     const firstBlockContent = card.preview;
     const previewContent = firstBlockContent || "Add content by opening this space.";
 
-    return (
-        <article
-            className={`note-card${temporalClass}`}
-            role="listitem"
-            data-id={card.id}
-            style={{
-                backgroundColor: colors.bg,
-                border: card.type === "temporal" ? `2px dashed ${colors.text}` : undefined
-            }}
-            onClick={() => onOpen(card)}
-        >
-            <header className="note-card__header">
-                <div className="note-card__info">
-                    <h2 className="note-card__title" style={{ color: colors.text }}>
-                        {displayTitle}
-                    </h2>
-                    {card.tag && (
-                        <span
-                            className="note-card__tag"
-                            style={{ color: `color-mix(in srgb, ${colors.text} 80%, white)` }}
-                        >
-                            {card.tag}
-                        </span>
-                    )}
-                </div>
+    const handleDeleteConfirm = (id) => {
+        onDelete(id);
+        setIsDeleting(false);
+    };
 
-                <div className="note-card__menu">
-                    <button
-                        type="button"
-                        className="note-card__menu-trigger"
-                        aria-label={`Opciones de ${displayTitle}`}
-                        popoverTarget={`note-menu-${card.id}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    >
-                        <svg
-                            className="icon"
-                            style={{ color: colors.text }}
-                            aria-hidden="true"
-                            focusable="false"
-                        >
-                            <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
-                        </svg>
-                    </button>
-                    <div
-                        id={`note-menu-${card.id}`}
-                        popover="auto"
-                        className="note-card__menu-panel"
-                        style={{ positionAnchor: `--note-anchor-${card.id}` }}
-                        role="menu"
-                        aria-label="Space Actions"
-                    >
-                        <button
-                            type="button"
-                            className="note-card__menu-item"
-                            role="menuitem"
-                            data-action="edit"
-                        >
-                            Edit
-                        </button>
-                        <button
-                            type="button"
-                            className="note-card__menu-item note-card__delete"
-                            role="menuitem"
-                            data-action="delete"
-                            onClick={(event) => {
-                                event.stopPropagation()
-                                onDelete(card.id)
-                            }}
-                        >
-                            Delete
-                        </button>
+    return (
+        <>
+            <article
+                className={`note-card${temporalClass}`}
+                role="listitem"
+                data-id={card.id}
+                style={{
+                    backgroundColor: colors.bg,
+                    border: card.type === "temporal" ? `2px dashed ${colors.text}` : undefined
+                }}
+                onClick={() => onOpen(card)}
+            >
+                <header className="note-card__header">
+                    <div className="note-card__info">
+                        <h2 className="note-card__title" style={{ color: colors.text }}>
+                            {displayTitle}
+                        </h2>
+                        {card.tag && (
+                            <span
+                                className="note-card__tag"
+                                style={{ color: `color-mix(in srgb, ${colors.text} 80%, white)` }}
+                            >
+                                {card.tag}
+                            </span>
+                        )}
                     </div>
+
+                    <div className="note-card__menu">
+                        <button
+                            type="button"
+                            className="note-card__menu-trigger"
+                            aria-label={`Opciones de ${displayTitle}`}
+                            popoverTarget={`note-menu-${card.id}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                            }}
+                            style={{ anchorName: `--note-anchor-${card.id}`}}
+                            aria-haspopup="menu"
+                        >
+                            <svg
+                                className="icon"
+                                style={{ color: colors.text }}
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                <use href="../assets/icons/sprite.svg#icon-more-horiz"></use>
+                            </svg>
+                        </button>
+                        <div
+                            id={`note-menu-${card.id}`}
+                            popover="auto"
+                            className="note-card__menu-panel"
+                            style={{ positionAnchor: `--note-anchor-${card.id}` }}
+                            role="menu"
+                            aria-label="Space Actions"
+                            onClick={(e) => e.stopPropagation()} // Detiene eventos dentro del menú
+                        >
+                            <button
+                                type="button"
+                                className="note-card__menu-item"
+                                role="menuitem"
+                                data-action="edit"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpen(card);
+                                }}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                type="button"
+                                className="note-card__menu-item note-card__delete"
+                                role="menuitem"
+                                data-action="delete"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsDeleting(true);
+                                }}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                <div className="note-card__preview">
+                    <p
+                        className="note-card__preview-text"
+                        style={{ color: `color-mix(in srgb, ${colors.text} 70%, white)` }}
+                    >
+                        { previewContent }
+                    </p>
                 </div>
-            </header>
-            <div className="note-card__preview">
-                <p
-                    className="note-card__preview-text"
-                    style={{ color: `color-mix(in srgb, ${colors.text} 70%, white)` }}
-                >
-                    { previewContent }
-                </p>
-            </div>
-        </article>
+            </article>
+
+            {isDeleting && (
+                <CardDialogDelete 
+                    card={card} 
+                    onClose={() => setIsDeleting(false)} 
+                    onDelete={handleDeleteConfirm} 
+                />
+            )}
+        </>
     );
 }
 
+// Corregido: exportar Card en vez de CardDialog
 export default Card;

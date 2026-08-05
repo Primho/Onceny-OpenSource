@@ -1,27 +1,53 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
-function CardDialogDelete({ card, onDelete }) {
+function CardDialogDelete({ card, onClose, onDelete }) {
     const dialogRef = useRef(null);
 
+    useEffect(() => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+
+        if (card) {
+            dialog.showModal();
+        } else {
+            dialog.close();
+        }
+    }, [card]);
+
+    if (!card) return null;
+
     return (
-        <dialog id="delete-dialog" closedby="any" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
-        <form className="confirm-dialog" method="dialog">
-            <h2 id="delete-dialog-title" class="confirm-dialog__title">Delete Space</h2>
-            <p id="delete-dialog-desc" class="confirm-dialog__desc">
-                Are you sure you want to permanently delete this Space? This action cannot be undone.
-            </p>
-            <div class="confirm-dialog__actions">
-                <button type="button" class="confirm-dialog__btn confirm-dialog__btn--ghost"
-                    data-action="delete-cancel">
-                    Cancel
-                </button>
-                <button type="submit" value="confirm" class="confirm-dialog__btn confirm-dialog__btn--danger">
-                    Delete
-                </button>
+        <dialog 
+            ref={dialogRef} 
+            id="delete-dialog" 
+            aria-labelledby="delete-dialog-title" 
+            aria-describedby="delete-dialog-desc" 
+            onClose={onClose}
+        >
+            <div className="confirm-dialog">
+                <h2 id="delete-dialog-title" className="confirm-dialog__title">Delete Space</h2>
+                <p id="delete-dialog-desc" className="confirm-dialog__desc">
+                    Are you sure you want to permanently delete "{card.title || "this space"}"? This action cannot be undone.
+                </p>
+                <div className="confirm-dialog__actions">
+                    <button 
+                        type="button" 
+                        className="confirm-dialog__btn confirm-dialog__btn--ghost"
+                        onClick={onClose}
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="button" 
+                        className="confirm-dialog__btn confirm-dialog__btn--danger"
+                        onClick={() => onDelete(card.id)}
+                    >
+                        Delete
+                    </button>
+                </div>
             </div>
-        </form>
-    </dialog>
-    )
+        </dialog>
+    );
 }
 
 export default CardDialogDelete;

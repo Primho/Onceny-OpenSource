@@ -25,7 +25,7 @@ function SpacesPage() {
             color: "#f1f1f1",
             marker: ""
         }).then((newCard) => {
-            setCards(cards => [...cards, newCard]);
+            setCards(cards => [newCard, ...cards]);
             setActiveCard(newCard);
         });
     };
@@ -39,19 +39,7 @@ function SpacesPage() {
     // funcion para actualizar los spaces despues de editarlos
     const handleSpaceChange = (updatedCard) => {
         setActiveCard(updatedCard);
-        setCards(cards =>
-            cards.map(card =>
-                card.id === updatedCard.id
-                    ? {
-                        ...card,
-                        title: updatedCard.title,
-                        color: updatedCard.color,
-                        marker: updatedCard.marker,
-                        tag: updatedCard.tag
-                    }
-                    : card
-            )
-        );
+        setCards(cards => cards.map(card => card.id === updatedCard.id ? updatedCard : card))
     };
 
     // funcion para borrar el space y la card
