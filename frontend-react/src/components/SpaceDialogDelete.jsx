@@ -1,20 +1,20 @@
 import { useRef, useEffect } from "react";
 
-function CardDialogDelete({ card, onClose, onDelete }) {
+function SpaceDialogDelete({ space, onClose, onDelete }) {
     const dialogRef = useRef(null);
 
     useEffect(() => {
         const dialog = dialogRef.current;
         if (!dialog) return;
 
-        if (card) {
+        if (space) {
             dialog.showModal();
         } else {
             dialog.close();
         }
-    }, [card]);
+    }, [space]);
 
-    if (!card) return null;
+    if (!space) return null;
 
     return (
         <dialog 
@@ -27,7 +27,7 @@ function CardDialogDelete({ card, onClose, onDelete }) {
             <div className="confirm-dialog">
                 <h2 id="delete-dialog-title" className="confirm-dialog__title">Delete Space</h2>
                 <p id="delete-dialog-desc" className="confirm-dialog__desc">
-                    Are you sure you want to permanently delete "{card.title || "this space"}"? This action cannot be undone.
+                    Are you sure you want to permanently delete "{space.title || "this space"}"? This action cannot be undone.
                 </p>
                 <div className="confirm-dialog__actions">
                     <button 
@@ -50,4 +50,4 @@ function CardDialogDelete({ card, onClose, onDelete }) {
     );
 }
 
-export default CardDialogDelete;
+export default SpaceDialogDelete;

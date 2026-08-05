@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CardDialogDelete from "./CardDialogDelete";
+import SpaceDialogDelete from "./SpaceDialogDelete";
 
 const COLOR_MAP = {
     "#f1f1f1": { bg: "var(--card-gray)", text: "var(--card-gray-text)" },
@@ -10,18 +10,18 @@ const COLOR_MAP = {
     "#efeaff": { bg: "var(--card-purple)", text: "var(--card-purple-text)" },
 };
 
-function Card({ card, onOpen, onDelete }) {
+function Space({space, onOpen, onDelete }) {
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const colors = COLOR_MAP[card.color] ?? {
-        bg: card.color || "var(--card-gray)",
+    const colors = COLOR_MAP[space.color] ?? {
+        bg: space.color || "var(--card-gray)",
         text: "inherit",
     };
 
-    const displayTitle = card.title?.trim() || "Sin título";
-    const temporalClass = card.type === "temporal" ? " note-card--temporal" : "";
+    const displayTitle = space.title?.trim() || "Sin título";
+    const temporalClass = space.type === "temporal" ? " note-card--temporal" : "";
 
-    const firstBlockContent = card.preview;
+    const firstBlockContent = space.preview;
     const previewContent = firstBlockContent || "Add content by opening this space.";
 
     const handleDeleteConfirm = (id) => {
@@ -34,24 +34,24 @@ function Card({ card, onOpen, onDelete }) {
             <article
                 className={`note-card${temporalClass}`}
                 role="listitem"
-                data-id={card.id}
+                data-id={space.id}
                 style={{
                     backgroundColor: colors.bg,
-                    border: card.type === "temporal" ? `2px dashed ${colors.text}` : undefined
+                    border: space.type === "temporal" ? `2px dashed ${colors.text}` : undefined
                 }}
-                onClick={() => onOpen(card)}
+                onClick={() => onOpen(space)}
             >
                 <header className="note-card__header">
                     <div className="note-card__info">
                         <h2 className="note-card__title" style={{ color: colors.text }}>
                             {displayTitle}
                         </h2>
-                        {card.tag && (
+                        {space.tag && (
                             <span
                                 className="note-card__tag"
                                 style={{ color: `color-mix(in srgb, ${colors.text} 80%, white)` }}
                             >
-                                {card.tag}
+                                {space.tag}
                             </span>
                         )}
                     </div>
@@ -61,11 +61,11 @@ function Card({ card, onOpen, onDelete }) {
                             type="button"
                             className="note-card__menu-trigger"
                             aria-label={`Opciones de ${displayTitle}`}
-                            popoverTarget={`note-menu-${card.id}`}
+                            popoverTarget={`note-menu-${space.id}`}
                             onClick={(e) => {
                                 e.stopPropagation();
                             }}
-                            style={{ anchorName: `--note-anchor-${card.id}`}}
+                            style={{ anchorName: `--note-anchor-${space.id}`}}
                             aria-haspopup="menu"
                         >
                             <svg
@@ -78,10 +78,10 @@ function Card({ card, onOpen, onDelete }) {
                             </svg>
                         </button>
                         <div
-                            id={`note-menu-${card.id}`}
+                            id={`note-menu-${space.id}`}
                             popover="auto"
                             className="note-card__menu-panel"
-                            style={{ positionAnchor: `--note-anchor-${card.id}` }}
+                            style={{ positionAnchor: `--note-anchor-${space.id}` }}
                             role="menu"
                             aria-label="Space Actions"
                             onClick={(e) => e.stopPropagation()} // Detiene eventos dentro del menú
@@ -93,7 +93,7 @@ function Card({ card, onOpen, onDelete }) {
                                 data-action="edit"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    onOpen(card);
+                                    onOpen(space);
                                 }}
                             >
                                 Edit
@@ -124,8 +124,8 @@ function Card({ card, onOpen, onDelete }) {
             </article>
 
             {isDeleting && (
-                <CardDialogDelete 
-                    card={card} 
+                <SpaceDialogDelete 
+                    space={space} 
                     onClose={() => setIsDeleting(false)} 
                     onDelete={handleDeleteConfirm} 
                 />
@@ -135,4 +135,4 @@ function Card({ card, onOpen, onDelete }) {
 }
 
 // Corregido: exportar Card en vez de CardDialog
-export default Card;
+export default Space;

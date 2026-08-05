@@ -5,19 +5,19 @@ const parseJson = async (response) => {
     return response.json();
 };
 
-const getCards = () => {
+const getSpaces = () => {
     return fetch(`${API_URL}/cards`).then(parseJson);
 };
 
-const createCard = (cardData) => {
+const createSpace = (spaceData) => {
     return fetch(`${API_URL}/cards`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cardData),
+        body: JSON.stringify(spaceData),
     }).then(parseJson);
 };
 
-const updateCard = (id, payload) => {
+const updateSpace = (id, payload) => {
     return fetch(`${API_URL}/cards/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -25,11 +25,11 @@ const updateCard = (id, payload) => {
     }).then(parseJson);
 };
 
-const deleteCard = (id) => {
+const deleteSpace = (id) => {
     return fetch(`${API_URL}/cards/${id}`, { method: 'DELETE' }).then(parseJson)
 };
 
-const getCard = (id) => {
+const getSpace = (id) => {
     return fetch(`${API_URL}/cards/${id}`).then(parseJson);
 };
 
@@ -49,4 +49,4 @@ const updateBlock = (id, payload) => {
     }).then(parseJson);
 };
 
-export { getCards, createCard, updateCard, deleteCard, getCard, createBlock, updateBlock };
+export { getSpaces, createSpace, updateSpace, deleteSpace, getSpace, createBlock, updateBlock };

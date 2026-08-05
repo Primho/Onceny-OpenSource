@@ -1,4 +1,4 @@
-export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
+export default function SpaceDialogSettings({ space, onUpdateSpace, onSave }) {
     return (
       <section
         id="card-dialog-panel-config"
@@ -27,7 +27,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#f1f1f1"
+                    space.color === "#f1f1f1"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -39,7 +39,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Grey"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#f1f1f1"
                     })
                     }
@@ -48,7 +48,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#fdefee"
+                    space.color === "#fdefee"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -60,7 +60,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Red"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#fdefee"
                     })
                     }
@@ -69,7 +69,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#e6f2ff"
+                    space.color === "#e6f2ff"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -81,7 +81,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Blue"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#e6f2ff"
                     })
                     }
@@ -90,7 +90,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#e1fae7"
+                    space.color === "#e1fae7"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -102,7 +102,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Green"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#e1fae7"
                     })
                     }
@@ -111,7 +111,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#fcf5db"
+                    space.color === "#fcf5db"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -123,7 +123,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Yellow"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#fcf5db"
                     })
                   }
@@ -132,7 +132,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                 <button
                   type="button"
                   className={`color-picker__option ${
-                    card.color === "#efeaff"
+                    space.color === "#efeaff"
                       ? "color-picker__option--selected"
                       : ""
                   }`}
@@ -144,7 +144,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   aria-label="Purple"
                   onClick={() => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       color: "#efeaff"
                     })
                   }
@@ -157,7 +157,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
               <div className="card-dialog__field">
                 <label htmlFor="card-dialog-marker">Marker</label>
                 <input
-                  value={card.marker || ''}
+                  value={space.marker || ''}
                   type="text"
                   id="card-dialog-marker"
                   maxLength={2}
@@ -167,7 +167,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   inputMode="text"
                   onChange={(evnt) => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       marker: evnt.target.value
                     })
                   }}
@@ -176,7 +176,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
               <div className="card-dialog__field">
                 <label htmlFor="card-dialog-tags">Tags</label>
                 <input
-                  value={card.tag || ''}
+                  value={space.tag || ''}
                   type="text"
                   id="card-dialog-tags"
                   className="card-dialog__input"
@@ -184,7 +184,7 @@ export default function CardDialogSettings({ card, onUpdateSpace, onSave }) {
                   name="tag"
                   onChange={(evnt) => {
                     onUpdateSpace({
-                      ...card,
+                      ...space,
                       tag: evnt.target.value
                     })
                   }}

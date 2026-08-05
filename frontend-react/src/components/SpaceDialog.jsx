@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { updateCard, updateBlock } from "../api";
+import { updateSpace, updateBlock } from "../api";
 import Block from "./Block";
-import CardDialogSettings from "./CardDialogSettings";
+import SpaceDialogSettings from "./SpaceDialogSettings";
 
-function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
+function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
   const dialogRef = useRef(null);
-  const defaultPage = activeCard?.pages[0]?.id;
+  const defaultPage = activeSpace?.pages[0]?.id;
   const [pageId, setPageId] = useState(defaultPage);
   const saveTimers = useRef({});
   const [activeTab, setActiveTab] = useState("editor");
@@ -14,7 +14,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    if (activeCard) {
+    if (activeSpace) {
       setPageId(defaultPage);
       if (!dialog.open) {
         dialog.showModal();
@@ -24,7 +24,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
         dialog.close();
       }
     }
-  }, [activeCard?.id]);
+  }, [activeSpace?.id]);
 
   useEffect(() => {
     return () => {
@@ -32,14 +32,14 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
     };
   }, []);
 
-  if (!activeCard) return null;
+  if (!activeSpace) return null;
 
-  const activePage = activeCard.pages?.find((page) => page.id === pageId);
+  const activePage = activeSpace.pages?.find((page) => page.id === pageId);
 
   const handleBlockChange = (pageId, blockId, newContent) => {
     const spaceUpdated = {
-      ...activeCard,
-      pages: activeCard.pages.map((page) => {
+      ...activeSpace,
+      pages: activeSpace.pages.map((page) => {
         if (page.id !== pageId) return page;
 
         return {
@@ -63,26 +63,22 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
   };
 
   const handleSaveAndClose = async () => {
-    await updateCard(activeCard.id, {
-        title: activeCard.title
+    await updateSpace(activeSpace.id, {
+        title: activeSpace.title
     });
 
     onClose();
   };
 
   const handleSettingsSave = async () => {
-    await updateCard(activeCard.id, {
-        marker: activeCard.marker,
-        tag: activeCard.tag,
-        color: activeCard.color
+    await updateSpace(activeSpace.id, {
+        marker: activeSpace.marker,
+        tag: activeSpace.tag,
+        color: activeSpace.color
     });
 
     setActiveTab("editor");
   };
-
-  const handleOpenDeleteDialog = (card) => {
-    
-  }
 
   return (
     <dialog
@@ -132,7 +128,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
             role="tablist"
             aria-label="List of pages"
           >
-            {activeCard.pages?.map((page) => (
+            {activeSpace.pages?.map((page) => (
               <div key={page.id} className="card-dialog__page" role="presentation">
                 <button
                   type="button"
@@ -200,9 +196,9 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
                   placeholder="Untitled"
                   maxLength={80}
                   autoComplete="off"
-                  value={activeCard.title || ""}
+                  value={activeSpace.title || ""}
                   onChange={(e) => {
-                    onSpaceChange({ ...activeCard, title: e.target.value });
+                    onSpaceChange({ ...activeSpace, title: e.target.value });
                   }}
                 />
 
@@ -238,7 +234,7 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
               </div>
             </main>
           ) : (
-            <CardDialogSettings card={activeCard} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave}/>
+            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave}/>
           )}
         </div>
       </div>
@@ -246,4 +242,4 @@ function CardDialog({ card: activeCard, onSpaceChange, onClose }) {
   );
 }
 
-export default CardDialog;
+export default SpaceDialog;

@@ -1,61 +1,61 @@
 import { useState, useEffect, useRef } from "react";
-import { getCards, createCard, getCard, deleteCard } from '../api';
-import Card from '../components/Card';
-import CardDialog from "../components/CardDialog";
+import { getSpaces, createSpace, getSpace, deleteSpace } from '../api';
+import Space from '../components/Space';
+import SpaceDialog from "../components/SpaceDialog";
 import Header from "../components/Header";
 
 function SpacesPage() {
-    // Estado de las cards
-    const [cards, setCards] = useState([]);
-    const [activeCard, setActiveCard] = useState(null);
+    // Estado de los spaces
+    const [spaces, setSpaces] = useState([]);
+    const [activeSpace, setActiveSpace] = useState(null);
 
     // Declaracion de los UseEffects
     useEffect(() => {
-        // hacemos el fetch de cada card
-        getCards()
-        .then(cards => setCards(cards))
+        // hacemos el fetch de cada space
+        getSpaces()
+        .then(spaces => setSpaces(spaces))
         .catch(err => console.error(err));
     }, []);
 
     // funcion para crear el space
-    const handleCreateCard = (type) => {
-        createCard({
+    const handleCreateSpace = (type) => {
+        createSpace({
             title: "",
             type,
             color: "#f1f1f1",
             marker: ""
-        }).then((newCard) => {
-            setCards(cards => [newCard, ...cards]);
-            setActiveCard(newCard);
+        }).then((newSpace) => {
+            setSpaces(spaces => [newSpace, ...spaces]);
+            setActiveSpace(newSpace);
         });
     };
     
     // funcion para abrir el space
-    const handleOpenCard = (card) => {
-        getCard(card.id)
-        .then(fullCard => setActiveCard(fullCard))
+    const handleOpenSpace = (space) => {
+        getSpace(space.id)
+        .then(fullSpace => setActiveSpace(fullSpace))
     };
     
     // funcion para actualizar los spaces despues de editarlos
-    const handleSpaceChange = (updatedCard) => {
-        setActiveCard(updatedCard);
-        setCards(cards => cards.map(card => card.id === updatedCard.id ? updatedCard : card))
+    const handleSpaceChange = (updatedSpace) => {
+        setActiveSpace(updatedSpace);
+        setSpaces(spaces => spaces.map(space => space.id === updatedSpace.id ? updatedSpace : space))
     };
 
     // funcion para borrar el space y la card
     const handleDeleteSpace = (id) => {
-        deleteCard(id)
-        setCards(cards.filter(card => card.id !== id))
+        deleteSpace(id)
+        setSpaces(spaces.filter(space => space.id !== id))
     }
     return (
         <>
-            <Header onCreateSpace={handleCreateCard}/>
+            <Header onCreateSpace={handleCreateSpace}/>
             <section className="workspace__section">
                 <div id="workspace-grid" className="workspace__grid" role="list" aria-live="polite" aria-label="Spaces and Notes">
-                    {cards.map(card => <Card key={card.id} card={card} onOpen={handleOpenCard} onDelete={handleDeleteSpace}/>)}
+                    {spaces.map(space => <Space key={space.id} space={space} onOpen={handleOpenSpace} onDelete={handleDeleteSpace}/>)}
                 </div>
             </section>
-            <CardDialog card={activeCard} onSpaceChange={handleSpaceChange} onClose={() => setActiveCard(null)}/>
+            <SpaceDialog space={activeSpace} onSpaceChange={handleSpaceChange} onClose={() => setActiveSpace(null)}/>
         </>
     )
 }
