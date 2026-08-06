@@ -40,7 +40,7 @@ function SpaceDialogDelete({ space, onClose, onDelete }) {
                     <button 
                         type="button" 
                         className="confirm-dialog__btn confirm-dialog__btn--danger"
-                        onClick={() => onDelete(card.id)}
+                        onClick={() => onDelete(space.id)}
                     >
                         Delete
                     </button>

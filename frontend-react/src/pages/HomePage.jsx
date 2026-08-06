@@ -1,8 +1,10 @@
+import HomeCard from "../components/HomeCard";
+
 function HomePage() {
     return (
         <>
             <section className="home-grid">
-                You are in home page
+                <HomeCard />
             </section>
         </>
     )
