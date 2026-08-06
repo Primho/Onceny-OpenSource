@@ -82,14 +82,14 @@
 }
 
 /* --- Estado Activo (Mejora: Indicador visual en móvil) --- */
-.sidebar__nav-item--active .sidebar__nav-link {
+.sidebar__nav-link--active.sidebar__nav-link {
     background-color: var(--color-surface-hover);
     color: var(--color-text);
     position: relative;
 }
 
 /* Pequeño indicador de "activo" tipo barra lateral izquierda */
-.sidebar__nav-item--active .sidebar__nav-link::before {
+.sidebar__nav-link--active.sidebar__nav-link::before {
     content: "";
     position: absolute;
     left: 0;

@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { getSpaces } from "../api"
 
 function HomeCard() {
-    let numSpaces = 0;
-    getSpaces().then(space => { numSpaces += 1 } )
-    console.log(numSpaces);
+    const [numSpaces, setNumSpaces] = useState(0);
+    getSpaces().then(dtaSpaces => setNumSpaces(dtaSpaces.length))
+
+
     return (
         <article className="home-card">
-            This is a card
+            {numSpaces}
         </article>
     )
 }
