@@ -25,9 +25,15 @@ def create_block(page_id):
         (page_id,),
     ).fetchone()['max_pos']
 
-    # Permite insertar en una posición concreta (ej. justo después del bloque actual);
-    # si no se manda, va al final.
-    position = data.get('position', max_pos + 1)
+    # Si se pasa una posición específica, desplazamos los bloques posteriores
+    if 'position' in data and data['position'] is not None:
+        position = int(data['position'])
+        conn.execute(
+            'UPDATE blocks SET position = position + 1 WHERE page_id = ? AND position >= ?',
+            (page_id, position),
+        )
+    else:
+        position = max_pos + 1
 
     cursor = conn.execute(
         'INSERT INTO blocks (page_id, type, content, checked, position) VALUES (?, ?, ?, ?, ?)',
@@ -71,9 +77,20 @@ def update_block(id):
     return jsonify({'message': 'Block edited'})
 
 
+@blocks_bp.route('/api/blocks/<int:id>', methods=['DELETE'])
+def delete_block(id):
+    conn = get_db()
+    cursor = conn.execute('DELETE FROM blocks WHERE id = ?', (id,))
+    if cursor.rowcount == 0:
+        conn.close()
+        return jsonify({'message': 'Block not found'}), 404
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Block deleted'})
+
+
 @blocks_bp.route('/api/pages/<int:page_id>/blocks/reorder', methods=['PUT'])
 def reorder_blocks(page_id):
-    # Espera: { "order": [block_id_1, block_id_2, ...] } en el nuevo orden.
     data = request.get_json() or {}
     order = data.get('order', [])
     conn = get_db()
@@ -87,12 +104,3 @@ def reorder_blocks(page_id):
     conn.commit()
     conn.close()
     return jsonify({'message': 'Blocks reordered'})
-
-
-@blocks_bp.route('/api/blocks/<int:id>', methods=['DELETE'])
-def delete_block(id):
-    conn = get_db()
-    conn.execute('DELETE FROM blocks WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'message': 'Block deleted'})

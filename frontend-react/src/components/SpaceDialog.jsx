@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { updateSpace, updateBlock } from "../api";
+import { updateSpace, updateBlock, createBlock, deleteBlock, reorderBlocks } from "../api";
 import Block from "./Block";
 import SpaceDialogSettings from "./SpaceDialogSettings";
 
@@ -9,6 +9,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
   const [pageId, setPageId] = useState(defaultPage);
   const saveTimers = useRef({});
   const [activeTab, setActiveTab] = useState("editor");
+
+  const [focusedBlockId, setFocusedBlockId] = useState(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -44,21 +46,23 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
 
         return {
           ...page,
-          blocks: page.blocks.map((block) => {
-            if (block.id !== blockId) return block;
-            return {
-              ...block,
-              content: newContent,
-            };
-          }),
+          blocks: page.blocks.map((block) =>
+            block.id === blockId ? { ...block, content: newContent } : block
+          ),
         };
       }),
     };
+
     onSpaceChange(spaceUpdated);
 
-    clearTimeout(saveTimers.current[blockId]);
+    if (saveTimers.current[blockId]) {
+      clearTimeout(saveTimers.current[blockId]);
+    }
+
     saveTimers.current[blockId] = setTimeout(() => {
-      updateBlock(blockId, { content: newContent });
+      updateBlock(blockId, { content: newContent }).catch((err) =>
+        console.error("Error guardando el bloque:", err)
+      );
     }, 500);
   };
 
@@ -78,6 +82,94 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     });
 
     setActiveTab("editor");
+  };
+
+  // 1. Al crear un bloque nuevo (con Enter)
+  const handleCreateBlock = async (pageId, currentBlockId) => {
+    const activePage = activeSpace.pages.find((p) => p.id === pageId);
+    if (!activePage) return;
+
+    const currentIndex = activePage.blocks.findIndex((b) => b.id === currentBlockId);
+    const targetPosition = currentIndex !== -1 ? currentIndex + 1 : activePage.blocks.length;
+
+    try {
+      // Creamos el bloque en el backend
+      const newBlock = await createBlock(pageId, {
+        type: "text",
+        content: "",
+        position: targetPosition
+      });
+
+      // Insertamos el bloque en la posición correcta en el estado local de React
+      const updatedBlocks = [...activePage.blocks];
+      if (currentIndex !== -1) {
+        updatedBlocks.splice(currentIndex + 1, 0, newBlock);
+      } else {
+        updatedBlocks.push(newBlock);
+      }
+
+      // Actualizamos el estado local del espacio
+      const updatedSpace = {
+        ...activeSpace,
+        pages: activeSpace.pages.map((p) =>
+          p.id === pageId ? { ...p, blocks: updatedBlocks } : p
+        )
+      };
+      onSpaceChange(updatedSpace);
+      setFocusedBlockId(newBlock.id);
+
+      // Sincronizamos las posiciones reales en la DB enviando el array completo de IDs
+      const blockIdsOrder = updatedBlocks.map((b) => b.id);
+      await reorderBlocks(pageId, { order: blockIdsOrder });
+
+    } catch (err) {
+      console.error("Error creating block:", err);
+    }
+  };
+
+  const handleDeleteBlock = async (pageId, blockId) => {
+    const activePage = activeSpace.pages.find((p) => p.id === pageId);
+    if (!activePage || activePage.blocks.length <= 1) return; // Evitar borrar si es el único bloque
+
+    const updatedBlocks = activePage.blocks.filter((b) => b.id !== blockId);
+    const deletedIndex = activePage.blocks.findIndex((b) => b.id === blockId);
+    const nextFocusBlock = updatedBlocks[Math.max(0, deletedIndex - 1)];
+
+    const updatedSpace = {
+      ...activeSpace,
+      pages: activeSpace.pages.map((p) =>
+        p.id === pageId ? { ...p, blocks: updatedBlocks } : p
+      )
+    };
+
+    onSpaceChange(updatedSpace);
+    if (nextFocusBlock) setFocusedBlockId(nextFocusBlock.id);
+
+    try {
+      await deleteBlock(blockId);
+      // Sincronizamos las posiciones restantes con el backend
+      const blockIdsOrder = updatedBlocks.map((b) => b.id);
+      await reorderBlocks(pageId, { order: blockIdsOrder });
+    } catch (err) {
+      console.error("Error deleting block:", err);
+    }
+  };
+
+  const handleReorderBlocks = async (pageId, newBlocks) => {
+    const spaceUpdated = {
+      ...activeSpace,
+      pages: activeSpace.pages.map((p) => {
+        if (p.id !== pageId) return p;
+        return { ...p, blocks: newBlocks };
+      }),
+    };
+
+    onSpaceChange(spaceUpdated);
+
+    const orderPayload = { order: newBlocks.map((b) => b.id) };
+    await reorderBlocks(pageId, orderPayload).catch((err) =>
+      console.error("Error reordenando bloques:", err)
+    );
   };
 
   return (
@@ -226,9 +318,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
                   <Block
                     key={block.id}
                     block={block}
-                    onChange={(newContent) =>
-                      handleBlockChange(activePage.id, block.id, newContent)
-                    }
+                    onEnter={() => {handleCreateBlock(activePage.id, block.id)}}
+                    onChange={(newContent) => handleBlockChange(activePage.id, block.id, newContent) }
+                    onDelete={() => handleDeleteBlock(activePage.id, block.id)}
+                    shouldFocus={block.id === focusedBlockId}
                   />
                 ))}
               </div>
