@@ -8,6 +8,9 @@ import LandingIntroPage from '../pages/LandingIntroPage';
 import AboutPage from '../pages/AboutPage';
 import HomePage from '../pages/HomePage';
 import SpacesPage from '../pages/SpacesPage';
+import FavoritesPage from '../pages/FavoritesPage';
+import FoldersPage from '../pages/FoldersPage';
+import SharedPage from '../pages/SharedPage';
 
 import AuthForm from '../components/AuthForm';
 
@@ -51,6 +54,18 @@ const router = createBrowserRouter([
       {
         path: 'spaces',
         element: <SpacesPage />
+      },
+      {
+        path: 'favorites',
+        element: <FavoritesPage />
+      },
+      {
+        path: 'folders',
+        element: <FoldersPage />
+      },
+      {
+        path: 'shared',
+        element: <SharedPage />
       }
     ]
   }
