@@ -25,7 +25,7 @@ function Sidebar() {
         <nav className="sidebar__nav" aria-label="Principal menu">
             <ul className="sidebar__nav-list">
                 <li className="sidebar__nav-item">
-                    <NavLink to="/app/home" className={({ isActive }) => handleLink(isActive)}>
+                    <NavLink to="/app/" className={({ isActive }) => handleLink(isActive)}>
                         <svg className="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-home"></use>
                         </svg>

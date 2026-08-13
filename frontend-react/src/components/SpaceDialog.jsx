@@ -12,6 +12,31 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
 
   const [focusedBlockId, setFocusedBlockId] = useState(null);
 
+  // DIALOG SETTINGS COMPACT MODE
+  const [userMode, setUserMode] = useState(localStorage.getItem("compact"));
+
+  // 1. CONTROL INICIAL: Solo aplicamos si el tema guardado es 'compact'
+  if (userMode === "true") {
+    cardDialog.classList.add("compact-mode");
+    if (toggleCompactMode) toggleCompactMode.checked = true;
+  }
+
+  // 2. EVENTO CLICK
+  if (toggleCompactMode) {
+    toggleCompactMode.addEventListener("change", () => {
+      if (toggleCompactMode.checked) {
+        cardDialog.classList.add("compact-mode");
+        localStorage.setItem("compact", true);
+        return;
+      }
+      cardDialog.classList.remove("compact-mode");
+      localStorage.setItem("compact", false);
+    });
+  }
+
+  
+
+  // Cuando el espacio activo cambia, actualizamos el pageId y abrimos/cerramos el diálogo según corresponda 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -327,7 +352,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
               </div>
             </main>
           ) : (
-            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave}/>
+            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} onClick={handleSettingsClick}/>
           )}
         </div>
       </div>
