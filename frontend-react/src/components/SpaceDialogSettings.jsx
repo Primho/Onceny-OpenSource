@@ -1,5 +1,23 @@
-export default function SpaceDialogSettings({ space, onUpdateSpace, onSave }) {
-    return (
+import { useState, useRef } from 'react';
+
+export function InterruptorEjemplo() {
+  return (
+    <input useRef={toggleRef} type="checkbox" className="compact-toggle" onChange={handleCompactMode} />
+  )
+}
+
+
+function SpaceDialogSettings({ space, onUpdateSpace, onSave, onClick }) {
+  
+  // DIALOG SETTINGS COMPACT MODE
+  const [userMode, setUserMode] = useState(localStorage.getItem("compact"));
+  const toggleRef = useRef(null);
+
+  const handleCompactMode = () => {
+    console.log(toggleRef.current);
+  }
+
+  return (
       <section
         id="card-dialog-panel-config"
         className="card-dialog__panel card-dialog__panel--active"
@@ -207,7 +225,7 @@ export default function SpaceDialogSettings({ space, onUpdateSpace, onSave }) {
                   </div>
                 </div>
                 <label className="switch">
-                  <input type="checkbox" className="compact-toggle" />
+                  
                   <span className="slider"></span>
                 </label>
               </div>
@@ -287,3 +305,5 @@ export default function SpaceDialogSettings({ space, onUpdateSpace, onSave }) {
       </section>
     );
 }
+
+export default SpaceDialogSettings;
