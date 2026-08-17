@@ -1,22 +1,4 @@
-import { useState, useRef } from 'react';
-
-export function InterruptorEjemplo() {
-  return (
-    <input useRef={toggleRef} type="checkbox" className="compact-toggle" onChange={handleCompactMode} />
-  )
-}
-
-
-function SpaceDialogSettings({ space, onUpdateSpace, onSave, onClick }) {
-  
-  // DIALOG SETTINGS COMPACT MODE
-  const [userMode, setUserMode] = useState(localStorage.getItem("compact"));
-  const toggleRef = useRef(null);
-
-  const handleCompactMode = () => {
-    console.log(toggleRef.current);
-  }
-
+function SpaceDialogSettings({ space, onUpdateSpace, onSave, compactMode, onCompactModeChange }) {
   return (
       <section
         id="card-dialog-panel-config"
@@ -225,7 +207,7 @@ function SpaceDialogSettings({ space, onUpdateSpace, onSave, onClick }) {
                   </div>
                 </div>
                 <label className="switch">
-                  
+                  <input type="checkbox" className="compact-toggle" checked={compactMode} onChange={onCompactModeChange} />
                   <span className="slider"></span>
                 </label>
               </div>

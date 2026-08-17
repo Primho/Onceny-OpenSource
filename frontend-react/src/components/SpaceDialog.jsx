@@ -12,6 +12,19 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
 
   const [focusedBlockId, setFocusedBlockId] = useState(null);
 
+  const [userMode, setUserMode] = useState(
+    localStorage.getItem("compact") === "true"
+  );
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+
+    if (!dialog) return;
+
+    dialog.classList.toggle("compact-mode", userMode);
+    localStorage.setItem("compact", String(userMode));
+  }, [userMode]);
+
   // Cuando el espacio activo cambia, actualizamos el pageId y abrimos/cerramos el diálogo según corresponda 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -173,6 +186,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     );
   };
 
+  const handleCompactMode = (event) => {
+    setUserMode(event.target.checked);
+  };
+
   return (
     <dialog
       ref={dialogRef}
@@ -328,7 +345,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
               </div>
             </main>
           ) : (
-            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} />
+            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
           )}
         </div>
       </div>
