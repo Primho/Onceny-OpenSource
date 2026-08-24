@@ -55,7 +55,7 @@
 }
 
 .sidebar__nav-link,
-.sidebar__settings-link {
+.sidebar__settings-btn {
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -63,8 +63,10 @@
     width: 48px;
     height: 48px;
     color: var(--color-text-muted);
+    border: none;
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
+    background-color: inherit;
 
     & svg { 
         width: 24px; height: 24px; 
@@ -73,11 +75,11 @@
     &:hover {
         color: var(--color-text);
         background-color: var(--color-surface-hover);
+        cursor: pointer;
     }
 }
 
-.sidebar__nav-text,
-.sidebar__settings-link span {
+.sidebar__nav-text  {
     display: none;
 }
 
@@ -151,10 +153,11 @@
         padding-inline: var(--space-md);
     }
 
-    .sidebar__nav-text,
-    .sidebar__settings-link span {
+    .sidebar__nav-text {
         display: inline;
         font-weight: 500;
+        font-size: var(--font-md);
+        font-family: var(--font-family);
     }
 
     /* Ajuste del indicador activo para escritorio */

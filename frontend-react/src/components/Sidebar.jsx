@@ -69,11 +69,11 @@ function Sidebar() {
 
         <div className="sidebar__settings">
             <ul className="sidebar__settings-list">
-                <button className="sidebar__settings-item sidebar__settings-link">
+                <button className="sidebar__settings-item sidebar__settings-link sidebar__settings-btn">
                     <svg className="icon sidebar__settings-icon" aria-hidden="true" focusable="false">
                         <use href="../assets/icons/sprite.svg#icon-settings"></use>
                     </svg>
-                    <span>Settings</span>
+                    <span className="sidebar__nav-text">Settings</span>
                 </button>
             </ul>
         </div>
