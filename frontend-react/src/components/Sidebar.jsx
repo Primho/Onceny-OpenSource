@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import AppSettingsDialog from "./AppSettingsDialog";
 
 function Sidebar() {
+
+    const [showSettings, setShowSettings] = useState(false);
 
     const handleLink = (isActive) => {
         if (isActive === true) {
@@ -25,7 +29,7 @@ function Sidebar() {
         <nav className="sidebar__nav" aria-label="Principal menu">
             <ul className="sidebar__nav-list">
                 <li className="sidebar__nav-item">
-                    <NavLink to="/app/" className={({ isActive }) => handleLink(isActive)}>
+                    <NavLink to="/app/" end className={({ isActive }) => handleLink(isActive)}>
                         <svg className="icon" aria-hidden="true" focusable="false">
                             <use href="../assets/icons/sprite.svg#icon-home"></use>
                         </svg>
@@ -69,7 +73,7 @@ function Sidebar() {
 
         <div className="sidebar__settings">
             <ul className="sidebar__settings-list">
-                <button className="sidebar__settings-item sidebar__settings-link sidebar__settings-btn">
+                <button className="sidebar__settings-item sidebar__settings-link sidebar__settings-btn" onClick={() => setShowSettings(true)}>
                     <svg className="icon sidebar__settings-icon" aria-hidden="true" focusable="false">
                         <use href="../assets/icons/sprite.svg#icon-settings"></use>
                     </svg>
@@ -77,6 +81,11 @@ function Sidebar() {
                 </button>
             </ul>
         </div>
+
+        <AppSettingsDialog
+            isOpen={showSettings}
+            onClose={() => setShowSettings(false)}
+        />
     </aside>
     );
 }

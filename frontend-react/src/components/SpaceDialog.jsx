@@ -48,7 +48,9 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     };
   }, []);
 
-  if (!activeSpace) return null;
+  if (!activeSpace) {
+    return <dialog ref={dialogRef} id="card-dialog" onClose={onClose} />;
+  }
 
   const activePage = activeSpace.pages?.find((page) => page.id === pageId);
 
@@ -85,7 +87,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
         title: activeSpace.title
     });
 
-    onClose();
+    dialogRef.current?.close();
   };
 
   const handleSettingsSave = async () => {

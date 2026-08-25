@@ -90,19 +90,24 @@ dialog[open]::backdrop {
         opacity var(--transition-base),
         display var(--transition-base) allow-discrete,
         overlay var(--transition-base) allow-discrete;
+    transition-behavior: allow-discrete;
+}
 
-    &[open] {
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: block;
-        opacity: 1;
-        scale: 1;
+#card-dialog[open],
+#settings-dialog[open] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    opacity: 1;
+    scale: 1;
+}
 
-        @starting-style {
-            opacity: 0;
-            scale: 0.96;
-        }
+@starting-style {
+    #card-dialog[open],
+    #settings-dialog[open] {
+        opacity: 0;
+        scale: 0.96;
     }
 }
 
@@ -955,7 +960,14 @@ dialog[open]::backdrop {
         border-radius: var(--radius-lg);
         border: 2px solid var(--color-border);
 
-        transition: width var(--transition-base), height var(--transition-base);
+        transition:
+            width var(--transition-base),
+            height var(--transition-base),
+            scale var(--transition-base),
+            opacity var(--transition-base),
+            display var(--transition-base) allow-discrete,
+            overlay var(--transition-base) allow-discrete;
+        transition-behavior: allow-discrete;
     }
 
     #card-dialog.compact-mode {
