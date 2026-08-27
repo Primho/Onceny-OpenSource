@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import { updateSpace, updateBlock, createBlock, deleteBlock, reorderBlocks } from "../api";
+import { updateSpace, updatePage, deletePage, updateBlock, createPage, createBlock, deleteBlock, reorderBlocks } from "../api";
 import Block from "./Block";
 import SpaceDialogSettings from "./SpaceDialogSettings";
 
 function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
   const dialogRef = useRef(null);
-  const defaultPage = activeSpace?.pages[0]?.id;
+  const pageMenuRef = useRef(null);
+  const defaultPage = activeSpace?.pages.at(-1);
   const [pageId, setPageId] = useState(defaultPage);
   const saveTimers = useRef({});
   const [activeTab, setActiveTab] = useState("editor");
 
   const [focusedBlockId, setFocusedBlockId] = useState(null);
+  const [pageMenuTargetId, setPageMenuTargetId] = useState(null);
 
   const [userMode, setUserMode] = useState(
     localStorage.getItem("compact") === "true"
@@ -31,7 +33,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     if (!dialog) return;
 
     if (activeSpace) {
-      setPageId(defaultPage);
+      setPageId(defaultPage?.id);
+      setFocusedBlockId(defaultPage?.blocks?.at(-1)?.id ?? null);
       if (!dialog.open) {
         dialog.showModal();
       }
@@ -98,6 +101,114 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     });
 
     setActiveTab("editor");
+  };
+
+  const handleCreatePage = async () => {
+    try {
+      const newPage = await createPage(activeSpace.id, {
+        title: `Page ${activeSpace.pages.length + 1}`,
+        emoji: "📄",
+      });
+
+      onSpaceChange({
+        ...activeSpace,
+        pages: [...activeSpace.pages, newPage],
+      });
+      setPageId(newPage.id);
+      setActiveTab("editor");
+      setFocusedBlockId(newPage.blocks?.[0]?.id ?? null);
+    } catch (err) {
+      console.error("Error creando la página:", err);
+    }
+  };
+
+  const handleOpenPageMenu = (event, pageId) => {
+    event.stopPropagation();
+    setPageMenuTargetId(pageId);
+
+    const menu = pageMenuRef.current;
+    if (!menu) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    menu.style.position = "fixed";
+    menu.style.margin = "0";
+    menu.style.top = `${rect.bottom + 4}px`;
+    menu.style.left = `${Math.max(8, rect.right - 150)}px`;
+
+    if (!menu.matches(":popover-open")) {
+      menu.showPopover();
+    }
+  };
+
+  const handlePageMenuAction = async (action) => {
+    const page = activeSpace.pages.find((item) => item.id === pageMenuTargetId);
+    const closePageMenu = () => {
+      pageMenuRef.current?.hidePopover();
+      setPageMenuTargetId(null);
+    };
+
+    if (!page || action === "duplicate") {
+      closePageMenu();
+      return;
+    }
+
+    if (action === "rename") {
+      const title = window.prompt("Rename the page", page.title || "");
+      if (title === null) {
+        closePageMenu();
+        return;
+      }
+
+      try {
+        const nextTitle = title.trim() || "Untitled";
+        await updatePage(page.id, { title: nextTitle });
+        onSpaceChange({
+          ...activeSpace,
+          pages: activeSpace.pages.map((item) =>
+            item.id === page.id ? { ...item, title: nextTitle } : item
+          ),
+        });
+      } catch (err) {
+        console.error("Error renombrando la página:", err);
+      }
+    }
+
+    if (action === "change-emoji") {
+      const emoji = window.prompt("Type an emoji", page.emoji || "📄");
+      if (emoji === null) {
+        closePageMenu();
+        return;
+      }
+
+      try {
+        const nextEmoji = emoji.trim() || "📄";
+        await updatePage(page.id, { emoji: nextEmoji });
+        onSpaceChange({
+          ...activeSpace,
+          pages: activeSpace.pages.map((item) =>
+            item.id === page.id ? { ...item, emoji: nextEmoji } : item
+          ),
+        });
+      } catch (err) {
+        console.error("Error cambiando el emoji:", err);
+      }
+    }
+
+    if (action === "delete") {
+      try {
+        await deletePage(page.id);
+        const remainingPages = activeSpace.pages.filter((item) => item.id !== page.id);
+        onSpaceChange({ ...activeSpace, pages: remainingPages });
+        if (page.id === pageId) {
+          setPageId(remainingPages[0]?.id);
+          setFocusedBlockId(null);
+        }
+      } catch (err) {
+        console.error("Error eliminando la página:", err);
+      }
+    }
+
+    closePageMenu();
   };
 
   // 1. Al crear un bloque nuevo (con Enter)
@@ -226,6 +337,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
               type="button"
               id="card-dialog-page-add"
               className="card-dialog__page-add"
+              onClick={handleCreatePage}
             >
               <svg className="icon icon-add-page" aria-hidden="true" focusable="false">
                 <use href="../assets/icons/sprite.svg#icon-add"></use>
@@ -263,7 +375,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
                   type="button"
                   className="card-dialog__page-menu"
                   aria-label="Page Actions"
-                  title="Coming soon"
+                  aria-controls="card-page-menu"
+                  onClick={(event) => handleOpenPageMenu(event, page.id)}
                 >
                   <svg className="icon" aria-hidden="true" focusable="false">
                     <use href="../assets/icons/sprite.svg#icon-more-vert"></use>
@@ -291,6 +404,33 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
             </button>
           </div>
         </nav>
+
+        <div ref={pageMenuRef} id="card-page-menu" popover="auto" className="note-card__menu-panel" role="menu" aria-label="Acciones de la página">
+          <button type="button" className="note-card__menu-item page" role="menuitem" data-action="rename" onClick={() => handlePageMenuAction("rename")}>
+                <svg className="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-edit"></use>
+                </svg>
+                Rename
+            </button>
+            <button type="button" className="note-card__menu-item page" role="menuitem" data-action="duplicate">
+                <svg className="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-copy"></use>
+                </svg>
+                Duplicate
+            </button>
+            <button type="button" className="note-card__menu-item page" role="menuitem" data-action="change-emoji" onClick={() => handlePageMenuAction("change-emoji")}>
+                <svg className="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-add-reaction"></use>
+                </svg>
+                Change Emoji
+            </button>
+            <button type="button" className="note-card__menu-item note-card__delete page" role="menuitem" data-action="delete" onClick={() => handlePageMenuAction("delete")}>
+                <svg className="icon menu-item" aria-hidden="true" focusable="false">
+                    <use href="../assets/icons/sprite.svg#icon-trash-can"></use>
+                </svg>
+                Delete
+            </button>
+        </div>
 
         {/* Panel Principal */}
         <div className="card-dialog__main">

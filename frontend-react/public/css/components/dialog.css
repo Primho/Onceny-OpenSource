@@ -236,6 +236,8 @@ dialog[open]::backdrop {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    min-width: 0;
     min-height: 2.5rem;
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-fast);
@@ -252,6 +254,7 @@ dialog[open]::backdrop {
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
+    flex: 0 0 1.5rem;
     margin-inline-end: var(--space-md);
     border: none;
     border-radius: 6px;
@@ -328,7 +331,9 @@ dialog[open]::backdrop {
 .card-dialog__page-tab {
     color: var(--color-text-muted);
     justify-content: flex-start;
-    max-width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
 }
 
 .card-dialog__page-tab:hover,
@@ -344,6 +349,7 @@ dialog[open]::backdrop {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
     flex: 1;
     text-align: left;
 }

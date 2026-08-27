@@ -23,6 +23,20 @@ const deleteSpace = (id) => fetch(`${API_URL}/cards/${id}`, { method: 'DELETE' }
 
 const getSpace = (id) => fetch(`${API_URL}/cards/${id}`).then(parseJson);
 
+const createPage = (cardId, pageData) => fetch(`${API_URL}/cards/${cardId}/pages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pageData),
+}).then(parseJson);
+
+const updatePage = (id, payload) => fetch(`${API_URL}/pages/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+}).then(parseJson);
+
+const deletePage = (id) => fetch(`${API_URL}/pages/${id}`, { method: 'DELETE' }).then(parseJson);
+
 const createBlock = (pageId, payload) => fetch(`${API_URL}/pages/${pageId}/blocks`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -49,6 +63,9 @@ export {
     updateSpace, 
     deleteSpace, 
     getSpace, 
+    createPage,
+    updatePage,
+    deletePage,
     createBlock, 
     updateBlock, 
     deleteBlock, 
