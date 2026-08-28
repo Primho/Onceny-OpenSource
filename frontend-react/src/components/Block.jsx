@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function Block({ block, onEnter, onChange, shouldFocus, onDelete }) {
+export default function Block({ block, onEnter, onChange, onTypeChange, shouldFocus, onDelete }) {
     const ref = useRef(null);
 
    // 1. Sincronizar el contenido
@@ -33,6 +33,17 @@ export default function Block({ block, onEnter, onChange, shouldFocus, onDelete 
         }
     }, [shouldFocus]);
 
+    const handleInput = (event) => {
+        const content = event.currentTarget.innerText;
+        onChange(content);
+
+        if (/(?:^|\s):[a-zA-Z]*$/.test(content)) {
+            onTypeChange?.("command", null, ref.current);
+        } else {
+            onTypeChange?.("dismiss", null, ref.current);
+        }
+    };
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             if (event.shiftKey) {
@@ -58,13 +69,22 @@ export default function Block({ block, onEnter, onChange, shouldFocus, onDelete 
 
     return (
         <div className="editor-block-wrapper" data-block-id={`default-${block.id}`}>
+            {block.type === "task" && (
+                <input
+                    type="checkbox"
+                    className="editor-block__task-checkbox"
+                    checked={block.checked}
+                    onChange={(event) => onTypeChange?.("checked", event.target.checked)}
+                    aria-label="Mark task as complete"
+                />
+            )}
             <div
                 ref={ref}
-                className="editor-block editor-block--text"
+                className={`editor-block editor-block--${block.type || "text"}`}
                 aria-placeholder="Type your content here or use ':' for commands..."
                 contentEditable
                 suppressContentEditableWarning
-                onInput={(e) => onChange(e.currentTarget.innerText)}
+                onInput={handleInput}
                 onKeyDown={handleKeyDown}
             />
         </div>

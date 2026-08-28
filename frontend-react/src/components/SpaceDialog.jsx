@@ -3,16 +3,17 @@ import { updateSpace, updatePage, deletePage, updateBlock, createPage, createBlo
 import Block from "./Block";
 import SpaceDialogSettings from "./SpaceDialogSettings";
 
-function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
+function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }) {
   const dialogRef = useRef(null);
   const pageMenuRef = useRef(null);
+  const isSavingRef = useRef(false);
   const defaultPage = activeSpace?.pages.at(-1);
   const [pageId, setPageId] = useState(defaultPage);
-  const saveTimers = useRef({});
   const [activeTab, setActiveTab] = useState("editor");
 
   const [focusedBlockId, setFocusedBlockId] = useState(null);
   const [pageMenuTargetId, setPageMenuTargetId] = useState(null);
+  const [blockMenuTarget, setBlockMenuTarget] = useState(null);
 
   const [userMode, setUserMode] = useState(
     localStorage.getItem("compact") === "true"
@@ -45,12 +46,6 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
     }
   }, [activeSpace?.id]);
 
-  useEffect(() => {
-    return () => {
-      Object.values(saveTimers.current).forEach(clearTimeout);
-    };
-  }, []);
-
   if (!activeSpace) {
     return <dialog ref={dialogRef} id="card-dialog" onClose={onClose} />;
   }
@@ -74,23 +69,99 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
 
     onSpaceChange(spaceUpdated);
 
-    if (saveTimers.current[blockId]) {
-      clearTimeout(saveTimers.current[blockId]);
+  };
+
+  const handleBlockTypeChange = (pageId, blockId, action, value, blockElement) => {
+    if (action === "dismiss") {
+      if (blockMenuTarget?.menu?.matches(":popover-open")) {
+        blockMenuTarget.menu.hidePopover();
+      }
+      setBlockMenuTarget(null);
+      return;
     }
 
-    saveTimers.current[blockId] = setTimeout(() => {
-      updateBlock(blockId, { content: newContent }).catch((err) =>
-        console.error("Error guardando el bloque:", err)
-      );
-    }, 500);
+    if (action === "command") {
+      const menu = document.getElementById("card-dialog-block-menu");
+      if (!menu || !blockElement) return;
+
+      const rect = blockElement.getBoundingClientRect();
+      menu.style.position = "fixed";
+      menu.style.margin = "0";
+      menu.style.top = `${rect.bottom + 8}px`;
+      menu.style.left = `${rect.left}px`;
+      setBlockMenuTarget({ menu, pageId, blockId, blockElement });
+      if (!menu.matches(":popover-open")) menu.showPopover();
+      return;
+    }
+
+    if (!action) return;
+    const nextBlock = action === "checked" ? { checked: value } : { type: value };
+    const updatedSpace = {
+      ...activeSpace,
+      pages: activeSpace.pages.map((page) => page.id !== pageId ? page : {
+        ...page,
+        blocks: page.blocks.map((block) => block.id === blockId ? { ...block, ...nextBlock } : block),
+      }),
+    };
+    onSpaceChange(updatedSpace);
+  };
+
+  const handleBlockMenuAction = (type) => {
+    if (!blockMenuTarget) return;
+    const { menu, pageId, blockId, blockElement } = blockMenuTarget;
+    const content = blockElement?.innerText || "";
+    const contentWithoutCommand = content.replace(/\s*:[a-zA-Z]*$/, "");
+
+    if (blockElement && content !== contentWithoutCommand) {
+      blockElement.innerText = contentWithoutCommand;
+      handleBlockChange(pageId, blockId, contentWithoutCommand);
+    }
+
+    handleBlockTypeChange(pageId, blockId, "type", type);
+    menu.hidePopover();
+    setBlockMenuTarget(null);
+
+    requestAnimationFrame(() => {
+      blockElement?.focus();
+      if (!blockElement || typeof window.getSelection === "undefined") return;
+
+      const range = document.createRange();
+      range.selectNodeContents(blockElement);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    });
   };
 
   const handleSaveAndClose = async () => {
-    await updateSpace(activeSpace.id, {
-        title: activeSpace.title
-    });
+    isSavingRef.current = true;
 
-    dialogRef.current?.close();
+    try {
+      await updateSpace(activeSpace.id, {
+        title: activeSpace.title,
+        marker: activeSpace.marker,
+        tag: activeSpace.tag,
+        color: activeSpace.color,
+      });
+
+      const blocks = activeSpace.pages.flatMap((page) => page.blocks || []);
+      await Promise.all(blocks.map((block) => updateBlock(block.id, {
+        type: block.type,
+        content: block.content,
+        checked: block.checked,
+      })));
+
+      const firstBlock = activeSpace.pages[0]?.blocks?.[0];
+      onSaveSpace({
+        ...activeSpace,
+        preview: firstBlock?.content || "",
+      });
+      dialogRef.current?.close();
+    } catch (err) {
+      isSavingRef.current = false;
+      console.error("Error guardando el espacio:", err);
+    }
   };
 
   const handleSettingsSave = async () => {
@@ -310,7 +381,14 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
       aria-modal="true"
       aria-labelledby="card-dialog-title-input"
       closedby="any"
-      onClose={onClose}
+      onClose={() => {
+        if (isSavingRef.current) {
+          isSavingRef.current = false;
+          return;
+        }
+        setBlockMenuTarget(null);
+        onClose();
+      }}
     >
       <div className="card-dialog__layout">
         {/* Botón flotante para Mobile */}
@@ -480,6 +558,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
                     block={block}
                     onEnter={() => {handleCreateBlock(activePage.id, block.id)}}
                     onChange={(newContent) => handleBlockChange(activePage.id, block.id, newContent) }
+                    onTypeChange={(action, value, element) => handleBlockTypeChange(activePage.id, block.id, action, value, element)}
                     onDelete={() => handleDeleteBlock(activePage.id, block.id)}
                     shouldFocus={block.id === focusedBlockId}
                   />
@@ -489,6 +568,13 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onClose }) {
           ) : (
             <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
           )}
+        </div>
+
+        <div id="card-dialog-block-menu" popover="auto" className="card-dialog__block-menu" role="menu" aria-label="Block type">
+          <button type="button" className="card-dialog__block-menu-item" data-block="text" role="menuitem" onClick={() => handleBlockMenuAction("text")}>✏️ Normal Text</button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="heading" role="menuitem" onClick={() => handleBlockMenuAction("heading")}>🔴 Title</button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="subheading" role="menuitem" onClick={() => handleBlockMenuAction("subheading")}>🔴&gt; Sub Title</button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="task" role="menuitem" onClick={() => handleBlockMenuAction("task")}>☑️ Task</button>
         </div>
       </div>
     </dialog>

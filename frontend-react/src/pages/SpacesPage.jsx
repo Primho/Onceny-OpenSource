@@ -39,7 +39,13 @@ function SpacesPage() {
     // funcion para actualizar los spaces despues de editarlos
     const handleSpaceChange = (updatedSpace) => {
         setActiveSpace(updatedSpace);
-        setSpaces(spaces => spaces.map(space => space.id === updatedSpace.id ? updatedSpace : space))
+    };
+
+    const handleSpaceSave = (savedSpace) => {
+        setSpaces(currentSpaces => currentSpaces.map(space =>
+            space.id === savedSpace.id ? savedSpace : space
+        ));
+        setActiveSpace(null);
     };
 
     // funcion para borrar el space y la card
@@ -55,7 +61,7 @@ function SpacesPage() {
                     {spaces.map(space => <Space key={space.id} space={space} onOpen={handleOpenSpace} onDelete={handleDeleteSpace}/>)}
                 </div>
             </section>
-            <SpaceDialog space={activeSpace} onSpaceChange={handleSpaceChange} onClose={() => setActiveSpace(null)}/>
+                <SpaceDialog space={activeSpace} onSpaceChange={handleSpaceChange} onSaveSpace={handleSpaceSave} onClose={() => setActiveSpace(null)}/>
         </>
     )
 }
