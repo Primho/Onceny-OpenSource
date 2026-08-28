@@ -89,7 +89,14 @@
 /* Menú contextual */
 .note-card__menu {
     display: inline-flex;
+    align-items: center;
     flex-shrink: 0;
+}
+
+.note-card__temporal-icon {
+    width: 24px;
+    height: 24px;
+    margin-inline: var(--space-xs);
 }
 
 .note-card__menu-trigger {

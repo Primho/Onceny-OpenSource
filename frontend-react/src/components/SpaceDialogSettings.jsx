@@ -1,4 +1,4 @@
-function SpaceDialogSettings({ space, onUpdateSpace, onSave, compactMode, onCompactModeChange }) {
+function SpaceDialogSettings({ space, onUpdateSpace, onSave, onClose, compactMode, onCompactModeChange }) {
   return (
       <section
         id="card-dialog-panel-config"
@@ -275,6 +275,17 @@ function SpaceDialogSettings({ space, onUpdateSpace, onSave, compactMode, onComp
         </div>
   
         <footer className="card-dialog__config-actions">
+          <button
+            type="button"
+            className="card-dialog__cancel"
+            aria-label="Close without saving"
+            onClick={onClose}
+          >
+            <svg className="icon" aria-hidden="true" focusable="false">
+              <use href="../assets/icons/sprite.svg#icon-close"></use>
+            </svg>
+            <span className="card-dialog__cancel--text">Close</span>
+          </button>
           <button
             type="button"
             className="card-dialog__config-btn card-dialog__config-btn--primary"

@@ -57,6 +57,16 @@ function Space({space, onOpen, onDelete }) {
                     </div>
 
                     <div className="note-card__menu">
+                        {space.type === "temporal" && (
+                            <svg
+                                className="icon note-card__temporal-icon"
+                                style={{ color: colors.text }}
+                                aria-label="Temporal space"
+                                focusable="false"
+                            >
+                                <use href="../assets/icons/sprite.svg#icon-temporal"></use>
+                            </svg>
+                        )}
                         <button
                             type="button"
                             className="note-card__menu-trigger"

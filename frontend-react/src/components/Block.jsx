@@ -68,7 +68,10 @@ export default function Block({ block, onEnter, onChange, onTypeChange, shouldFo
     }
 
     return (
-        <div className="editor-block-wrapper" data-block-id={`default-${block.id}`}>
+        <div
+            className={`editor-block-wrapper ${block.type === "task" ? "editor-block-wrapper--task" : ""}`}
+            data-block-id={`default-${block.id}`}
+        >
             {block.type === "task" && (
                 <input
                     type="checkbox"

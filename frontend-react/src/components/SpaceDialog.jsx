@@ -3,6 +3,17 @@ import { updateSpace, updatePage, deletePage, updateBlock, createPage, createBlo
 import Block from "./Block";
 import SpaceDialogSettings from "./SpaceDialogSettings";
 
+const CARD_TEXT_COLORS = {
+  "#f1f1f1": "var(--card-gray-text)",
+  "#fdefee": "var(--card-red-text)",
+  "#e6f2ff": "var(--card-blue-text)",
+  "#e1fae7": "var(--card-green-text)",
+  "#fcf5db": "var(--card-yellow-text)",
+  "#efeaff": "var(--card-purple-text)",
+};
+
+const getCardTextColor = (color) => CARD_TEXT_COLORS[color] || "var(--color-text)";
+
 function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }) {
   const dialogRef = useRef(null);
   const pageMenuRef = useRef(null);
@@ -14,6 +25,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
   const [focusedBlockId, setFocusedBlockId] = useState(null);
   const [pageMenuTargetId, setPageMenuTargetId] = useState(null);
   const [blockMenuTarget, setBlockMenuTarget] = useState(null);
+  const [savedColor, setSavedColor] = useState(activeSpace?.color || "#f1f1f1");
 
   const [userMode, setUserMode] = useState(
     localStorage.getItem("compact") === "true"
@@ -34,6 +46,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     if (!dialog) return;
 
     if (activeSpace) {
+      setSavedColor(activeSpace.color || "#f1f1f1");
       setPageId(defaultPage?.id);
       setFocusedBlockId(defaultPage?.blocks?.at(-1)?.id ?? null);
       if (!dialog.open) {
@@ -46,11 +59,37 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     }
   }, [activeSpace?.id]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      [
+        "card-dialog-mobile-menu",
+        "card-page-menu",
+        "card-dialog-block-menu",
+      ].forEach((popoverId) => {
+        const popover = document.getElementById(popoverId);
+        if (popover?.matches(":popover-open")) {
+          popover.hidePopover();
+        }
+      });
+      setBlockMenuTarget(null);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!activeSpace) {
     return <dialog ref={dialogRef} id="card-dialog" onClose={onClose} />;
   }
 
   const activePage = activeSpace.pages?.find((page) => page.id === pageId);
+
+  const closeMobileMenu = () => {
+    const mobileMenu = document.getElementById("card-dialog-mobile-menu");
+    if (mobileMenu?.matches(":popover-open")) {
+      mobileMenu.hidePopover();
+    }
+  };
 
   const handleBlockChange = (pageId, blockId, newContent) => {
     const spaceUpdated = {
@@ -104,6 +143,11 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
       }),
     };
     onSpaceChange(updatedSpace);
+    if (action === "checked") {
+      updateBlock(blockId, { checked: value }).catch((err) =>
+        console.error("Error actualizando la tarea:", err)
+      );
+    }
   };
 
   const handleBlockMenuAction = (type) => {
@@ -153,11 +197,12 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
       })));
 
       const firstBlock = activeSpace.pages[0]?.blocks?.[0];
+      dialogRef.current?.close();
+      setSavedColor(activeSpace.color || "#f1f1f1");
       onSaveSpace({
         ...activeSpace,
         preview: firstBlock?.content || "",
       });
-      dialogRef.current?.close();
     } catch (err) {
       isSavingRef.current = false;
       console.error("Error guardando el espacio:", err);
@@ -165,12 +210,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
   };
 
   const handleSettingsSave = async () => {
-    await updateSpace(activeSpace.id, {
-        marker: activeSpace.marker,
-        tag: activeSpace.tag,
-        color: activeSpace.color
-    });
-
+    closeMobileMenu();
     setActiveTab("editor");
   };
 
@@ -392,16 +432,19 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     >
       <div className="card-dialog__layout">
         {/* Botón flotante para Mobile */}
-        <button
-          type="button"
-          className="card-dialog__menu"
-          popoverTarget="card-dialog-mobile-menu"
-          role="menuitem"
-        >
-          <svg className="icon" aria-hidden="true" focusable="false">
-            <use href="../assets/icons/sprite.svg#icon-menu"></use>
-          </svg>
-        </button>
+        {activeTab === "editor" && (
+          <button
+            type="button"
+            className="card-dialog__menu"
+            popoverTarget="card-dialog-mobile-menu"
+            role="menuitem"
+            style={{ backgroundColor: savedColor, color: getCardTextColor(savedColor) }}
+          >
+            <svg className="icon" aria-hidden="true" focusable="false">
+              <use href="../assets/icons/sprite.svg#icon-menu"></use>
+            </svg>
+          </button>
+        )}
 
         {/* Navegación Lateral */}
         <nav
@@ -442,6 +485,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
                   role="tab"
                   aria-selected={activeTab === "editor" && page.id === pageId}
                   onClick={() => {
+                    closeMobileMenu();
                     setPageId(page.id);
                     setActiveTab("editor");
                   }}
@@ -473,7 +517,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
               }`}
               role="tab"
               aria-selected={activeTab === "settings"}
-              onClick={() => setActiveTab("settings")}
+              onClick={() => {
+                closeMobileMenu();
+                setActiveTab("settings");
+              }}
             >
               <svg className="icon" aria-hidden="true" focusable="false">
                 <use href="../assets/icons/sprite.svg#icon-settings"></use>
@@ -566,7 +613,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
               </div>
             </main>
           ) : (
-            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
+            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} onClose={() => setActiveTab("editor")} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
           )}
         </div>
 

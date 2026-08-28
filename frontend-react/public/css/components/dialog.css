@@ -23,6 +23,32 @@
     line-height: 1.6 !important;
 }
 
+.editor-block-wrapper--task {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.editor-block__task-checkbox {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: calc(var(--space-sm) + 0.2rem) 0 0 var(--space-md);
+    accent-color: var(--color-accent);
+    cursor: pointer;
+}
+
+.editor-block-wrapper--task .editor-block {
+    flex: 1;
+    min-width: 0;
+}
+
+.editor-block-wrapper--task:has(.editor-block__task-checkbox:checked) .editor-block {
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--color-text-muted);
+}
+
 /* BASE Y BACKDROP */
 
 body:has(dialog[open]) {
@@ -146,7 +172,7 @@ dialog[open]::backdrop {
     }
 
     & svg {
-        color: var(--color-text);
+        color: inherit;
     }
 }
 
@@ -394,7 +420,8 @@ dialog[open]::backdrop {
     }
 }
 
-.card-dialog__save {
+.card-dialog__save,
+.card-dialog__cancel {
     flex-shrink: 0;
     min-height: 2.25rem;
     padding: 0 var(--space-md);
@@ -415,6 +442,16 @@ dialog[open]::backdrop {
         outline: 2px solid var(--color-focus);
         outline-offset: 2px;
     }
+}
+
+.card-dialog__cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.card-dialog__cancel--text {
+    font-weight: var(--font-weight-medium);
 }
 
 /* Pestañas / Paneles */
@@ -748,6 +785,10 @@ dialog[open]::backdrop {
     border-top: 1px solid var(--color-border);
     background-color: var(--color-bg);
     flex-shrink: 0;
+}
+
+.card-dialog__config-actions .card-dialog__cancel {
+    margin-right: auto;
 }
 
 .card-dialog__config-btn,

@@ -4,6 +4,8 @@ import Space from '../components/Space';
 import SpaceDialog from "../components/SpaceDialog";
 import Header from "../components/Header";
 
+const TEMPORAL_TTL_MS = 120_000;
+
 function SpacesPage() {
     // Estado de los spaces
     const [spaces, setSpaces] = useState([]);
@@ -16,6 +18,37 @@ function SpacesPage() {
         .then(spaces => setSpaces(spaces))
         .catch(err => console.error(err));
     }, []);
+
+    useEffect(() => {
+        const timers = spaces
+            .filter(space => space.type === "temporal" && space.createdAt)
+            .map(space => {
+                const expiresAt = Number(space.createdAt) + TEMPORAL_TTL_MS;
+                const remaining = expiresAt - Date.now();
+
+                const removeExpiredSpace = async () => {
+                    setSpaces(currentSpaces => currentSpaces.filter(item => item.id !== space.id));
+                    setActiveSpace(currentActive =>
+                        currentActive?.id === space.id ? null : currentActive
+                    );
+                    try {
+                        await deleteSpace(space.id);
+                    } catch (err) {
+                        console.error("Error eliminando el espacio temporal:", err);
+                    }
+                };
+
+                if (remaining <= 0) {
+                    removeExpiredSpace();
+                    return null;
+                }
+
+                return window.setTimeout(removeExpiredSpace, remaining);
+            })
+            .filter(Boolean);
+
+        return () => timers.forEach(window.clearTimeout);
+    }, [spaces]);
 
     // funcion para crear el space
     const handleCreateSpace = (type) => {
@@ -61,7 +94,7 @@ function SpacesPage() {
                     {spaces.map(space => <Space key={space.id} space={space} onOpen={handleOpenSpace} onDelete={handleDeleteSpace}/>)}
                 </div>
             </section>
-                <SpaceDialog space={activeSpace} onSpaceChange={handleSpaceChange} onSaveSpace={handleSpaceSave} onClose={() => setActiveSpace(null)}/>
+            <SpaceDialog space={activeSpace} onSpaceChange={handleSpaceChange} onSaveSpace={handleSpaceSave} onClose={() => setActiveSpace(null)}/>
         </>
     )
 }

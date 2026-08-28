@@ -1,0 +1,15 @@
+.main-home--content {
+  margin-top: var(--space-lg);
+}
+
+.main-home--content header {
+  margin-bottom: var(--space-md);
+}
+
+.home-card {
+  background-color: var(--color-surface-hover);
+  max-width: 300px;
+  padding: var(--space-md);
+  margin-bottom: 20px;
+  border-radius: var(--radius-md);
+}
