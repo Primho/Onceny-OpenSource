@@ -1,7 +1,7 @@
 @import './variables.css';
 @import './utils.css';
 @import './reset.css';
-@import './layouts/MainLayout.css';
+@import './layouts/landigPage.css';
 @import './pages/spacesPage.css';
 @import './components/sidebar.css';
 @import './components/card.css';

@@ -4,10 +4,12 @@ import Sidebar from '../components/Sidebar';
 function AppLayout() {
   return (
     <>
+      <div id='main-app'>
         <Sidebar />
-        <main id="main" className="workspace">
+        <main className="workspace">
             <Outlet />
         </main>
+      </div>
     </>
   )
 }

@@ -1,7 +1,13 @@
 function LandingIntroPage() {
     return (
-        <div>
-            <h2>Prizmy</h2>
+        <div className="landing-page">
+            <header className="landing-page__header">
+                <h1>Onceny</h1>
+                <div>
+                    <button>Log In</button>
+                    <button>Sign Up</button>
+                </div>
+            </header>
         </div>
     )
 }
