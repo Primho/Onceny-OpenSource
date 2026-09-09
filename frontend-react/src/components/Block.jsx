@@ -84,7 +84,7 @@ export default function Block({ block, onEnter, onChange, onTypeChange, shouldFo
             <div
                 ref={ref}
                 className={`editor-block editor-block--${block.type || "text"}`}
-                aria-placeholder="Type your content here or use ':' for commands..."
+                placeholder="Type your content here or use ':' for commands..."
                 contentEditable
                 suppressContentEditableWarning
                 onInput={handleInput}
