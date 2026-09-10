@@ -24,7 +24,7 @@
     margin-bottom: var(--space-lg);
 
     & h1 {
-        font-size: var(--font-base);
+        font-size: var(--font-xl);
         color: var(--color-text-primary);
     }
 }
@@ -54,7 +54,7 @@
 .btn-signup {
     border: none;
     border-radius: var(--radius-sm);
-    font-size: var(--font-sm);
+    font-size: var(--font-md);
     text-decoration: none;
     padding: var(--space-sm) var(--space-md);
     color: var(--color-text);
