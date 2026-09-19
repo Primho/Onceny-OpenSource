@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from auth_helpers import get_user_block, get_user_page, login_required
 from models import get_db, serialize_block
 
 blocks_bp = Blueprint('blocks', __name__)
@@ -7,11 +8,12 @@ VALID_TYPES = {'text', 'heading', 'subheading', 'task'}
 
 
 @blocks_bp.route('/api/pages/<int:page_id>/blocks', methods=['POST'])
+@login_required
 def create_block(page_id):
     data = request.get_json() or {}
     conn = get_db()
 
-    page = conn.execute('SELECT id FROM pages WHERE id = ?', (page_id,)).fetchone()
+    page = get_user_page(conn, page_id)
     if page is None:
         conn.close()
         return jsonify({'message': 'Page not found'}), 404
@@ -50,9 +52,14 @@ def create_block(page_id):
 
 
 @blocks_bp.route('/api/blocks/<int:id>', methods=['PUT'])
+@login_required
 def update_block(id):
     data = request.get_json() or {}
     conn = get_db()
+
+    if get_user_block(conn, id) is None:
+        conn.close()
+        return jsonify({'message': 'Block not found'}), 404
 
     fields_to_update = {}
     if 'type' in data and data['type'] in VALID_TYPES:
@@ -78,8 +85,13 @@ def update_block(id):
 
 
 @blocks_bp.route('/api/blocks/<int:id>', methods=['DELETE'])
+@login_required
 def delete_block(id):
     conn = get_db()
+    if get_user_block(conn, id) is None:
+        conn.close()
+        return jsonify({'message': 'Block not found'}), 404
+
     cursor = conn.execute('DELETE FROM blocks WHERE id = ?', (id,))
     if cursor.rowcount == 0:
         conn.close()
@@ -90,10 +102,15 @@ def delete_block(id):
 
 
 @blocks_bp.route('/api/pages/<int:page_id>/blocks/reorder', methods=['PUT'])
+@login_required
 def reorder_blocks(page_id):
     data = request.get_json() or {}
     order = data.get('order', [])
     conn = get_db()
+
+    if get_user_page(conn, page_id) is None:
+        conn.close()
+        return jsonify({'message': 'Page not found'}), 404
 
     for index, block_id in enumerate(order):
         conn.execute(

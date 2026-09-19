@@ -102,6 +102,20 @@
   transform: translateY(1px);
 }
 
+.auth-form__submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.auth-form__error {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+  font-size: var(--font-sm);
+}
+
 .auth-form__submit:focus-visible,
 .auth-form__link:focus-visible,
 .auth-layout__brand a:focus-visible {

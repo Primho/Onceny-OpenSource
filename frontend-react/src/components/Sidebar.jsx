@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import AppSettingsDialog from "./AppSettingsDialog";
 
-function Sidebar() {
+function Sidebar({ user }) {
 
     const [showSettings, setShowSettings] = useState(false);
 
@@ -21,8 +21,8 @@ function Sidebar() {
             <img src="../assets/Primh.png" alt="" className="sidebar__profile-img" width="50" height="50"
                 decoding="async" />
             <div className="sidebar__profile-info">
-                <span className="sidebar__profile-name">Kevin Parra</span>
-                <span className="sidebar__profile-email">kevin@exam...</span>
+                <span className="sidebar__profile-name">{user.username}</span>
+                <span className="sidebar__profile-email">{user.email}</span>
             </div>
         </div>
 

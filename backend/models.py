@@ -34,8 +34,19 @@ def init_db():
     conn = get_db()
 
     conn.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at INTEGER NOT NULL
+    )
+    ''')
+
+    conn.execute('''
     CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
         title TEXT NOT NULL DEFAULT '',
         color TEXT DEFAULT '#f1f1f1',
         tag TEXT DEFAULT '',
@@ -45,6 +56,12 @@ def init_db():
         updated_at INTEGER
     )
     ''')
+
+    card_columns = conn.execute('PRAGMA table_info(cards)').fetchall()
+    has_user_id = any(column['name'] == 'user_id' for column in card_columns)
+
+    if not has_user_id:
+        conn.execute('ALTER TABLE cards ADD COLUMN user_id INTEGER')
 
     conn.execute('''
     CREATE TABLE IF NOT EXISTS pages (
@@ -71,6 +88,7 @@ def init_db():
 
     conn.execute('CREATE INDEX IF NOT EXISTS idx_pages_card_id ON pages(card_id)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_blocks_page_id ON blocks(page_id)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_cards_user_id ON cards(user_id)')
 
     conn.commit()
     conn.close()

@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../api';
 
 function AppSettingsDialog({ isOpen, onClose }) {
     const settingsDialogRef = useRef(null);
+    const navigate = useNavigate();
     const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+    const handleLogout = async () => {
+        await logout();
+        onClose();
+        navigate('/login');
+    };
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -61,6 +70,10 @@ function AppSettingsDialog({ isOpen, onClose }) {
                     </div>
                 </div> 
             </fieldset>
+
+            <button type="button" className="settings-dialog__logout" onClick={handleLogout}>
+                Log out
+            </button>
 
             <footer className="settings-dialog__config-actions">
                 <button type="button" className="settings-dialog__config-btn settings-dialog__config-btn--primary" data-action="config-save" onClick={onClose}>

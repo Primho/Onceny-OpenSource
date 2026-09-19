@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
+from auth_helpers import get_user_card, login_required
 from models import get_db, serialize_card
 import time
 
@@ -7,36 +8,43 @@ cards_bp = Blueprint('cards', __name__)
 TEMPORAL_TTL_MS = 120_000
 
 
-def _purge_expired_temporal(conn):
+def _purge_expired_temporal(conn, user_id):
     current_time = int(time.time() * 1000)
     conn.execute(
         '''
         DELETE FROM cards
         WHERE type = 'temporal'
+                    AND user_id = ?
           AND created_at IS NOT NULL
           AND (? - created_at) >= ?
         ''',
-        (current_time, TEMPORAL_TTL_MS),
+                (user_id, current_time, TEMPORAL_TTL_MS),
     )
     conn.commit()
 
 
 @cards_bp.route('/api/cards', methods=['GET'])
+@login_required
 def get_cards():
     conn = get_db()
-    _purge_expired_temporal(conn)
+    user_id = session['user_id']
+    _purge_expired_temporal(conn, user_id)
 
     # Listado "ligero" para el grid: sin pages/blocks, igual que antes.
-    rows = conn.execute('SELECT * FROM cards ORDER BY id DESC').fetchall()
+    rows = conn.execute(
+        'SELECT * FROM cards WHERE user_id = ? ORDER BY id DESC',
+        (user_id,),
+    ).fetchall()
     cards = [serialize_card(row, conn=conn) for row in rows]
     conn.close()
     return jsonify(cards)
 
 
 @cards_bp.route('/api/cards/<int:id>', methods=['GET'])
+@login_required
 def get_card(id):
     conn = get_db()
-    row = conn.execute('SELECT * FROM cards WHERE id = ?', (id,)).fetchone()
+    row = get_user_card(conn, id)
 
     if row is None:
         conn.close()
@@ -49,6 +57,7 @@ def get_card(id):
 
 
 @cards_bp.route('/api/cards', methods=['POST'])
+@login_required
 def create_card():
     data = request.get_json()
     now = int(time.time() * 1000)
@@ -56,10 +65,11 @@ def create_card():
 
     cursor = conn.execute(
         '''
-        INSERT INTO cards (title, color, tag, marker, type, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO cards (user_id, title, color, tag, marker, type, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
+            session['user_id'],
             data.get('title', ''),
             data.get('color', '#f1f1f1'),
             data.get('tag', ''),
@@ -85,7 +95,7 @@ def create_card():
     )
 
     conn.commit()
-    row = conn.execute('SELECT * FROM cards WHERE id = ?', (card_id,)).fetchone()
+    row = get_user_card(conn, card_id)
     card = serialize_card(row, with_pages=True, conn=conn)
     conn.close()
 
@@ -93,9 +103,13 @@ def create_card():
 
 
 @cards_bp.route('/api/cards/<int:id>', methods=['PUT'])
+@login_required
 def update_card(id):
     data = request.get_json()
     conn = get_db()
+    if get_user_card(conn, id) is None:
+        conn.close()
+        return jsonify({'message': 'Card not found'}), 404
 
     allowed_fields = {
         'title': 'title',
@@ -114,18 +128,26 @@ def update_card(id):
     set_clause = ', '.join(f'{field} = ?' for field in fields_to_update)
     values = list(fields_to_update.values()) + [id]
 
-    conn.execute(f'UPDATE cards SET {set_clause} WHERE id = ?', values)
+    values.append(session['user_id'])
+    conn.execute(f'UPDATE cards SET {set_clause} WHERE id = ? AND user_id = ?', values)
     conn.commit()
     conn.close()
     return jsonify({'message': 'Note edited'})
 
 
 @cards_bp.route('/api/cards/<int:id>', methods=['DELETE'])
+@login_required
 def delete_card(id):
     conn = get_db()
+    if get_user_card(conn, id) is None:
+        conn.close()
+        return jsonify({'message': 'Card not found'}), 404
     # Gracias a ON DELETE CASCADE + PRAGMA foreign_keys=ON, esto también
     # borra sus pages y los blocks de esas pages.
-    conn.execute('DELETE FROM cards WHERE id = ?', (id,))
+    conn.execute(
+        'DELETE FROM cards WHERE id = ? AND user_id = ?',
+        (id, session['user_id']),
+    )
     conn.commit()
     conn.close()
     return jsonify({'message': 'Note deleted'})
