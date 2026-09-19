@@ -2,9 +2,9 @@ import { Outlet } from 'react-router-dom';
 
 function MainLayout() {
     return (
-        <main id="main" className='main-app'>
+        <div id="main" className='main-layout'>
             <Outlet />
-        </main>
+        </div>
     )
 }
 

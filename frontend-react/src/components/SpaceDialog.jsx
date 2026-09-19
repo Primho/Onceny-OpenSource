@@ -618,10 +618,25 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
         </div>
 
         <div id="card-dialog-block-menu" popover="auto" className="card-dialog__block-menu" role="menu" aria-label="Block type">
-          <button type="button" className="card-dialog__block-menu-item" data-block="text" role="menuitem" onClick={() => handleBlockMenuAction("text")}>✏️ Normal Text</button>
-          <button type="button" className="card-dialog__block-menu-item" data-block="heading" role="menuitem" onClick={() => handleBlockMenuAction("heading")}>🔴 Title</button>
-          <button type="button" className="card-dialog__block-menu-item" data-block="subheading" role="menuitem" onClick={() => handleBlockMenuAction("subheading")}>🔴&gt; Sub Title</button>
-          <button type="button" className="card-dialog__block-menu-item" data-block="task" role="menuitem" onClick={() => handleBlockMenuAction("task")}>☑️ Task</button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="text" role="menuitem" onClick={() => handleBlockMenuAction("text")}><span>✏️</span> Normal Text</button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="heading" role="menuitem" onClick={() => handleBlockMenuAction("heading")}> 
+            <svg className="icon" aria-hidden="true" focusable="false">
+              <use href="../assets/icons/sprite.svg#icon-title"></use>
+            </svg>
+            Title
+          </button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="subheading" role="menuitem" onClick={() => handleBlockMenuAction("subheading")}>
+            <svg className="icon" aria-hidden="true" focusable="false">
+              <use href="../assets/icons/sprite.svg#icon-subtitle"></use>
+            </svg>
+            Subtitle
+          </button>
+          <button type="button" className="card-dialog__block-menu-item" data-block="task" role="menuitem" onClick={() => handleBlockMenuAction("task")}>
+            <svg className="icon" aria-hidden="true" focusable="false">
+              <use href="../assets/icons/sprite.svg#icon-task"></use>
+            </svg>
+            Task
+            </button>
         </div>
       </div>
     </dialog>

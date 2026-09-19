@@ -2,8 +2,11 @@
 @import './utils.css';
 @import './reset.css';
 @import './layouts/landigPage.css';
+@import './layouts/authPage.css';
 @import './pages/spacesPage.css';
 @import './components/sidebar.css';
+@import './components/authForm.css';
 @import './components/card.css';
 @import './components/dialog.css';
-@import './components/homeCard.css'
+@import './components/homeCard.css';
+@import './components/appSettingsDialog.css';

@@ -1,57 +1,66 @@
-.main-app {
+.main-layout {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin: 20px;
+    min-width: 0;
+    min-height: 0;
+    margin: var(--space-md);
     padding: var(--space-md);
     border-radius: var(--radius-md);
     background-color: var(--color-surface);
 }
 
-.landing-page {
-    flex: 1;
+.main-layout__header {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-background);
-}
-
-.landing-page__header {
-    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: var(--space-sm);
+    min-height: 2.75rem;
     justify-content: space-between;
-    margin-bottom: var(--space-lg);
-
-    & h1 {
-        font-size: var(--font-xl);
-        color: var(--color-text-primary);
-    }
 }
 
-.landing-page__main {
+.main-layout__brand {
+  margin: 0;
+  font-size: var(--font-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+}
+
+.main-layout__brand a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.main-layout__main {
     flex: 1;
-    gap: var(--space-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 0;
+    min-width: 0;
+    padding: var(--space-lg) 0;
 
     & h2 {
+        margin: 0 0 var(--space-lg);
         font-size: var(--font-xl);
         color: var(--color-text-primary);
+        text-align: center;
     }
 }
 
 .landing-page__video {
     width: 100%;
     max-width: 800px;
+    max-height: min(60dvh, 520px);
     height: auto;
+    object-fit: contain;
     border-radius: var(--radius-md);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-login,
 .btn-signup {
+    display: inline-block;
     border: none;
     border-radius: var(--radius-sm);
     font-size: var(--font-md);
@@ -64,4 +73,24 @@
 .btn-signup {
     background-color: var(--color-accent);
     color: var(--color-text);
+}
+
+@media (min-width: 480px) {
+    .main-layout {
+        margin: var(--space-lg);
+        padding: var(--space-md);
+    }
+
+    .main-layout__header {
+        flex-wrap: nowrap;
+    }
+
+    .main-layout__header > div {
+        display: flex;
+        gap: var(--space-xs);
+    }
+
+    .main-layout__main {
+        padding: var(--space-xl) 0;
+    }
 }

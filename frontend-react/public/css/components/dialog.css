@@ -612,6 +612,7 @@ dialog[open]::backdrop {
 }
 
 /* Selector de Color */
+
 .color-picker {
     display: flex;
     flex-wrap: wrap;
@@ -853,7 +854,9 @@ dialog[open]::backdrop {
 }
 
 .card-dialog__block-menu-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
     width: 100%;
     padding: var(--space-sm) var(--space-md);
     border: none;

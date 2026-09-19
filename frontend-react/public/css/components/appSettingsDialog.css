@@ -1,0 +1,4 @@
+.color-theme-picker {
+  display: flex;
+  gap: var(--space-sm);
+}
