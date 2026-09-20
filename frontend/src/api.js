@@ -27,6 +27,12 @@ const updateSpace = (id, payload) => apiFetch(`${API_URL}/cards/${id}`, {
     body: JSON.stringify(payload),
 }).then(parseJson);
 
+const saveSpace = (id, payload) => apiFetch(`${API_URL}/cards/${id}/contents`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+}).then(parseJson);
+
 const deleteSpace = (id) => apiFetch(`${API_URL}/cards/${id}`, { method: 'DELETE' }).then(parseJson);
 
 const getSpace = (id) => apiFetch(`${API_URL}/cards/${id}`).then(parseJson);
@@ -87,6 +93,7 @@ export {
     getSpaces, 
     createSpace, 
     updateSpace, 
+    saveSpace,
     deleteSpace, 
     getSpace, 
     createPage,

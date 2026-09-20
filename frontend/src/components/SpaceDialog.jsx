@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { updateSpace, updatePage, deletePage, updateBlock, createPage, createBlock, deleteBlock, reorderBlocks } from "../api";
+import { saveSpace, updatePage, deletePage, createPage, createBlock, deleteBlock, reorderBlocks } from "../api";
 import Block from "./Block";
 import SpaceDialogSettings from "./SpaceDialogSettings";
 
@@ -20,6 +20,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
   const blockMenuElementRef = useRef(null);
   const isSavingRef = useRef(false);
   const dirtyBlockIdsRef = useRef(new Set());
+  const isDirtyRef = useRef(false);
+  const saveTimerRef = useRef(null);
   const defaultPage = activeSpace?.pages.at(-1);
   const [pageId, setPageId] = useState(defaultPage);
   const [activeTab, setActiveTab] = useState("editor");
@@ -84,6 +86,39 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const persistSpace = async (space) => {
+    setIsSaving(true);
+    try {
+      const blocks = space.pages
+        .flatMap((page) => page.blocks || [])
+        .filter((block) => dirtyBlockIdsRef.current.has(block.id));
+
+      await saveSpace(space.id, {
+        title: space.title,
+        marker: space.marker,
+        tag: space.tag,
+        color: space.color,
+        blocks,
+      });
+      dirtyBlockIdsRef.current.clear();
+      isDirtyRef.current = false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!activeSpace || !isDirtyRef.current) return undefined;
+
+    saveTimerRef.current = window.setTimeout(() => {
+      persistSpace(activeSpace).catch((err) => {
+        console.error("Error en autosave:", err);
+      });
+    }, 800);
+
+    return () => window.clearTimeout(saveTimerRef.current);
+  }, [activeSpace]);
+
   if (!activeSpace) {
     return <dialog ref={dialogRef} id="card-dialog" onClose={onClose} />;
   }
@@ -98,6 +133,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
   };
 
   const handleBlockChange = (pageId, blockId, newContent) => {
+    isDirtyRef.current = true;
     dirtyBlockIdsRef.current.add(blockId);
     const spaceUpdated = {
       ...activeSpace,
@@ -142,6 +178,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     }
 
     if (!action) return;
+    isDirtyRef.current = true;
     const nextBlock = action === "checked" ? { checked: value } : { type: value };
     const updatedSpace = {
       ...activeSpace,
@@ -152,11 +189,6 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     };
     onSpaceChange(updatedSpace);
     dirtyBlockIdsRef.current.add(blockId);
-    if (action === "checked") {
-      updateBlock(blockId, { checked: value }).catch((err) =>
-        console.error("Error actualizando la tarea:", err)
-      );
-    }
   };
 
   const handleBlockMenuAction = (type) => {
@@ -190,24 +222,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
 
   const handleSaveAndClose = async () => {
     isSavingRef.current = true;
-    setIsSaving(true);
+    window.clearTimeout(saveTimerRef.current);
 
     try {
-      await updateSpace(activeSpace.id, {
-        title: activeSpace.title,
-        marker: activeSpace.marker,
-        tag: activeSpace.tag,
-        color: activeSpace.color,
-      });
-
-      const blocks = activeSpace.pages
-        .flatMap((page) => page.blocks || [])
-        .filter((block) => dirtyBlockIdsRef.current.has(block.id));
-      await Promise.all(blocks.map((block) => updateBlock(block.id, {
-        type: block.type,
-        content: block.content,
-        checked: block.checked,
-      })));
+      await persistSpace(activeSpace);
 
       const firstBlock = activeSpace.pages[0]?.blocks?.[0];
       dialogRef.current?.close();
@@ -217,11 +235,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
         preview: firstBlock?.content || "",
       });
       dirtyBlockIdsRef.current.clear();
+      isDirtyRef.current = false;
     } catch (err) {
       isSavingRef.current = false;
       console.error("Error guardando el espacio:", err);
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -574,6 +591,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
                   autoComplete="off"
                   value={activeSpace.title || ""}
                   onChange={(e) => {
+                    isDirtyRef.current = true;
                     onSpaceChange({ ...activeSpace, title: e.target.value });
                   }}
                 />
@@ -613,7 +631,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
               </div>
             </main>
           ) : (
-            <SpaceDialogSettings space={activeSpace} onUpdateSpace={onSpaceChange} onSave={handleSettingsSave} onClose={() => setActiveTab("editor")} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
+            <SpaceDialogSettings space={activeSpace} onUpdateSpace={(updatedSpace) => {
+              isDirtyRef.current = true;
+              onSpaceChange(updatedSpace);
+            }} onSave={handleSettingsSave} onClose={() => setActiveTab("editor")} compactMode={userMode} onCompactModeChange={handleCompactMode}/>
           )}
         </div>
 

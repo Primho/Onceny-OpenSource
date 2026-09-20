@@ -32,7 +32,20 @@ def get_cards():
 
     # Listado "ligero" para el grid: sin pages/blocks, igual que antes.
     rows = conn.execute(
-        'SELECT * FROM cards WHERE user_id = ? ORDER BY id DESC',
+        '''
+        SELECT cards.*,
+               COALESCE((
+                   SELECT blocks.content
+                   FROM pages
+                   JOIN blocks ON blocks.page_id = pages.id
+                   WHERE pages.card_id = cards.id
+                   ORDER BY pages.position ASC, blocks.position ASC
+                   LIMIT 1
+               ), '') AS preview
+        FROM cards
+        WHERE user_id = ?
+        ORDER BY id DESC
+        ''',
         (user_id,),
     ).fetchall()
     cards = [serialize_card(row, conn=conn) for row in rows]
@@ -134,6 +147,63 @@ def update_card(id):
     conn.commit()
     conn.close()
     return jsonify({'message': 'Note edited'})
+
+
+@cards_bp.route('/api/cards/<int:id>/contents', methods=['PUT'])
+@login_required
+def save_card_contents(id):
+    data = request.get_json() or {}
+    conn = get_db()
+
+    try:
+        if get_user_card(conn, id) is None:
+            return jsonify({'message': 'Card not found'}), 404
+
+        allowed_fields = {'title', 'color', 'tag', 'marker'}
+        card_fields = {
+            field: data[field]
+            for field in allowed_fields
+            if field in data
+        }
+        card_fields['updated_at'] = int(time.time() * 1000)
+        set_clause = ', '.join(f'{field} = ?' for field in card_fields)
+        conn.execute(
+            f'UPDATE cards SET {set_clause} WHERE id = ? AND user_id = ?',
+            [*card_fields.values(), id, session['user_id']],
+        )
+
+        for block in data.get('blocks', []):
+            block_id = block.get('id')
+            if block_id is None:
+                continue
+            conn.execute(
+                '''
+                UPDATE blocks
+                SET type = ?, content = ?, checked = ?, position = ?
+                WHERE id = ?
+                  AND page_id IN (
+                      SELECT pages.id
+                      FROM pages
+                      WHERE pages.card_id = ?
+                  )
+                ''',
+                (
+                    block.get('type', 'text'),
+                    block.get('content', ''),
+                    int(bool(block.get('checked', False))),
+                    block.get('position', 0),
+                    block_id,
+                    id,
+                ),
+            )
+
+        conn.commit()
+        return jsonify({'message': 'Space saved'})
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 @cards_bp.route('/api/cards/<int:id>', methods=['DELETE'])

@@ -3,11 +3,13 @@ import sqlite3
 
 DB_PATH = os.path.join(os.path.expanduser('~'), 'onceny.db')
 DATABASE_URL = os.environ.get('DATABASE_URL')
+POSTGRES_POOL = None
 
 
 class PostgresConnection:
-    def __init__(self, connection):
+    def __init__(self, connection, pool):
         self.connection = connection
+        self.pool = pool
 
     def execute(self, query, parameters=()):
         return self.connection.execute(query.replace('?', '%s'), parameters)
@@ -15,19 +17,29 @@ class PostgresConnection:
     def commit(self):
         self.connection.commit()
 
+    def rollback(self):
+        self.connection.rollback()
+
     def close(self):
-        self.connection.close()
+        self.pool.putconn(self.connection)
 
 
 def _postgres_connection():
-    import psycopg
+    from psycopg_pool import ConnectionPool
     from psycopg.rows import dict_row
 
-    connection = psycopg.connect(
-        DATABASE_URL.replace('postgres://', 'postgresql://', 1),
-        row_factory=dict_row,
-    )
-    return PostgresConnection(connection)
+    global POSTGRES_POOL
+    if POSTGRES_POOL is None:
+        POSTGRES_POOL = ConnectionPool(
+            conninfo=DATABASE_URL.replace('postgres://', 'postgresql://', 1),
+            kwargs={'row_factory': dict_row},
+            min_size=1,
+            max_size=5,
+            timeout=10,
+            open=True,
+        )
+
+    return PostgresConnection(POSTGRES_POOL.getconn(), POSTGRES_POOL)
 
 
 def get_db():
@@ -182,7 +194,7 @@ def _init_postgres_db(conn):
 def serialize_card(row, with_pages=False, conn=None):
     card = {
         'id': row['id'],
-        'preview': get_card_preview(row['id'], conn) if conn else '',
+        'preview': row['preview'] if 'preview' in row.keys() else get_card_preview(row['id'], conn) if conn else '',
         'title': row['title'],
         'color': row['color'],
         'tag': row['tag'],
