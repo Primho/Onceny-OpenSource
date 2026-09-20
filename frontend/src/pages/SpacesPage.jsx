@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { getSpaces, createSpace, getSpace, deleteSpace } from '../api';
 import Space from '../components/Space';
 import SpaceDialog from "../components/SpaceDialog";
@@ -10,6 +10,7 @@ function SpacesPage() {
     // Estado de los spaces
     const [spaces, setSpaces] = useState([]);
     const [activeSpace, setActiveSpace] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
 
     // Declaracion de los UseEffects
     useEffect(() => {
@@ -51,16 +52,22 @@ function SpacesPage() {
     }, [spaces]);
 
     // funcion para crear el space
-    const handleCreateSpace = (type) => {
-        createSpace({
-            title: "",
-            type,
-            color: "#f1f1f1",
-            marker: ""
-        }).then((newSpace) => {
+    const handleCreateSpace = async (type) => {
+        setIsCreating(true);
+        try {
+            const newSpace = await createSpace({
+                title: "",
+                type,
+                color: "#f1f1f1",
+                marker: ""
+            });
             setSpaces(spaces => [newSpace, ...spaces]);
             setActiveSpace(newSpace);
-        });
+        } catch (err) {
+            console.error("Error creando el espacio:", err);
+        } finally {
+            setIsCreating(false);
+        }
     };
     
     // funcion para abrir el space
@@ -88,7 +95,7 @@ function SpacesPage() {
     }
     return (
         <>
-            <Header onCreateSpace={handleCreateSpace}/>
+            <Header onCreateSpace={handleCreateSpace} isCreating={isCreating}/>
             <section className="workspace__section">
                 <div id="workspace-grid" className="workspace__grid" role="list" aria-live="polite" aria-label="Spaces and Notes">
                     {spaces.map(space => <Space key={space.id} space={space} onOpen={handleOpenSpace} onDelete={handleDeleteSpace}/>)}

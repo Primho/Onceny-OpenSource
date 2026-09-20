@@ -1,4 +1,4 @@
-function Header({ onCreateSpace }) {
+function Header({ onCreateSpace, isCreating }) {
     return (
         <header className="workspace__header">
             <div className="workspace__heading">
@@ -10,11 +10,13 @@ function Header({ onCreateSpace }) {
                 <button type="button" popoverTarget="workspace-create-menu"
                     className="workspace__btn workspace__btn--primary" id="workspace-create-trigger"
                     aria-haspopup="menu" aria-controls="workspace-create-menu"
+                    aria-busy={isCreating}
+                    disabled={isCreating}
                     aria-label="Create a new space">
                     <svg className="icon" aria-hidden="true" focusable="false">
                         <use href="../assets/icons/sprite.svg#icon-add"></use>
                     </svg>
-                    <span className="hidden-text-btn">New Space</span>
+                    <span className="hidden-text-btn">{isCreating ? "Creating..." : "New Space"}</span>
                 </button>
 
                 <div id="workspace-create-menu" popover="auto" className="workspace__menu" role="menu"

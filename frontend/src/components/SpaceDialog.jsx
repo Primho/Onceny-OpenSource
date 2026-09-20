@@ -17,10 +17,13 @@ const getCardTextColor = (color) => CARD_TEXT_COLORS[color] || "var(--color-text
 function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }) {
   const dialogRef = useRef(null);
   const pageMenuRef = useRef(null);
+  const blockMenuElementRef = useRef(null);
   const isSavingRef = useRef(false);
+  const dirtyBlockIdsRef = useRef(new Set());
   const defaultPage = activeSpace?.pages.at(-1);
   const [pageId, setPageId] = useState(defaultPage);
   const [activeTab, setActiveTab] = useState("editor");
+  const [isSaving, setIsSaving] = useState(false);
 
   const [focusedBlockId, setFocusedBlockId] = useState(null);
   const [pageMenuTargetId, setPageMenuTargetId] = useState(null);
@@ -46,6 +49,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     if (!dialog) return;
 
     if (activeSpace) {
+      // This effect intentionally resets editor state only when a different space opens.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSavedColor(activeSpace.color || "#f1f1f1");
       setPageId(defaultPage?.id);
       setFocusedBlockId(defaultPage?.blocks?.at(-1)?.id ?? null);
@@ -57,6 +62,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
         dialog.close();
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSpace?.id]);
 
   useEffect(() => {
@@ -92,6 +98,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
   };
 
   const handleBlockChange = (pageId, blockId, newContent) => {
+    dirtyBlockIdsRef.current.add(blockId);
     const spaceUpdated = {
       ...activeSpace,
       pages: activeSpace.pages.map((page) => {
@@ -128,7 +135,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
       menu.style.margin = "0";
       menu.style.top = `${rect.bottom + 8}px`;
       menu.style.left = `${rect.left}px`;
-      setBlockMenuTarget({ menu, pageId, blockId, blockElement });
+      blockMenuElementRef.current = blockElement;
+      setBlockMenuTarget({ menu, pageId, blockId });
       if (!menu.matches(":popover-open")) menu.showPopover();
       return;
     }
@@ -143,6 +151,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
       }),
     };
     onSpaceChange(updatedSpace);
+    dirtyBlockIdsRef.current.add(blockId);
     if (action === "checked") {
       updateBlock(blockId, { checked: value }).catch((err) =>
         console.error("Error actualizando la tarea:", err)
@@ -152,7 +161,8 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
 
   const handleBlockMenuAction = (type) => {
     if (!blockMenuTarget) return;
-    const { menu, pageId, blockId, blockElement } = blockMenuTarget;
+    const { menu, pageId, blockId } = blockMenuTarget;
+    const blockElement = blockMenuElementRef.current;
     const content = blockElement?.innerText || "";
     const contentWithoutCommand = content.replace(/\s*:[a-zA-Z]*$/, "");
 
@@ -180,6 +190,7 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
 
   const handleSaveAndClose = async () => {
     isSavingRef.current = true;
+    setIsSaving(true);
 
     try {
       await updateSpace(activeSpace.id, {
@@ -189,7 +200,9 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
         color: activeSpace.color,
       });
 
-      const blocks = activeSpace.pages.flatMap((page) => page.blocks || []);
+      const blocks = activeSpace.pages
+        .flatMap((page) => page.blocks || [])
+        .filter((block) => dirtyBlockIdsRef.current.has(block.id));
       await Promise.all(blocks.map((block) => updateBlock(block.id, {
         type: block.type,
         content: block.content,
@@ -203,9 +216,12 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
         ...activeSpace,
         preview: firstBlock?.content || "",
       });
+      dirtyBlockIdsRef.current.clear();
     } catch (err) {
       isSavingRef.current = false;
       console.error("Error guardando el espacio:", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -393,23 +409,6 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
     }
   };
 
-  const handleReorderBlocks = async (pageId, newBlocks) => {
-    const spaceUpdated = {
-      ...activeSpace,
-      pages: activeSpace.pages.map((p) => {
-        if (p.id !== pageId) return p;
-        return { ...p, blocks: newBlocks };
-      }),
-    };
-
-    onSpaceChange(spaceUpdated);
-
-    const orderPayload = { order: newBlocks.map((b) => b.id) };
-    await reorderBlocks(pageId, orderPayload).catch((err) =>
-      console.error("Error reordenando bloques:", err)
-    );
-  };
-
   const handleCompactMode = (event) => {
     setUserMode(event.target.checked);
   };
@@ -584,9 +583,10 @@ function SpaceDialog({ space: activeSpace, onSpaceChange, onSaveSpace, onClose }
                   id="card-dialog-close"
                   className="card-dialog__save"
                   aria-label="Save and close"
+                  disabled={isSaving}
                   onClick={handleSaveAndClose}
                 >
-                  💾 <span className="hidden card-dialog__save--text">Save and close</span>
+                  {isSaving ? "..." : "💾"} <span className="hidden card-dialog__save--text">Save and close</span>
                 </button> 
               </>) : ( <h2>Settings</h2> ) }
           </header>

@@ -18,7 +18,10 @@ function LandingIntroPage() {
             </header>
             <main className="main-layout__main">
                 <h2>Welcome to Onceny!</h2>
-                <video className="landing-page__video" src="../public/assets/videos/onceny-trailer-untitled.mp4" controls autoPlay loop muted />
+                <video className="landing-page__video" controls autoPlay loop muted playsInline>
+                    <source src="/assets/videos/onceny-trailer-untitled.mp4" type="video/mp4" />
+                    Your browser does not support MP4 video playback.
+                </video>
             </main>
         </>
     )
