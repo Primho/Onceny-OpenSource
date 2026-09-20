@@ -1,11 +1,39 @@
 import os
 import sqlite3
 
-# Ubicación de la base de datos en el directorio home del usuario
-DB_PATH = os.path.join(os.path.expanduser('~'), 'prizma.db')
+DB_PATH = os.path.join(os.path.expanduser('~'), 'onceny.db')
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+
+class PostgresConnection:
+    def __init__(self, connection):
+        self.connection = connection
+
+    def execute(self, query, parameters=()):
+        return self.connection.execute(query.replace('?', '%s'), parameters)
+
+    def commit(self):
+        self.connection.commit()
+
+    def close(self):
+        self.connection.close()
+
+
+def _postgres_connection():
+    import psycopg
+    from psycopg.rows import dict_row
+
+    connection = psycopg.connect(
+        DATABASE_URL.replace('postgres://', 'postgresql://', 1),
+        row_factory=dict_row,
+    )
+    return PostgresConnection(connection)
 
 
 def get_db():
+    if DATABASE_URL:
+        return _postgres_connection()
+
     conn = sqlite3.connect(DB_PATH)
     # Necesario en cada conexión: SQLite no aplica ON DELETE CASCADE
     # a menos que esta pragma esté activa en la conexión actual.
@@ -32,6 +60,11 @@ def get_card_preview(card_id, conn):
 
 def init_db():
     conn = get_db()
+
+    if DATABASE_URL:
+        _init_postgres_db(conn)
+        conn.close()
+        return
 
     conn.execute('''
     CREATE TABLE IF NOT EXISTS users (
@@ -92,6 +125,54 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+
+def _init_postgres_db(conn):
+    conn.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id BIGSERIAL PRIMARY KEY,
+        username TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at BIGINT NOT NULL
+    )
+    ''')
+    conn.execute('''
+    CREATE TABLE IF NOT EXISTS cards (
+        id BIGSERIAL PRIMARY KEY,
+        user_id BIGINT REFERENCES users(id),
+        title TEXT NOT NULL DEFAULT '',
+        color TEXT DEFAULT '#f1f1f1',
+        tag TEXT DEFAULT '',
+        marker TEXT DEFAULT '',
+        type TEXT DEFAULT 'normal',
+        created_at BIGINT,
+        updated_at BIGINT
+    )
+    ''')
+    conn.execute('''
+    CREATE TABLE IF NOT EXISTS pages (
+        id BIGSERIAL PRIMARY KEY,
+        card_id BIGINT NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+        title TEXT DEFAULT '',
+        emoji TEXT DEFAULT '📄',
+        position INTEGER NOT NULL DEFAULT 0
+    )
+    ''')
+    conn.execute('''
+    CREATE TABLE IF NOT EXISTS blocks (
+        id BIGSERIAL PRIMARY KEY,
+        page_id BIGINT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+        type TEXT NOT NULL DEFAULT 'text',
+        content TEXT DEFAULT '',
+        checked INTEGER NOT NULL DEFAULT 0,
+        position INTEGER NOT NULL DEFAULT 0
+    )
+    ''')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_pages_card_id ON pages(card_id)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_blocks_page_id ON blocks(page_id)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_cards_user_id ON cards(user_id)')
+    conn.commit()
 
 
 # ---------- Helpers de serialización ----------

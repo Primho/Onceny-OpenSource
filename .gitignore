@@ -5,7 +5,7 @@ __pycache__/
 
 # React / Node
 node_modules/
-frontend-react/dist/
+frontend/dist/
 
 # Base de datos local (no la subas, cada compu tendrá la suya)
 *.db

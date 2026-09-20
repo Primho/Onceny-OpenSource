@@ -38,10 +38,10 @@ def create_block(page_id):
         position = max_pos + 1
 
     cursor = conn.execute(
-        'INSERT INTO blocks (page_id, type, content, checked, position) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO blocks (page_id, type, content, checked, position) VALUES (?, ?, ?, ?, ?) RETURNING id',
         (page_id, block_type, data.get('content', ''), int(bool(data.get('checked', False))), position),
     )
-    block_id = cursor.lastrowid
+    block_id = cursor.fetchone()['id']
 
     conn.commit()
     row = conn.execute('SELECT * FROM blocks WHERE id = ?', (block_id,)).fetchone()

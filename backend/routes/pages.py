@@ -22,10 +22,10 @@ def create_page(card_id):
     ).fetchone()['max_pos']
 
     cursor = conn.execute(
-        'INSERT INTO pages (card_id, title, emoji, position) VALUES (?, ?, ?, ?)',
+        'INSERT INTO pages (card_id, title, emoji, position) VALUES (?, ?, ?, ?) RETURNING id',
         (card_id, data.get('title', ''), data.get('emoji', '📄'), max_pos + 1),
     )
-    page_id = cursor.lastrowid
+    page_id = cursor.fetchone()['id']
 
     # Página nueva arranca con un bloque de texto vacío, igual que hoy en el DOM.
     conn.execute(

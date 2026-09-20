@@ -44,6 +44,7 @@ def signup():
 		'''
 		INSERT INTO users (username, email, password_hash, created_at)
 		VALUES (?, ?, ?, ?)
+		RETURNING id
 		''',
 		(
 			username,
@@ -56,7 +57,7 @@ def signup():
 
 	user = conn.execute(
 		'SELECT id, username, email FROM users WHERE id = ?',
-		(cursor.lastrowid,),
+		(cursor.fetchone()['id'],),
 	).fetchone()
 	conn.close()
 

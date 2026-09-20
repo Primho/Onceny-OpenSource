@@ -67,6 +67,7 @@ def create_card():
         '''
         INSERT INTO cards (user_id, title, color, tag, marker, type, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		RETURNING id
         ''',
         (
             session['user_id'],
@@ -79,15 +80,15 @@ def create_card():
             now,
         ),
     )
-    card_id = cursor.lastrowid
+    card_id = cursor.fetchone()['id']
 
     # Toda card nace con una página por defecto y un bloque de texto vacío,
     # que es exactamente lo que page.js monta "a mano" en el DOM hoy.
     page_cursor = conn.execute(
-        'INSERT INTO pages (card_id, title, emoji, position) VALUES (?, ?, ?, ?)',
+        'INSERT INTO pages (card_id, title, emoji, position) VALUES (?, ?, ?, ?) RETURNING id',
         (card_id, 'Page 1', '📄', 0),
     )
-    page_id = page_cursor.lastrowid
+    page_id = page_cursor.fetchone()['id']
 
     conn.execute(
         'INSERT INTO blocks (page_id, type, content, position) VALUES (?, ?, ?, ?)',

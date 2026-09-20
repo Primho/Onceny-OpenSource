@@ -11,9 +11,21 @@ from models import init_db
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-me')
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None' if os.environ.get('FRONTEND_URL') else 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = bool(os.environ.get('FRONTEND_URL'))
+
+frontend_origins = [
+    origin.strip()
+    for origin in os.environ.get(
+        'FRONTEND_URL',
+        'http://localhost:5173,http://127.0.0.1:5173',
+    ).split(',')
+    if origin.strip()
+]
 CORS(
     app,
-    origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origins=frontend_origins,
     supports_credentials=True,
 )
 
