@@ -106,3 +106,4 @@ python3 -m py_compile backend/app.py backend/models.py backend/auth_helpers.py b
 
 This project is currently maintained as a private application. Licensing terms can be added here when the project is made public.
 
+This is the first log :O
