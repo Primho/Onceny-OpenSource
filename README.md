@@ -63,15 +63,15 @@ Use a Python Web Service with:
 
 ```text
 Build Command: pip install -r requirements.txt
-Start Command: gunicorn --chdir backend app:app
+Start Command: gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT
 ```
 
-Required environment variables:
+The root `render.yaml` defines this configuration, including the Python runtime and a health check. `DATABASE_URL` must be set to the Supabase PostgreSQL connection string in Render. Render generates `SECRET_KEY`, and `FRONTEND_URL` is set to the deployed frontend origin.
+
+Required environment variable:
 
 ```text
 DATABASE_URL=Supabase PostgreSQL connection string
-SECRET_KEY=long random secret
-FRONTEND_URL=https://onceny.vercel.app
 ```
 
 ### Vercel
@@ -105,5 +105,4 @@ python3 -m py_compile backend/app.py backend/models.py backend/auth_helpers.py b
 ## License
 
 This project is currently maintained as a private application. Licensing terms can be added here when the project is made public.
-
 This is the first log :O
